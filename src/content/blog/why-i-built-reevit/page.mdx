@@ -1,8 +1,8 @@
 ---
-title: 'Why I Built Primeflow: A Developer’s Reaction to a Real Problem'
+title: 'Why I Built Reevit: A Developer’s Reaction to a Real Problem'
 date: '2025-12-01T10:00:00.000Z'
 updated: '2025-12-01T10:00:00.000Z'
-subtitle: I built Primeflow to solve a real problem I faced as a developer. It started with a simple e-commerce app I built for a client selling natural spice products. Everything worked perfectly until the payments started failing. The webhook—the critical automated message from the Payment Service Provider (PSP)—became unreliable. Sometimes it fired, sometimes it was total silence.
+subtitle: I built Reevit to solve a real problem I faced as a developer. It started with a simple e-commerce app I built for a client selling natural spice products. Everything worked perfectly until the payments started failing. The webhook—the critical automated message from the Payment Service Provider (PSP)—became unreliable. Sometimes it fired, sometimes it was total silence.
 categories: ['review']
 keywords:
   [
@@ -15,7 +15,7 @@ keywords:
     'fraud',
     'security',
   ]
-slug: why-i-built-primeflow-a-developers-reaction-to-a-real-problem
+slug: why-i-built-reevit-a-developers-reaction-to-a-real-problem
 cover: blog/photo-1726137569825-7535962addcd_eja9ae
 bannerAlt: A payment flow
 bannerCredit: Photo by [SumUp](https://unsplash.com/@sumup)
@@ -25,7 +25,7 @@ featured: true
 
 ## 📖 The Origin Story
 
-I didn’t set out to build a payment product. **Primeflow** started from a frustration common to many developers: **Payment integration fragility.**
+I didn’t set out to build a payment product. **Reevit** started from a frustration common to many developers: **Payment integration fragility.**
 
 It began with an e-commerce app I built for a client selling natural spice products. Everything worked perfectly until the payments started failing. The webhook, the critical automated message from the Payment Service Provider (PSP) became unreliable. Sometimes it fired, sometimes it was total silence.
 
@@ -44,7 +44,7 @@ The goal was simple. I wanted to build a "Universal Remote" for payments.
 
 1.  **A Single Integration Layer:** Developers integrate once.
 2.  **Consistent Data Structures:** Standardized request and response bodies so switching PSPs never requires rewriting business logic.
-3.  **Zero Downtime:** If your app communicates with Primeflow, it shouldn't matter if the backend forwards to Hubtel, Paystack, or Stripe.
+3.  **Zero Downtime:** If your app communicates with Reevit, it shouldn't matter if the backend forwards to Hubtel, Paystack, or Stripe.
 
 ---
 
@@ -53,7 +53,7 @@ The goal was simple. I wanted to build a "Universal Remote" for payments.
 ### 🔄 Automatic Fallback Routing
 
 _The biggest win for merchants._
-We connect multiple PSPs—one as default, one as backup. If **PSP A** has issues or goes offline, Primeflow:
+We connect multiple PSPs—one as default, one as backup. If **PSP A** has issues or goes offline, Reevit:
 
 - Automatically forwards the transaction to **PSP B**.
 - Checks health in real-time.
@@ -61,7 +61,7 @@ We connect multiple PSPs—one as default, one as backup. If **PSP A** has issue
 
 ### 🛡️ Merchant-First Fraud Control
 
-Most PSPs run their own fraud checks, but Primeflow adds a layer of **merchant-level control** _before_ the transaction leaves the system.
+Most PSPs run their own fraud checks, but Reevit adds a layer of **merchant-level control** _before_ the transaction leaves the system.
 
 - **Geography:** Apply rules based on country.
 - **Transaction Limits:** Set rules based on amounts.
@@ -95,7 +95,7 @@ The current version is live and serving early clients (including the original sp
 
 No developer wants to spend days relearning PSP integrations every time a provider changes. And no merchant wants to lose business just because a webhook decided not to behave today.
 
-**Primeflow is built for:**
+**Reevit is built for:**
 
 - **Developers** building payment features who want a clean, unified API.
 - **Merchants** who depend on stable transactions.

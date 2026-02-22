@@ -6,7 +6,7 @@ import matter from "gray-matter";
 function getPosts() {
   const docsDir = path.join(process.cwd(), "src/content/blog");
   if (!fs.existsSync(docsDir)) return [];
-  
+
   const entries = fs.readdirSync(docsDir, { withFileTypes: true });
 
   const posts = entries
@@ -46,7 +46,7 @@ export default function Home() {
           A software developer building things for the web and mobile. I consider
           myself a life-long learner. Over the years, I've been building
           functional, beautiful interfaces and experiences that leave a positive
-          impact on people and businesses. Currently, I am building{" "}
+          impact on people and businesses. Currently building{" "}
           <Link
             href="https://reevit.io"
             target="_blank"
@@ -114,7 +114,7 @@ export default function Home() {
                 {project.category}
               </span>
             </Link>
-            ))}
+          ))}
         </div>
       </section>
 

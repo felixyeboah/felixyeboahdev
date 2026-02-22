@@ -1,0 +1,566 @@
+---
+title: How to think in Remix
+date: '2023-06-27T10:00:00.000Z'
+updated: '2023-06-27T10:00:00.000Z'
+subtitle: When developers are starting a new project, we often think about what libraries/tools we need to use to simplify our development process.
+categories: ['engineering', 'remix']
+keywords: ['remix', 'react']
+slug: how-to-think-in-remix
+cover: blog/pexels-capture-blinks-4108663
+bannerAlt: Thinking bubbles
+bannerCredit: Photo by [Capture Blinks](https://www.pexels.com/@maxx23/)
+type: 'blogPost'
+featured: false
+---
+
+
+
+When developers are starting a new project, we often think about what libraries/tools we need to use to simplify our development process. We might think about what state management library we want to use, what styling library we want to use, what testing library we want to use, etc. We might even think about what framework we want to use. This is a great way to start a project, but it's not the only way.
+
+Most developers have this Mental Model of how they think about building web applications. State management, working with form, caching data, etc are tools/libraries we often think about whiles building an application/fullstack application.
+
+<Callout variant="info" label="Mental Model">
+    Mental model is an explanation of someone's thought process about how something works in the real world. It is a representation of the surrounding world, the relationships between its various parts and a person's intuitive perception about his or her own acts and their consequences.
+</Callout>
+
+When I first delved into the world of Remix, I brought along my existing mental model of building web applications. However, Remix challenged my preconceptions and pushed me to reconsider my approach. In this article, I'll share my evolving perspective on web application development with Remix and how it has influenced my thinking.
+
+Initially, I had numerous questions swirling in my mind. How would React Query and React Form Hook fit into the Remix ecosystem? How can I seamlessly incorporate loading spinners and other UI components? The Remix community proved invaluable in addressing these queries, providing valuable insights and guidance along the way.
+
+As I immersed myself deeper into Remix, I realized the need to unlearn some of my established practices and embrace new ways of thinking. Remix introduced me to a paradigm shift in web application development that challenged traditional patterns. It emphasized the importance of server-side rendering, modularity, and code reusability.
+
+During the development of a recent project for a client, I had the opportunity to deeply explore Remix. I was particularly drawn to Remix because of its simplicity and its foundation built on top of React.
+
+As I embarked on the project, I found Remix to be an excellent fit for my needs. Its seamless integration with React allowed me to leverage my existing knowledge and skills while benefiting from Remix's unique features and capabilities.
+
+#### The worry
+
+<Image
+  src="blog/Screenshot_2023-06-27_at_22.09.58_vxxymn.webp"
+  alt="Creating Event"
+  width={600}
+  height={379}
+/>
+
+At one point in the development journey, I contemplated using the React Context API for creating a wizard form and transmitting the saved data to the server at the conclusion of each step. However, during my thought process, I stumbled upon a fascinating discussion on GitHub that completely shifted my perspective. The [discussion](https://github.com/remix-run/remix/discussions/2211) centered around the __Remix way__ of handling such scenarios, prompting me to reconsider my approach and align with the principles and practices of Remix.
+
+#### What's the Remix way?
+
+Saving all the data in session storage is the __Remix way__ without reaching out for a state or React Context API.
+
+```ts title=wizard-session.server.ts
+import { createCookieSessionStorage, redirect } from "@remix-run/node";
+
+export type WizardType = "event" | "coupon";
+
+type WizardSessionBase<Type extends WizardType> = {
+  type: Type;
+};
+
+export type EventWizardSession = WizardSessionBase<"event"> & {
+  id?: string;
+  slug?: string;
+  name: string;
+  date: string;
+  time: string;
+  price: string;
+ - // other fields
+}
+```
+
+I created a __WizardType__ which is a union type of two string literal types: __event__ and __coupon__. __WizardSessionBase__ which has a single property type of type Type. The Type parameter is constrained to be a subtype of WizardType. This means that Type can only be __event__ or __coupon__.
+
+The type __EventWizardSession__ which extends `WizardSessionBase<"event">`. This means that EventWizardSession has a type property of __event__. It also adds additional properties specific to an event wizard session, such as id, slug, name, date, time, and price.
+
+By using a generic type WizardSessionBase, it allows for code reuse and consistency across different types of wizard sessions. By constraining the Type parameter to be a subtype of WizardType, it ensures that only valid wizard types can be used.
+
+By extending `WizardSessionBase<"event">`, EventWizardSession inherits the type property with a value of __event__. This ensures that all event wizard sessions have a type property with a value of __event__, which can be used to differentiate between different types of wizard sessions.
+
+```ts title=wizard-session.server.ts
+export type CouponWizardSession = WizardSessionBase<"coupon"> & {
+  amount: number | null;
+  event: {
+    name: string;
+    date: string;
+    time: string;
+    location: string;
+    photos: string[];
+  };
+};
+
+type WizardSession = EventWizardSession | CouponWizardSession;
+
+const SESSION_KEY = "eventSession";
+```
+
+__CouponWizardSession__ is a type that extends `WizardSessionBase<"coupon">`. This means that CouponWizardSession has a type property of __coupon__. It also adds additional properties specific to a coupon wizard session, such as amount and event. The event property is an object that contains properties such as name, date, time, location, and photos.
+
+`WizardSession` is a union type of EventWizardSession and CouponWizardSession. This means that a variable of type WizardSession can be either an EventWizardSession or a CouponWizardSession.
+
+The last line defines a constant `SESSION_KEY` with a value of __eventSession__. This constant is likely used to store the wizard session in some sort of storage, such as local storage or a cookie.
+
+```diff-ts title=wizard-session.server.ts
++ const sessionStorage = createCookieSessionStorage({
++  cookie: {
++    name: "__eventSession",
++    httpOnly: true,
++    path: "/events",
++    sameSite: "lax",
++    secrets: ["s3cr3t"],
++    secure: process.env.NODE_ENV === "production",
++  },
++ });
+```
+
+This code defines a constant sessionStorage that is assigned the result of calling a function createCookieSessionStorage with an object argument that contains various properties for configuring a cookie-based session storage.
+
+The cookie property is an object that contains several properties:
+
+- __name:__ the name of the cookie, which is set to `__eventSession`
+- __httpOnly:__ a boolean value that determines whether the cookie is accessible only through HTTP(S) requests, which is set to true
+- __path:__ a string that specifies the path for which the cookie is valid, which is set to __/events__
+- __sameSite:__ a string that specifies the SameSite attribute for the cookie, which is set to __"lax"__
+- __secrets:__ an array of strings that are used to sign the cookie, which is set to `["s3cr3t"]`
+- __secure:__ a boolean value that determines whether the cookie is only sent over HTTPS, which is set to true if the NODE_ENV environment variable is set to "production", and false otherwise.
+
+The createCookieSessionStorage function likely returns an object that provides methods for storing and retrieving session data using the cookie-based storage mechanism.
+
+```ts title=wizard-session.server.ts
+async function getSession(request: Request) {
+  const cookie = request.headers.get("Cookie");
+  return sessionStorage.getSession(cookie);
+}
+
+export async function getWizardSession<T>(request: Request) {
+  const session = await getSession(request);
+  return session.get(SESSION_KEY) as T;
+}
+
+export async function getMaybeWizardSession<T>(request: Request) {
+  const wizardSession = await getWizardSession<T>(request);
+  return wizardSession || null;
+}
+
+export async function commitWizardSession(
+  request: Request,
+  wizardSession: Partial<WizardSession> | null
+) {
+  const session = await getSession(request);
+
+  // merge the existing session with the new data
+  if (wizardSession) {
+    session.set(SESSION_KEY, {
+      ...(session.get(SESSION_KEY) || {}),
+      ...wizardSession,
+    });
+  } else {
+    session.set(SESSION_KEY, null);
+  }
+
+  return sessionStorage.commitSession(session);
+}
+
+export async function destroyWizardSession(request: Request) {
+  const session = await getSession(request);
+
+  return redirect("/", {
+    headers: {
+      "Set-Cookie": await sessionStorage.destroySession(session),
+    },
+  });
+}
+```
+
+The __getSession__ function takes a Request object and returns a Promise that resolves to a session object retrieved from a session storage mechanism. The session object is retrieved using a cookie value from the Cookie header of the request.
+
+The __getWizardSession__ function takes a Request object and returns a Promise that resolves to a wizard session object of type T. The wizard session object is retrieved from the session object using a key SESSION_KEY. The SESSION_KEY constant is likely defined elsewhere in the codebase.
+
+The __getMaybeWizardSession__ function is similar to getWizardSession, but it returns null if the wizard session object is not found in the session object.
+
+The __commitWizardSession__ function takes a Request object and a partial wizard session object, and updates the session object with the new data. If the partial wizard session object is null, then the session object is set to null. The updated session object is then committed to the session storage mechanism.
+
+The __destroyWizardSession__ function takes a Request object and destroys the session object in the session storage mechanism. It then redirects the user to the root URL of the application.
+
+Then I created a hook that utilizes the wizard session
+
+```ts title=use-outlet-handle.ts
+import { useMatches } from "@remix-run/react";
+import type { WizardType } from "~/sessions/wizard-session.server";
+
+export type WizardHandle<T extends WizardType> = {
+  key: T;
+};
+
+export function useOutletHandle<T extends WizardHandle<WizardType>>(
+  key: T["key"]
+) {
+  const handles = useMatches()
+    .filter((match) => match.handle && match.handle.key === key)
+    .map((match) => match.handle);
+
+  if (handles.length === 0) {
+    throw new Error(`This route should export a handle with key ${key}`);
+  }
+
+  return handles as T[];
+}
+```
+
+WizardHandle which has a single property key of type T. The T parameter is constrained to be a subtype of WizardType. WizardType is likely defined elsewhere in the codebase as a union type of two string literal types: __event__ and __coupon__.
+
+The useOutletHandle function is a React hook that takes a key parameter of type __T["key"]__. It uses the useMatches hook from the @remix-run/react package to get an array of matches for the current route. It filters the matches to only include those that have a handle property with a key property that matches the key parameter. It then maps the matches to an array of handles.
+
+If there are no handles in the array, the function throws an error with a message that includes the key parameter. Otherwise, it returns the array of handles as type T[].
+
+This code is likely used in a Remix Run application to get a handle for a specific wizard type. The key parameter is likely a string literal type of __event__ or __coupon__. The useMatches hook is likely used to get the current route and its associated handle. The `useOutletHandle` function is likely used to get the handle for a specific wizard type, which can then be used to render the appropriate wizard component.
+
+Using the hook with Remix handle API.
+
+<Callout variant="info">
+    Handle allows you to create application conventions with the __useMatches()__ hook. The handle API handles whatever you put in there.
+</Callout>
+
+
+```ts title=events.new.tsx
+export type EventWizardHandle = WizardHandle<"event"> & {
+  title: string;
+  step: string;
+  submitButton: React.ReactElement;
+};
+```
+
+
+EventWizardHandle which extends `WizardHandle<"event">`. This means that EventWizardHandle has a type property of __event__. It also adds additional properties specific to an event wizard handle, such as title, step, and submitButton.
+
+The WizardHandle type is likely defined elsewhere in the codebase. It is a generic type that takes a type parameter Type which is constrained to be a subtype of WizardType. WizardType is likely defined elsewhere in the codebase as well, and is a union type of two string literal types: __event__ and __coupon__.
+
+By using a generic type WizardHandle, it allows for code reuse and consistency across different types of wizard handles. By constraining the Type parameter to be a subtype of WizardType, it ensures that only valid wizard types can be used.
+
+Before we continue, let's take a look at routes structure for the event pages.
+
+
+```bash title=Routes structure
+ |-- routes
+ |   |-- events
+ |   |-- events.new
+ |   |-- events.new.basic-info
+ |   |-- events.new.category
+ |   |-- events.new.locations
+ |   |-- events.new.misc
+ |   |-- events.new.photos
+ |   |-- events.new.status
+ |   |-- events.new.tickets
+ |   |-- events.new.preview
+```
+
+The file path is relative to the root directory of the project. It shows a directory structure with a routes directory, which likely contains the routes for the web application. Within the routes directory, there is an events directory, which likely contains the routes for events-related functionality.
+
+The remaining directories within the events directory are likely sub-routes for creating a new event. The events.new directory is likely the main route for creating a new event, and the remaining directories are likely child-routes for different steps in the event creation process, such as basic-info, category, locations, misc, photos, status, tickets, and preview.
+
+```ts title=events.new.basic-info.tsx
+// routes/events.tsx
+import { Outlet } from "@remix-run/react";
+
+export default function EventsScreen() {
+  return <Outlet />;
+}
+```
+
+The Outlet component is used in Remix Run applications to render the appropriate component for the current route. It is typically used as the root component for a page or screen.
+
+In this code, the EventsScreen component is likely used as the root component for the events-related routes in the application. When a user navigates to an events-related route, the Outlet component will render the appropriate component for that route.
+
+```ts title=events.new.basic-info.tsx
+// routes/events.new.tsx
+import type { WizardHandle } from "~/hooks/use-outlet-handle";
+import { useOutletHandle } from "~/hooks/use-outlet-handle";
+
+export type EventWizardHandle = WizardHandle<"event"> & {
+  title: string;
+  step: string;
+  submitButton: React.ReactElement;
+};
+
+const EventsNew = () => {
+const { title, step, submitButton } =
+useOutletHandle<EventWizardHandle>("event")[0];
+
+return (
+    <div>
+        <div>{title}</div>
+        <Outlet />
+        {step === "basic-info" && <BasicInfo />}
+        <div>{submitButton}</div>
+    </div>
+    );
+}
+```
+
+The __useOutletHandle__ hook is used to get the handle for the current event wizard. The [0] index is used to get the first handle in the array, which is likely the only handle for the current route.
+
+The title, step, and submitButton properties are destructured from the handle and used to render the appropriate UI for the event wizard. The title property is the title of the current step in the wizard. The step property is the current step in the wizard, and is used to conditionally render the appropriate component. The submitButton property is the submit button in the wizard.
+
+The Outlet component is used to render the appropriate component for the current route. It is likely used to render the appropriate component for each step in the event wizard.
+
+Now that we have a better understanding of the codebase, let's take a look at the code for the event wizard. Let's start with form validation.
+
+```ts title=events.new.basic-info.tsx
+import { z } from "zod";
+import { withZod } from "@remix-validated-form/with-zod";
+
+export const validator = withZod(
+  z.object({
+    nextStep: z.string().nonempty("Next step is required"),
+    name: z.string().nonempty("Event name is required"),
+    date: z.string().nonempty("Event date is required"),
+    time: z.string().nonempty("Event time is required"),
+    price: z
+      .string()
+      .nonempty("Event price is required")
+      .min(0, "Price must be greater than 0"),
+    description: z.string().nonempty("Event description is required"),
+  })
+);
+```
+
+The __z__ function is used to define a schema for validating data. It is a function that takes an object representing the schema and returns a ZodSchema object that can be used to validate data.
+
+The __withZod__ function is used to create a higher-order component that wraps a form component and provides validation using the schema defined with z. It is a function that takes a ZodSchema object and returns a function that takes a form component and returns a new component that wraps the form component with validation.
+
+The __validator__ constant is used to export the schema and validation function for use in other parts of the application. It is defined as the result of calling withZod with an object representing the schema for validating event data. The schema includes properties for nextStep, name, date, time, price, and description, each of which is defined using the z.string() function with additional validation rules.
+
+Next, let's look into how useful the handle API is for creating a wizard.
+
+```ts title=events.new.basic-info.tsx
+import type { EventWizardHandle } from "~/routes/events.new";
+import Button from "~/components/Button";
+
+export const handle: EventWizardHandle = {
+  key: "event",
+  title: "Basic Info",
+  step: "basic-info",
+  submitButton: <Button type="submit" form="basic-info" title="Next" />,
+};
+```
+
+The handle is defined as an object with properties for key, title, step, and submitButton. The key property is a unique identifier for the step. The title property is the title of the step. The step property is the name of the step, which is used to determine which component to render. The submitButton property is the submit button for the step, and is rendered as a Button component with a type of "submit", a form ID of "basic-info", and a title of "Next".
+
+To achieve our goal of displaying previously saved data in a form when visiting a specific route, we need to implement a data retrieval mechanism in our application. This ensures that the relevant data is fetched and seamlessly populated within the form.
+
+```ts title=events.new.basic-info.tsx
+import type { LoaderArgs } from "@remix-run/server-runtime";
+import { json } from "@remix-run/node";
+import type { EventWizardSession } from "~/sessions/wizard-session.server";
+import {
+  getMaybeWizardSession,
+} from "~/sessions/wizard-session.server";
+
+export async function loader({ request }: LoaderArgs) {
+  const eventWizardSession = await getMaybeWizardSession<EventWizardSession>(
+    request
+  );
+
+  return json(eventWizardSession);
+}
+```
+
+The __eventWizardSession__ object is obtained by calling the __getMaybeWizardSession__ function, which is defined in another module called wizard-session.server. This function takes a request object as its argument, which is also defined in the `@remix-run/server-runtime` module. The getMaybeWizardSession function returns a promise that resolves to an object of type EventWizardSession or null.
+
+The __json__ function is a helper function from the `@remix-run/node` module that serializes the eventWizardSession object to JSON format and sets the appropriate headers for the response.
+
+Now, let's create a an event wizard session to store the data for the event wizard.
+
+```ts title=events.new.basic-info.tsx
+import type { ActionArgs } from "@remix-run/server-runtime";
+import { redirect } from "@remix-run/node";
+import {
+  commitWizardSession,
+} from "~/sessions/wizard-session.server";
+import type { EventWizardSession } from "~/sessions/wizard-session.server";
+
+export async function action({ request }: ActionArgs) {
+  const formData = await request.formData();
+
+  const { name, date, time, description, price, nextStep } = Object.fromEntries(
+    formData
+  ) as Pick<
+    EventWizardSession,
+    "name" | "date" | "time" | "price" | "description"
+  > & {
+    nextStep: string;
+  };
+
+  return redirect(`/events/new/${nextStep}`, {
+    headers: {
+      "Set-Cookie": await commitWizardSession(request, {
+        name,
+        date,
+        time,
+        description,
+        price,
+      }),
+    },
+  });
+}
+```
+
+The action function is used to handle form submissions in the event creation process.
+
+- The formData is called on the request object to parse the form data submitted by the user.
+- The form data is then extracted and assigned to variables using destructuring.
+- The Object.fromEntries function is used to convert the form data into an object.
+- The redirect function is called to redirect the user to the next step in the event creation process.
+- The nextStep variable is used to construct the URL for the next step.
+- The commitWizardSession function is called to update the eventWizardSession object in the server session with the form data.
+- The Set-Cookie header is set to the updated eventWizardSession object.
+
+The action function returns a response object with the redirect function and the Set-Cookie header.
+
+Now, let's bring it all together and create a wizard session.
+
+```ts title=events.new.basic-info.tsx
+import React from "react";
+import type { V2_MetaFunction } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
+import { Stack } from "@chakra-ui/react";
+import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime";
+import { json, redirect } from "@remix-run/node";
+import { ValidatedForm } from "remix-validated-form";
+import { z } from "zod";
+import { withZod } from "@remix-validated-form/with-zod";
+import FormInput from "~/components/Form/FormInput";
+import FormNumber from "~/components/Form/FormNumber";
+import FormTextarea from "~/components/Form/FormTextarea";
+import type { EventWizardHandle } from "~/routes/events.new";
+import Button from "~/components/Button";
+import type { EventWizardSession } from "~/sessions/wizard-session.server";
+import {
+  commitWizardSession,
+  getMaybeWizardSession,
+} from "~/sessions/wizard-session.server";
+
+export const validator = withZod(
+  z.object({
+    nextStep: z.string().nonempty("Next step is required"),
+    name: z.string().nonempty("Event name is required"),
+    date: z.string().nonempty("Event date is required"),
+    time: z.string().nonempty("Event time is required"),
+    price: z
+      .string()
+      .nonempty("Event price is required")
+      .min(0, "Price must be greater than 0"),
+    description: z.string().nonempty("Event description is required"),
+  })
+);
+
+export const handle: EventWizardHandle = {
+  key: "event",
+  title: "Basic Info",
+  step: "basic-info",
+  submitButton: <Button type="submit" form="basic-info" title="Next" />,
+};
+
+export const meta: V2_MetaFunction = () => [
+  { title: `Create Event ${handle.title} Step | Culture Management Group` },
+];
+
+export async function loader({ request }: LoaderArgs) {
+  const eventWizardSession = await getMaybeWizardSession<EventWizardSession>(
+    request
+  );
+
+  return json(eventWizardSession);
+}
+
+export async function action({ request }: ActionArgs) {
+  const formData = await request.formData();
+
+  const { name, date, time, description, price, nextStep } = Object.fromEntries(
+    formData
+  ) as Pick<
+    EventWizardSession,
+    "name" | "date" | "time" | "price" | "description"
+  > & {
+    nextStep: string;
+  };
+
+  return redirect(`/events/new/${nextStep}`, {
+    headers: {
+      "Set-Cookie": await commitWizardSession(request, {
+        name,
+        date,
+        time,
+        description,
+        price,
+      }),
+    },
+  });
+}
+
+const BasicInfo = () => {
+  const data = useLoaderData<typeof loader>();
+
+  return (
+    <ValidatedForm
+      validator={validator}
+      id="basic-info"
+      method="post"
+      defaultValues={data as any}
+    >
+      <Stack spacing={6}>
+        <FormInput
+          label="Whats the name of this event?"
+          placeholder="Event name"
+          name="name"
+        />
+        <FormInput
+          label="When is this event happening?"
+          type="date"
+          name="date"
+        />
+        <FormInput label="What time does this event?" type="time" name="time" />
+        <FormNumber
+          label="How much does this ticket cost?"
+          name="price"
+          min={100}
+          step={50}
+        />
+        <FormTextarea label="What is this event about?" name="description" />
+      </Stack>
+
+      <input type="hidden" name="nextStep" value="lineups" />
+    </ValidatedForm>
+  );
+};
+
+export default BasicInfo;
+```
+
+The component also uses the ValidatedForm component from the remix-validated-form module to validate the form input. The validator function defines the validation schema using the zod library.
+
+The form has several input fields for the user to fill in, such as the name of the event, the date and time of the event, the price of the ticket, and a description of the event. Each input field is defined using a FormInput, FormNumber, or FormTextarea component from the remix-ui module.
+
+When the form is submitted, the action function is called. This function extracts the form data and updates the eventWizardSession object in the server session. It then redirects the user to the next step in the event creation process.
+
+The input element with type="hidden" is used to store the value of the next step in the event creation process. This value is passed to the action function when the form is submitted.
+
+<Info label="Key takeaways">
+
+In this article, I've shared my journey of building a wizard session in Remix. I've also shared some of the key takeaways from my experience.
+
+- Remix's server-side rendering approach makes it easy to create a wizard session.
+- The eventWizardSession object is stored in the server session.
+- The eventWizardSession object is updated using the commitWizardSession function.
+- The eventWizardSession object is retrieved using the getMaybeWizardSession function.
+- The action function is used to handle form submissions in the event creation process.
+- The action function uses the redirect function to redirect the user to the next step in the event creation process.
+- The action function uses the Set-Cookie header to update the eventWizardSession object in the server session.
+
+</Info>
+
+
+#### Conclusion
+
+In conclusion, my mental model of web application development underwent a transformation through my experience with Remix. I had to unlearn certain practices and embrace Remix's unique approach. By emphasizing server-side rendering, modularity, and extensibility, Remix challenged me to think differently and helped me build web applications that are performant, maintainable, and scalable. In this article, I've shared my journey and insights, and I hope it sparks inspiration for others to explore the exciting world of Remix.
+
+If you need help with your next project, [get in touch](https://twitter.com/sudocode_) with me. I'd love to hear from you!

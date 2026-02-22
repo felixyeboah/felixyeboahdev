@@ -1,0 +1,44 @@
+export const metadata = {
+  title: "MDX Docs",
+  description: "MDX components showcase with syntax highlighting and copy button.",
+};
+
+# MDX Setup Complete
+
+This route is rendered from an `.mdx` file and uses custom components from `mdx-components.tsx`.
+
+<Callout title="What you get" tone="success">
+  GitHub-style syntax highlighting, polished typography defaults, and a copy button for every fenced code block.
+</Callout>
+
+## Useful components
+
+- `Callout` with `info`, `success`, and `warning` tones.
+- Styled tables, blockquotes, inline code, and headings.
+- External links open in a new tab.
+
+## Code block with copy
+
+```tsx
+import { HugeiconsIcon } from "@hugeicons/react";
+import { SearchIcon } from "@hugeicons/core-free-icons";
+
+export function SearchBadge() {
+  return (
+    <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm">
+      <HugeiconsIcon icon={SearchIcon} size={16} />
+      Search ready
+    </div>
+  );
+}
+```
+
+## GFM table
+
+| Feature | Status |
+| --- | --- |
+| MDX route | Ready |
+| Code copy button | Ready |
+| Highlight theme | Ready |
+
+> Tip: Add more MDX pages under `src/app/**/page.mdx`.

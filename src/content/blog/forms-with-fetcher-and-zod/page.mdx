@@ -1,0 +1,379 @@
+---
+title: Forms with useFetcher and Zod in Remix
+date: '2023-07-01T10:00:00.000Z'
+updated: '2023-07-01T10:00:00.000Z'
+subtitle: Forms are an essential part of many web applications, enabling users to interact with the application by submitting data.
+categories: ['engineering', 'remix']
+keywords: ['remix', 'react', 'forms', 'zod']
+slug: forms-with-fetcher-and-zod
+cover: blog/pexels-scott-webb-8086280
+bannerAlt: Plants in a window
+bannerCredit: Photo by [Scott Webb](https://www.pexels.com/@scottwebb/)
+type: 'blogPost'
+featured: false
+---
+
+Forms are an essential part of many web applications, enabling users to interact with the application by submitting data. However, handling form submission and validation can be challenging. In this blog post, we will explore how to build forms using the useFetcher hook and Zod validation library in Remix, a versatile framework for building web applications. Combining these powerful tools allows for efficient form handling and validation, ensuring a smooth user experience. Let's dive in!
+
+<Info>
+    Before getting started, make sure you have a basic understanding of Remix.
+    If you are new to Remix, check out the [official
+    documentation](https://docs.remix.run/) and [egghead
+    course](https://egghead.io/playlists/getting-started-with-remix-2d2e) to get
+    up to speed.
+</Info>
+
+Working with Forms in Remix is a breeze. The framework provides a `Form` component that handles form submission and validation. However, the `Form` component is not the only way to handle forms in Remix. In this blog post, we will explore how to build forms using the `useFetcher` hook and Zod validation library.
+
+One of the primary features of Remix is simplifying interactions with the server to get data into components. The `useFetcher` hook allows us to call a loader outside its navigation, or call an action but doesn't change the URL.
+
+Let's start building a form to create a new blog post. We will use the `useFetcher` hook to call an action to create a new blog post.
+
+```tsx {{ filename: "app/posts/create.tsx" }}
+import { useFetcher } from 'remix';
+
+export default function CreatePost() {
+    const fetcher = useFetcher();
+
+    return (
+        <fetcher.Form
+            action="/posts" //can be ignored if the action is the same as the current URL
+            method="post"
+            className="space-y-4"
+            noValidate
+        >
+            <div>
+                <label htmlFor="title">Title</label>
+                <input id="title" name="title" type="text" />
+            </div>
+            <div>
+                <label htmlFor="body">Body</label>
+                <textarea id="body" name="body" />
+            </div>
+            <button type="submit">Create Post</button>
+        </fetcher.Form>
+    );
+}
+```
+
+Now, we can get the data from the form submission in the action handler.
+
+```tsx {{ filename: "app/posts/create.tsx" }}
+import { json, redirect } from 'remix';
+
+export async function action({ request }) {
+    const formData = await request.formData();
+    const title = formData.get('title');
+    const body = formData.get('body');
+
+    if (!title) {
+        return json({ error: 'Title is required' }, { status: 400 });
+    }
+
+    if (!body) {
+        return json({ error: 'Body is required' }, { status: 400 });
+    }
+
+    // create a new post
+    await db.posts.create({
+        data: {
+            title,
+            body,
+        },
+    });
+
+    return redirect('/posts');
+}
+```
+
+## Pending UI
+
+This approach seems to work fine but for a better user experience, let's find a way to show the user that we are submitting the data to the server.
+
+```tsx {{ filename: "app/posts/create.tsx" }}
+import { useFetcher } from 'remix';
+
+export default function CreatePost() {
+    const fetcher = useFetcher();
+
+    const isSubmitting = fetcher.state === 'submitting'; // this is true when the form is submitting
+
+    return (
+        <fetcher.Form
+            action="/posts" //can be ignored if the action is the same as the current URL
+            method="post"
+            className="space-y-4"
+            noValidate
+        >
+            <div>
+                <label htmlFor="title">Title</label>
+                <input id="title" name="title" type="text" />
+            </div>
+            <div>
+                <label htmlFor="body">Body</label>
+                <textarea id="body" name="body" />
+            </div>
+            <button type="submit">
+                {isSubmitting ? 'Submitting' : 'Create Post'} // show submitting
+                when the form is submitting
+            </button>
+        </fetcher.Form>
+    );
+}
+```
+
+## Zod Validation
+
+Now, let's add some validation to the form. We will use the Zod validation library to validate the form data.
+
+```tsx {{ filename: "app/posts/create.tsx" }}
+import { json, redirect } from '@remix-run/node';
+import { ActionFunctionArgs } from '@remix-run/router';
+import { useFetcher } from 'remix';
+import { z } from 'zod';
+
+const schema = z.object({
+    title: z.string().min(3).max(50),
+    body: z.string().min(3).max(500),
+});
+
+async function action({ request }: ActionFunctionArgs) {
+    const formData = await request.formData();
+    const data = await schema.parseAsync(Object.fromEntries(formData));
+
+    if (!data.title) {
+        return json({ error: 'Title is required' }, { status: 400 });
+    }
+
+    // create a new post
+    await db.posts.create({
+        data,
+    });
+
+    return redirect('/posts');
+}
+
+function CreatePost() {
+    const fetcher = useFetcher();
+
+    const hasError = fetcher.data?.error; // this is true when the form has an error
+
+    return (
+        <fetcher.Form
+            action="/posts" //can be ignored if the action is the same as the current URL
+            method="post"
+            className="space-y-4"
+        >
+            <div>
+                <label htmlFor="title">Title</label>
+                <input id="title" name="title" type="text" />
+                {hasError && (
+                    <p className="text-red-500">{fetcher.data.error}</p>
+                )}{' '}
+                // show the error message if the form has an error
+            </div>
+            <div>
+                <label htmlFor="body">Body</label>
+                <textarea id="body" name="body" />
+            </div>
+            <button type="submit">Create Post</button>
+        </fetcher.Form>
+    );
+}
+```
+
+We can send data to the server, let's fetch the data from the server and display it on the page. Also, we can implement deleting a post.
+
+```tsx {{ filename: "app/posts/index.tsx" }}
+import { useFetcher } from "remix";
+import { ActionFunctionArgs } from "@remix-run/router";
+import {json,redirect} from "@remix-run/node";
+import {useLoaderData} from "@remix-run/react";
+
+async function loader() {
+  const posts = await db.posts.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return json(posts);
+}
+
+async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const id = formData.get("id");
+
+    if (!id) {
+        return json({ error: "Id is required" }, { status: 400 });
+    }
+
+    // delete a post
+    await db.posts.delete({
+        where: {
+            id
+        },
+    });
+
+  return redirect("/posts");
+}
+
+export default const Posts = () => {
+  const data = useLoaderData<typeof loader>();
+  const fetcher = useFetcher();
+
+  return (
+    <fetcher.Form>
+      <h1>Posts</h1>
+      <ul>
+        {data.map((post) => (
+          <li key={post.id}>
+            <h2>{post.title}</h2>
+            <input type="hidden" name="id" value={post.id} /> // we need to send the id of the post to the server
+            <button type="submit">
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+      <CreatePost />
+    </fetcher.Form>
+  );
+};
+```
+
+## Optimistic UI
+
+Deleting a post works fine but what if we want to delete multiple posts at once. This is where optimistic UI comes in. We can delete the post from the UI before sending the request to the server. If the request fails, we can revert the changes.
+
+```tsx {{ filename: "app/posts/index.tsx" }}
+import { useFetcher } from "remix";
+import { ActionFunctionArgs } from "@remix-run/router";
+import {json} from "@remix-run/node";
+import {useLoaderData} from "@remix-run/react";
+
+async function loader() {
+  const posts = await db.posts.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return json(posts);
+}
+
+async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const id = formData.get("id");
+
+    if (!id) {
+        return json({ error: "Id is required" }, { status: 400 });
+    }
+
+    // we can use try catch to catch the error to revert the changes
+    try {
+        // delete a post
+        await db.posts.delete({
+            where: {
+                id
+            },
+        });
+    } catch (error) {
+        return json({ error: error.message }, { status: 500 });
+    }
+}
+
+export default const Posts = () => {
+  const data = useLoaderData<typeof loader>();
+  const fetcher = useFetcher();
+
+  const isDeleting = fetcher.formData.get('id') // check if the form is submitting and the id is present
+  const isFailed = fetcher.data?.error
+
+  return (
+    <fetcher.Form>
+      <h1>Posts</h1>
+      <ul>
+        {data.map((post) => (
+          <li key={post.id} hidden={isDeleting === post.id} color={isFailed ? 'red': ""}> // hide the post if the form is submitting and the id is present
+            <h2>{post.title}</h2>
+            <input type="hidden" name="id" value={post.id} /> // we need to send the id of the post to the server
+            <button type="submit">
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+      <CreatePost />
+    </fetcher.Form>
+  );
+};
+```
+
+We added try catch to the action to catch any errors and revert the changes back to the UI if deletion fails. And we checked in the UI if the data submitted has the id, and if it does, we hide the post.
+
+Now, let's do same for creating a post.
+
+```tsx {{ filename: "app/posts/index.tsx" }}
+import { useFetcher } from "remix";
+import {json} from "@remix-run/node";
+import {useLoaderData} from "@remix-run/react";
+
+async function loader() {
+  const posts = await db.posts.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return json(posts);
+}
+
+export default const Posts = () => {
+  const data = useLoaderData<typeof loader>();
+  const fetcher = useFetcher();
+
+  const isDeleting = fetcher.formData.get('id') // check if the form is submitting and the id is present
+  const isFailed = fetcher.data?.error
+
+  // fetcher presents us with
+  const hasTitle  = fetcher.formData.get('title') // check if the form is submitting and the title is present
+
+  return (
+    <fetcher.Form>
+      <h1>Posts</h1>
+      <ul>
+        {data.map((post) => (
+          <li key={post.id} hidden={isDeleting === post.id} color={isFailed ? 'red': ""}> // hide the post if the form is submitting and the id is present
+            <h2>{post.title}</h2>
+            <input type="hidden" name="id" value={post.id} /> // we need to send the id of the post to the server
+            <button type="submit">
+              Delete
+            </button>
+          </li>
+        ))}
+        // we add this section when the form is submitting and the title is present
+        {
+            hasTitle && (
+                <li>
+                    <h2>{fetcher.formData.get('title')}</h2>
+                    <button type="submit">
+                        Delete
+                    </button>
+                </li>
+            )
+        }
+      </ul>
+      <CreatePost />
+    </fetcher.Form>
+  );
+};
+```
+
+We added a section to the UI to show the post when the form is submitting and the title is present.
+
+There's a lot you can do with `useFetcher`. You can check out the [docs](https://remix.run/docs/en/main/hooks/use-fetcher) for more information.
+
+## Conclusion
+
+In this tutorial, we learned how to use `useFetcher` hook to create a form that submits data to the server and how to use optimistic UI to make the user experience better.

@@ -1,0 +1,327 @@
+---
+title: How i got sold on Remix
+date: '2023-06-21T10:00:00.000Z'
+updated: '2023-06-21T10:00:00.000Z'
+subtitle: One of the primary features of Remix is simplifying interactions with the server to get data into components.
+categories: ['engineering', 'remix']
+keywords: ['remix', 'react', 'framework', 'dx', 'ux']
+slug: how-i-got-sold-on-remix
+cover: blog/pexels-scott-webb-7145555
+bannerAlt: A beautiful plant in a pot on a table
+bannerCredit: Photo by [Scott Webb](https://www.pexels.com/@scottwebb/)
+type: 'blogPost'
+featured: true
+---
+
+For over 7 years, I've been immersed in the world of frontend development, constantly exploring different frameworks, tools, and libraries. I've hopped from Vue.js, Nuxt.js, and Gridsome to React.js, Next.js, and Gatsby.js, all in pursuit of the perfect framework that would elevate my skills as a developer.
+
+During the past 5 years, React.js has been my primary focus. Within that timeframe, I've transitioned from Gatsby.js to Next.js and even dabbled in Blitz.js. Throughout my journey, developer experience (DX) has remained a top priority for me. I've yearned for a framework that would truly empower me and help me grow as a developer, and I believe I may have found it in Remix.
+
+<Callout variant="info" label="Importance of DX">
+  While UX/UI holds great significance, we mustn't overlook the importance of
+  DX— the experience of developers working with a framework.
+</Callout>
+
+Although I primarily identify as a frontend developer, I've been eager to delve into backend development since 2019. However, I've often found myself daunted by the perceived complexity of backend development. It was during this time that I became deeply involved with Next.js, enticed by the allure of full-stack development.
+
+Next.js allowed me to create impressive projects with ease, enabling the development of full-stack applications. Nonetheless, it had its own limitations, particularly in terms of DX. While it didn't hinder me significantly, I yearned for a framework that would truly empower and elevate my abilities as a developer.
+
+Now, one will ask why I am so pumped about Remix. [From Remix Blog](https://remix.run/blog/remix-data-flow): “one of the primary features of Remix is simplifying interactions with the server to get data into components.” Remix extends the flow of data across the network, making it truly one-way and cyclical: from the server (state), to the client (view), and back to the server (action).
+
+<Image
+  src="blog/Remix_Data_Flow_xrnhg2.png"
+  alt="Remix Data Flow"
+  width={600}
+  height={379}
+/>
+
+In Remix, you don't worry about using states as Remix keeps client-side state in sync with the server. You set mutation functions on the server via actions, and Remix will automatically prefetch up to-date data via the loaders and re-render the view.
+
+<Image
+  src="blog/Remix_Data_Flow_1_usgd2q.png"
+  alt="Remix Data Flow"
+  width={600}
+  height={379}
+/>
+
+As seen in the picture above, the data flow is cyclical. The server sends data to the client via the loader, the client sends data back to the server via the action, and the action sync with the loader. This is the Remix data flow.
+
+## Working with Forms
+
+In the client, the `Form` component imported from Remix is used to handle form submission. The `Form` component takes a `method` prop, which is the HTTP method to use when submitting the form. The `Form` component also takes an `action` prop, which is the URL to submit the form to. The `Form` component also takes a `replace` prop, which is a boolean that determines whether the browser history should be replaced or not.
+
+```jsx title=working with forms
+import { Form } from 'remix';
+
+export default function Index() {
+  return (
+    <Form method="post" action="/login" replace>
+      <label>
+        Email
+        <input type="email" name="email" />
+      </label>
+      <label>
+        Password
+        <input type="password" name="password" />
+      </label>
+      <button type="submit">Login</button>
+    </Form>
+  );
+}
+```
+
+Most times,
+you don't even need the `action` on the `Form` component
+if the action is in the same route as the `Form` component
+unless the `Form` component is in a different route or a resource route.
+
+```jsx title=working with forms
+import { Form, json, redirect } from 'remix';
+
+// Action
+export default async function action({ request }) {
+  const formData = await request.formData();
+  const email = formData.get('email');
+  const password = formData.get('password');
+
+  //check if email and password is valid
+  if (email === ' ' || password === ' ') {
+    return json({ message: 'Email or password is invalid' }, { status: 400 });
+  }
+
+  //send data to db or backend
+  const user = await db.users.create({ email, password });
+  return redirect(`/dashboard/${user.id}`);
+}
+
+// Component
+export default function Index() {
+  return (
+    <Form method="post">
+      <label>
+        Email
+        <input type="email" name="email" />
+      </label>
+      <label>
+        Password
+        <input type="password" name="password" />
+      </label>
+      <button type="submit">Login</button>
+    </Form>
+  );
+}
+```
+
+`useFetcher` is also a hook that is used to send data to the server. It takes a `method` argument, which is the HTTP method to use when sending data to the server.
+
+```jsx title=working with forms
+import { useFetcher } from 'remix';
+
+export default function Index() {
+  const login = useFetcher();
+
+  return (
+    <login.Form method="post">
+      <label>
+        Email
+        <input type="email" name="email" />
+      </label>
+      <label>
+        Password
+        <input type="password" name="password" />
+      </label>
+      <button type="submit">Login</button>
+    </login.Form>
+  );
+}
+```
+
+## Handling Data on the Server
+
+Now, it's the job of the `action` to handle the data sent from the client.
+The `action` is a server-only function to handle data mutations and other actions.
+If a non-GET request is made to your route (POST, PUT, PATCH, DELETE)
+then the action is called before the loaders.
+
+Remix runs the action server side, revalidates data client side, and even handles race conditions from resubmissions.
+
+```jsx title=handling data on the server
+import { json, redirect } from 'remix';
+
+export default async function action({ request }) {
+  const formData = await request.formData();
+  const email = formData.get('email');
+  const password = formData.get('password');
+
+  //check if email and password is valid
+  if (email === ' ' || password === ' ') {
+    return json({ message: 'Email or password is invalid' }, { status: 400 });
+  }
+
+  //send data to db or backend
+  const user = await db.users.create({ email, password });
+  return redirect(`/dashboard/${user.id}`);
+}
+```
+
+Validate user input on the server and render validation errors in the client with ease thanks to `useActionData`.
+
+<Callout variant="info" label="useActionData">
+  <StaticTweet id="1630965969849040901" />
+</Callout>
+
+## Handling Errors on the Client
+
+Errors can be displayed on the client via the useActionData hook.
+The useActionData hook returns the data sent from the server.
+
+```jsx title=handling errors on the client
+import { useActionData, useFetcher } from 'remix';
+
+export default function Index() {
+  const data = useActionData();
+  const login = useFetcher();
+
+  return (
+    <div>
+      <p className="text-sm text-red-500">
+        {data.message && <p>{data.message}</p>}
+      </p>
+      <login.Form method="post" action="/login" replace>
+        <label>
+          Email
+          <input type="email" name="email" />
+        </label>
+        <label>
+          Password
+          <input type="password" name="password" />
+        </label>
+        <button type="submit">Login</button>
+      </login.Form>
+    </div>
+  );
+}
+```
+
+oh and that's not all with `Form` in remix, there's a lot more.
+
+<Callout variant="info" label="HTML Form">
+  <StaticTweet id="1633875230040150016" />
+</Callout>
+
+<Callout variant="info" label="Prefetch page links">
+  <StaticTweet id="1631684701797892097" />
+</Callout>
+
+## Consuming Data from the Server
+
+Most of the work we do on the client is consuming data from the server,
+Remix makes that even easier with the `useLoaderData` hook.
+This hook returns the JSON parsed from the `route` loader function.
+
+```jsx title=consuming data from the server
+import { useLoaderData } from 'remix';
+
+export default function Index() {
+  const data = useLoaderData();
+
+  return (
+    <div>
+      <p>{data.message}</p>
+    </div>
+  );
+}
+```
+
+## Fetching Data from the DB
+
+Since we know how to consume data from the server, let's see how to fetch data from the db or backend.
+The loader function only runs on the server. Remix calls this function via `fetch` from the browser and on the initial render on the server, provides data to the HTML document.
+`loader` is GET only, so it's not used for data mutations.
+
+```jsx title=fetching data from the db
+export default async function loader({ request }) {
+  const user = await db.users.find({ id: request.params.id });
+  return json({ user });
+}
+```
+
+## Streaming Data on the Server
+
+Streaming data on the server is a great way to improve performance and user experience.
+This is done by utilizing the `defer` function from Remix.
+`Defer` is a `utf-8` encoded JSON string that behaves just like `json`,
+but with the ability to transport promises to your UI components.
+
+```jsx title=streaming data on the server
+import { defer } from '@remix-run/cloudflare';
+
+export async function loader({ request }) {
+  //not awaited, will stream in when ready
+  const users = db.users.find({ id: request.params.id });
+
+  //awaited, will load before rendering
+  const posts = await db.posts.find({ id: request.params.id });
+  return defer({ users, posts });
+}
+```
+
+## Optimistic UI
+
+According to Remix Docs, Optimistic UI is a pattern to avoid showing busy spinners in your UI and make your application feel like it's responding instantly to user interactions that change data on the server. Even though it will take some time to make it to the server to be processed, we often have enough information in the UI that sent it to fake it. If for some reason it fails, we can then notify the user that there was a problem. In the vast majority of cases, it doesn't fail, and the app can respond instantly to the user's interactions. Read more on [Optimistic UI](https://remix.run/docs/en/1.17.1/guides/optimistic-ui).
+
+## Handling Client Errors
+
+In Remix, each route module can export an error boundary next to the component that renders the UI. If an error is thrown, client or server side, users see the boundary instead of the default component.
+
+```jsx title=handling client errors
+export function ErrorBoundary({ error }) {
+  console.error(error);
+  return (
+    <div>
+      <h2>Oh snap!</h2>
+      <p>There was a problem loading this invoice</p>
+    </div>
+  );
+}
+```
+
+If a route has no boundary, errors are caught by the error boundary in the parent route file which is the `root.tsx`.
+
+At this point,
+I hope I have been able to convince you that Remix is a great framework for building web apps.
+If you are still not convinced,
+I will be sharing some resources that will help you get started with Remix.
+
+## Remix Stacks
+
+Remix Stacks is a feature of the Remix CLI that allows you to generate a Remix project quickly and easily. There are several built-in and official stacks that are full-blown applications. There are few Stacks created by Remix, and you can check them out [here](https://remix.run/docs/en/1.17.1/pages/stacks#custom-stacks) but also, other developers have built their own stacks, and you can check them out on Github by Searching for `remix-stacks`.
+
+[Epic Stack](https://www.epicweb.dev/epic-stack) by [Kent C. Dodds](https://twitter.com/kentcdodds) is an opinionated project starter that allows teams to ship their ideas to production faster and on a more stable foundation. It comes with a lot of features out of the box, and it's a great stack to use if you want to build a web app with Remix.
+
+<Image
+  src="blog/Epic_Stack_Logos.svg"
+  alt="Epic Stack Logos"
+  width={600}
+  height={379}
+/>
+
+Acccording to Kent, the primary goal of the Epic Stack is to help your team get over analysis paralysis by giving you solid opinions for technologies to use to build your web application. [Read More on](https://www.epicweb.dev/epic-stack) the Epic Stack.
+
+Currently building [La Ferme Victoire](https://la-ferme-victoire-347a.fly.dev/) with Remix and Epic Stack.
+
+### Conclusion
+
+If you're seeking a framework that can enhance your web development skills, I highly recommend giving Remix a try. In my experience, Remix has proven to be an exceptional framework that not only empowers developers but also encourages continuous learning. Instead of solely relying on their documentation, Remix redirects you to valuable resources like [MDN](https://developer.mozilla.org/en-US/) and [Web.dev](https://web.dev/), allowing you to expand your knowledge and discover new concepts that may have eluded you throughout your years as a developer. To delve deeper into Remix, I encourage you to explore the [Remix Docs](https://remix.run/docs/en/main), where you can find comprehensive information and insights about this remarkable framework.
+
+If you decide to learn Remix, you’ll organically also learn:
+
+- A lot about web fundamentals
+- Databases and ORM
+- API design
+- Authentication, Cookies, and Sessions
+- Caching
+- Testing
+- Performance
+- Continuous Integration and Deployment
+- And more!

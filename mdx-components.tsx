@@ -1,6 +1,7 @@
 import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
 import { Callout } from "@/components/mdx/callout";
+import { CloudinaryImage } from "@/components/mdx/cloudinary-image";
 import { CodeBlock } from "@/components/mdx/code-block";
 import { Tweet } from "react-tweet";
 
@@ -121,21 +122,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         <Tweet id={id} />
       </div>
     ),
-    Image: (props: any) => {
-      let src = props.src;
-      // Handle Cloudinary URLs from previous Remix setup if needed
-      if (src && !src.startsWith("http") && !src.startsWith("/")) {
-        src = `https://res.cloudinary.com/felixyeboah/image/upload/v1/${src}`;
-      }
-      return (
-        /* eslint-disable-next-line @next/next/no-img-element */
-        <img
-          src={src}
-          alt={props.alt || "Blog image"}
-          className="my-8 w-full rounded-xl border border-foreground/10"
-        />
-      );
-    },
+    Image: (props: any) => (
+      <CloudinaryImage
+        src={props.src}
+        alt={props.alt}
+        width={props.width}
+        height={props.height}
+      />
+    ),
     ...components,
   };
 }

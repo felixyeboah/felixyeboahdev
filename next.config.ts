@@ -24,6 +24,17 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  images: {
+    loader: "custom",
+    loaderFile: "./src/lib/cloudinary-loader.ts",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+    ],
+  },
   turbopack: {
     root: process.cwd(),
   },

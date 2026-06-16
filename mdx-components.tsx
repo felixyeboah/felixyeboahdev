@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Callout } from "@/components/mdx/callout";
 import { CloudinaryImage } from "@/components/mdx/cloudinary-image";
 import { CodeBlock } from "@/components/mdx/code-block";
-import { Tweet } from "react-tweet";
+import { StaticTweet as SafeTweet } from "@/components/mdx/static-tweet";
 
 function isInternalLink(href: string) {
   return href.startsWith("/") || href.startsWith("#");
@@ -93,15 +93,22 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     td: (props) => (
       <td className="border-b border-foreground/10 px-4 py-2" {...props} />
     ),
-    code: ({ className, ...props }) =>
-      className ? (
+    code: ({ className, ...props }: any) => {
+      // rehype-pretty-code annotates highlighted/block code with data-language /
+      // data-theme (and no className). Those must render as-is — the <pre> styles
+      // them. Only genuine inline code gets the pill treatment, otherwise the pill's
+      // background sits on the grid-locked <code> and tears on horizontal scroll.
+      const isHighlighted =
+        Boolean(className) || "data-language" in props || "data-theme" in props;
+      return isHighlighted ? (
         <code className={className} {...props} />
       ) : (
         <code
           className="rounded-md bg-foreground/10 px-1.5 py-1 font-mono text-[0.9em] text-foreground"
           {...props}
         />
-      ),
+      );
+    },
     pre: (props) => <CodeBlock {...props} />,
     Callout: ({ variant, label, title, tone, children, ...props }: any) => (
       <Callout
@@ -119,7 +126,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ),
     StaticTweet: ({ id }: any) => (
       <div className="my-6 flex justify-center">
-        <Tweet id={id} />
+        <SafeTweet id={id} />
       </div>
     ),
     Image: (props: any) => (

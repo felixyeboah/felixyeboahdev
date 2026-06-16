@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Callout } from "@/components/mdx/callout";
 import { CloudinaryImage } from "@/components/mdx/cloudinary-image";
 import { CodeBlock } from "@/components/mdx/code-block";
-import { Tweet } from "react-tweet";
+import { StaticTweet as SafeTweet } from "@/components/mdx/static-tweet";
 
 function isInternalLink(href: string) {
   return href.startsWith("/") || href.startsWith("#");
@@ -126,7 +126,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ),
     StaticTweet: ({ id }: any) => (
       <div className="my-6 flex justify-center">
-        <Tweet id={id} />
+        <SafeTweet id={id} />
       </div>
     ),
     Image: (props: any) => (

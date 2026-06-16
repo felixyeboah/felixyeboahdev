@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { notFound } from "next/navigation";
 import { useMDXComponents } from "../../../../mdx-components";
@@ -67,26 +68,36 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
   const date = new Date(frontmatter.date || "1970-01-01");
   const formattedDate = date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  const words = content.trim().split(/\s+/).length;
+  const readingTime = Math.max(1, Math.round(words / 200));
 
   const components = useMDXComponents({});
 
   return (
     <article className="pb-20">
-      <header className="mb-12 space-y-6">
-        <div className="space-y-2">
-          <h1 className="text-xl font-bold tracking-tight text-foreground">
+      <Link
+        href="/"
+        className="group mb-10 inline-flex items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.25em] text-foreground/40 transition-colors hover:text-accent"
+      >
+        <span className="transition-transform group-hover:-translate-x-0.5">←</span>
+        Index
+      </Link>
+      <header className="mb-12 space-y-5">
+        <div className="space-y-3">
+          <h1 className="font-serif text-3xl font-semibold leading-tight tracking-tight text-foreground">
             {frontmatter.title}
           </h1>
-          <div className="flex items-center text-sm text-foreground/40 tabular-nums">
+          <div className="flex items-center gap-2 font-mono text-xs text-foreground/40 tabular-nums">
             <time dateTime={date.toISOString()}>{formattedDate}</time>
+            <span className="text-accent">/</span>
+            <span>{readingTime} min read</span>
           </div>
         </div>
         {frontmatter.subtitle && (
-          <p className="text-foreground/60 text-base leading-relaxed">
+          <p className="font-serif text-lg italic leading-relaxed text-foreground/60">
             {frontmatter.subtitle}
           </p>
         )}
-
       </header>
 
       <div className="prose-custom">
@@ -104,6 +115,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                       dark: "github-dark-default",
                       light: "github-light",
                     },
+                    defaultColor: false,
                     keepBackground: false,
                   },
                 ],

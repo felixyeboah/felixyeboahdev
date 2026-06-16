@@ -31,7 +31,7 @@ export const projects: Project[] = [
   { name: "Dasheen Atelier", url: "https://dasheenatelier.com/", category: "Fashion", featured: true },
   { name: "Dronehub", url: "https://dronehub.vercel.app/", category: "Drones" },
   { name: "UAVOps", url: "https://uavops.vercel.app/", category: "Aerial Data" },
-  { name: "Blavior", url: "https://blavior.vercel.app/", category: "Software" },
+  { name: "Blavior", url: "https://blavior.io/", category: "Software" },
   { name: "The Rumson", url: "https://therumson.com", category: "Restaurant" },
   { name: "7even Sports Group", url: "https://7evensportsgroup.com", category: "Sports" },
   { name: "Push & Pull Cosmetics", url: "https://www.pnpcosmetics.com", category: "Skincare" },

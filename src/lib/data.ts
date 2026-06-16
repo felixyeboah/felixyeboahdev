@@ -39,7 +39,7 @@ export const projects: Project[] = [
   { name: "CSS", url: "https://techbycss.com/", category: "Tech Solutions" },
   { name: "The Arck Interior LTD", url: "https://thearckinteriorltd.com/", category: "Interior Design" },
   { name: "Desmond Weds Akyeamaa", url: "https://dna-8a83.fly.dev", category: "Wedding" },
-  { name: "Undisciplined", url: "https://undisciplined.xyz/", category: "Studio" },
+  { name: "Undisciplined", url: "https://undisciplined.vercel.app/", category: "Studio" },
 ];
 
 export const featuredProjects = projects.filter((p) => p.featured);

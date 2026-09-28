@@ -1,0 +1,230 @@
+{
+  "slug": "studio-theon",
+  "status": "live",
+  "url": "https://www.studiotheon.com/",
+  "checkedAt": "2026-09-27",
+  "pages": [
+    "https://www.studiotheon.com/",
+    "https://www.studiotheon.com/services",
+    "https://www.studiotheon.com/projects",
+    "https://www.studiotheon.com/about",
+    "https://www.studiotheon.com/brandler",
+    "https://www.studiotheon.com/learned",
+    "https://www.studiotheon.com/careers",
+    "https://www.studiotheon.com/modules/insait-accelerated-program",
+    "https://www.studiotheon.com/modules/workshop",
+    "https://www.studiotheon.com/contact",
+    "https://www.studiotheon.com/projects/360-furnishings",
+    "https://www.studiotheon.com/projects/dasheen-atelier",
+    "https://www.studiotheon.com/projects/chow-pae",
+    "https://www.studiotheon.com/terms-and-conditions",
+    "https://www.studiotheon.com/privacy-policy",
+    "https://www.studiotheon.com/fonts",
+    "https://www.studiotheon.com/sitemap",
+    "https://www.studiotheon.com/company-information",
+    "https://www.studiotheon.com/cookie-preferences",
+    "https://www.studiotheon.com/projects/farmwell-consult",
+    "https://www.studiotheon.com/projects/ayekoo-honey",
+    "https://www.studiotheon.com/projects/logiciele-labs",
+    "https://www.studiotheon.com/projects/whitestone-dental",
+    "https://www.studiotheon.com/projects/complete-farmer",
+    "https://www.studiotheon.com/projects/hadarah-naturals"
+  ],
+  "evidence": {
+    "stack": [
+      {
+        "name": "Next.js",
+        "evidence": "x-powered-by: Next.js, Payload header; window.next.version = 15.4.8"
+      },
+      {
+        "name": "Payload CMS",
+        "evidence": "x-powered-by: Next.js, Payload header"
+      },
+      {
+        "name": "Tailwind CSS",
+        "evidence": "\"tailwindcss v4.1.12\" banner in the stylesheet"
+      },
+      {
+        "name": "GSAP",
+        "evidence": "GreenSock / gsap.com markers in the JS bundles"
+      },
+      {
+        "name": "Lenis",
+        "evidence": "html.lenis class at runtime"
+      },
+      {
+        "name": "Radix UI",
+        "evidence": "data-radix attributes / radix-ui in the bundles"
+      }
+    ],
+    "hosting": "Vercel (server: Vercel, x-vercel-id, x-vercel-cache)",
+    "other": [
+      "74 further internal links not crawled one by one (Brandler product/category/help pages and /courses/* pages); their titles were read from the nav",
+      "Homepage hero is a 3-slide carousel; the captured slide is the live \"Get beautifully crafted seasonal souvenirs\" slide, so the existing tagline still holds",
+      "Portfolio lists 15 client projects, including Dasheen Atelier (also in this portfolio)",
+      "Brandler page contains a placeholder line (\"with Founder & CEO John Doe\"); /terms-and-conditions, /privacy-policy, /fonts, /sitemap, /company-information, /cookie-preferences render almost empty",
+      "Careers and module pages use a generic <title>"
+    ]
+  },
+  "tagline": [
+    "A creative digital agency site",
+    "with a storefront for seasonal souvenirs and gifts."
+  ],
+  "credits": [
+    [
+      "Category",
+      "Agency",
+      null
+    ],
+    [
+      "Built with",
+      "Next.js, Payload CMS, Tailwind CSS",
+      "detected on the live site"
+    ],
+    [
+      "Hosting",
+      "Vercel",
+      "detected on the live site"
+    ]
+  ],
+  "stage": {
+    "src": "/assets/case/studio-theon-s0.jpg",
+    "w": 2160,
+    "h": 1350,
+    "alt": "Studio Theon homepage: \"Get beautifully crafted seasonal souvenirs\" and a Shop Now button over green gift boxes, under the green Theon bar and navigation",
+    "bar": "studiotheon.com"
+  },
+  "brief": {
+    "statement": "One site for an agency that does five things:",
+    "muted": "client work, a print shop, a school, courses and hiring.",
+    "story": [
+      {
+        "h": "The studio",
+        "body": [
+          "StudioTheon calls itself a DesignTech company: brand identity, UI/UX, motion and animation, web and mobile development, print and packaging.",
+          "Its portfolio runs from full branding for 360 Furnishings and Dasheen Atelier to visual identities for ChowPae, Farmwell and Ayekoo Honey."
+        ]
+      },
+      {
+        "h": "The site",
+        "body": [
+          "The navigation mirrors the business: Services, Projects, About, Products, Careers and Learn.",
+          "Fifteen projects each get their own case page, laid out as overview, problems and solutions, research, design stages and results. The services page lists every design and development service with its starting timeline."
+        ]
+      },
+      {
+        "h": "Beyond client work",
+        "body": [],
+        "list": [
+          [
+            "Brandler.",
+            "A print storefront for business cards, postcards, stickers, packaging and merchandise, with next-day delivery on selected products."
+          ],
+          [
+            "Insait.",
+            "An accelerated programme with four tracks: graphic design and motion, digital marketing, voiceover acting for animation, and programming."
+          ],
+          [
+            "Workshops.",
+            "Short courses in 2D and 3D animation, UI/UX, brand identity and design technology."
+          ]
+        ]
+      }
+    ]
+  },
+  "notes": {
+    "label": "Inside the site",
+    "title": "An agency, a print shop <span class=\"soft\">and a school.</span>",
+    "items": [
+      [
+        "Case studies",
+        "Fifteen client projects, each with the problem, the research, the design stages and the result."
+      ],
+      [
+        "Brandler storefront",
+        "Product categories, a business plan, sample packs and help pages under one shop."
+      ],
+      [
+        "Insait programme",
+        "Tracks, a full scholarship offer and instructors for the accelerated programme, with an application route."
+      ],
+      [
+        "Contact and careers",
+        "A project form that asks for the service and budget and takes an attachment, and a list of open roles."
+      ]
+    ],
+    "chips_label": "Stack",
+    "chips": [
+      "Next.js",
+      "Payload CMS",
+      "Tailwind CSS",
+      "GSAP",
+      "Lenis",
+      "Vercel"
+    ]
+  },
+  "gallery": {
+    "label": "The site",
+    "title": "Work, shop <span class=\"soft\">and school.</span>",
+    "items": [
+      {
+        "src": "/assets/case/studio-theon-s1.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "\"Featured Work\": the 360 Furnishings brand board with wood-grain typography cards, a chair and the 360 logo",
+        "cap": "Featured work",
+        "note": "Home · studiotheon.com",
+        "span": 12,
+        "bar": "studiotheon.com",
+        "wide": true
+      },
+      {
+        "src": "/assets/case/studio-theon-s2.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Project grid: 360 Furnishings, Dasheen Atelier and ChowPae, then Farmwell, Ayekoo Honey and logiciele Labs",
+        "cap": "Projects",
+        "note": "/projects",
+        "span": 6,
+        "bar": "studiotheon.com/projects"
+      },
+      {
+        "src": "/assets/case/studio-theon-s3.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Brandler storefront grid: shop business cards, postcards, brochures, stickers, notepads, flyers, drinkables and notebooks",
+        "cap": "Brandler shop",
+        "note": "/brandler",
+        "span": 6,
+        "bar": "studiotheon.com/brandler"
+      },
+      {
+        "src": "/assets/case/studio-theon-s4.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Insait Accelerated Programme hero: \"Growing people to build the future through the Insait Accelerated Programme\" with Apply Now",
+        "cap": "Insait programme",
+        "note": "/modules/insait-accelerated-program",
+        "span": 6,
+        "bar": "studiotheon.com/modules/insait-accelerated-program"
+      },
+      {
+        "src": "/assets/case/studio-theon-s5.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Design Services list: Brand Innovation, Web & Mobile Application Design and Website Design, each \"From 1 week\"",
+        "cap": "Services",
+        "note": "/services",
+        "span": 6,
+        "bar": "studiotheon.com/services"
+      }
+    ]
+  },
+  "mobile": {
+    "src": "/assets/case/studio-theon-mobile.jpg",
+    "w": 780,
+    "h": 1688,
+    "alt": "Studio Theon on a phone: the seasonal souvenirs slide with Shop Now under the green Theon bar"
+  },
+  "accent": "Matches the current theme; the site bar is a deeper green (#1E7002) than the CTA green used for the theme."
+}

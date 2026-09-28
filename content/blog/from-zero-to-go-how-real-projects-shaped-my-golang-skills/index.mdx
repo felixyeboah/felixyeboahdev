@@ -1,0 +1,202 @@
+---
+title: "From Zero to Go: How Real Projects Shaped My Golang Skills"
+date: '2024-09-07T10:00:00.000Z'
+updated: '2026-09-27T10:00:00.000Z'
+subtitle: I started with zero knowledge about Go and gradually built real projects, learning as I went along. Along the way, I discovered effective ways to structure things properly.
+categories: ['engineering']
+keywords: ['go']
+slug: from-zero-to-go-how-real-projects-shaped-my-golang-skills
+cover: blog/Clay_Pot_Making_t8b4tz
+bannerAlt: A potter making a clay pot
+bannerCredit: Photo by [Shane Albuquerque](https://www.pexels.com/@shayneinc/)
+type: 'blogPost'
+featured: false
+---
+My first Go repository has one commit. It's called `go-notes`, it's from 25 March, and this is the whole program:
+
+```go title=main.go
+package main
+
+func main() {
+	// Run the server
+
+}
+```
+
+That's what zero looked like. Five months later I had an auth service with email verification, sessions and password resets, split into packages I could test on their own. I didn't get there by reading. I got there by building four small projects, getting the structure wrong in each one, and fixing a different part of it in the next.
+
+This post walks through those projects in order. The code is all on my GitHub, mistakes included. At the end there's a newer section on Reevit, the payments platform whose backend I now write in Go, because that's where all of this ended up.
+
+## A coffee API, built like an Express app
+
+A week after `go-notes` I built [coffee-app](https://github.com/felixyeboah/coffee-app), a CRUD API for a coffee menu. Chi for routing, Postgres through `database/sql`, `godotenv` for config and SQL migration files for the schema. It took two days.
+
+I came from JavaScript, so I gave it the folders I knew from Express. `controllers`, `services`, `routes` and `helpers`. The problem was how those folders talked to each other. The database lived in a package-level variable, and so did the service:
+
+```go title=services/main.go
+var db *sql.DB
+```
+
+```go title=controllers/coffee.go
+var coffeeService services.Coffee
+
+func GetCoffees(w http.ResponseWriter, r *http.Request) {
+	coffees, err := coffeeService.GetAll()
+	// ...
+}
+```
+
+It worked, and that was the trap. Every function could reach the database, so nothing said what it depended on. I couldn't test a controller without a real Postgres running, because there was no way to hand it anything else.
+
+Reading it now, I can also spot two bugs. `GetAll` calls `defer rows.Close()` before it checks the query's error, so a failed query closes a nil `rows` and panics. And `Run` calls `server.ListenAndServe()` twice. Go compiled both happily. Neither is a Go problem. They're what happens when you write a new language with the habits of an old one.
+
+## A bank that taught me sqlc and transactions
+
+In June I built [simplebank](https://github.com/felixyeboah/simplebank), which has accounts, entries and transfers between accounts. This is where two tools changed how I write every Go service since.
+
+The first was sqlc. In coffee-app I wrote every query as a string and scanned every column by hand, nine `&coffee.Field` arguments per row. With sqlc I write the SQL in a `.sql` file, run `sqlc generate`, and get typed Go functions back. If I rename a column, the generated code changes and the compiler tells me what broke.
+
+The second was the store. A transfer touches three tables, so it has to happen inside one transaction or not at all. The store wraps sqlc's queries and runs a function inside a transaction:
+
+```go title=db/sqlc/store.go
+type Store interface {
+	Querier
+	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
+}
+
+func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
+	tx, err := store.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+
+	q := New(tx)
+	err = fn(q)
+	if err != nil {
+		if rbErr := tx.Rollback(); rbErr != nil {
+			return fmt.Errorf("tx error: %v, rb error: %v", err, rbErr)
+		}
+		return err
+	}
+
+	return tx.Commit()
+}
+```
+
+Look at the return type of `NewStore`. It's the `Store` interface, not the struct. The HTTP layer only knows about the interface, so a test can hand it a fake store. That was the first time an interface in Go made sense to me as something I needed, not something I was told to write.
+
+simplebank was also the first project with tests. Every query has its own test file, and the transfer test runs transfers concurrently to check the balances still add up. Config moved from `godotenv` to Viper, and a Makefile took over the commands I kept retyping.
+
+## An auth service, split by feature
+
+In August I started [go-huma-auth](https://github.com/felixyeboah/go-huma-auth), the auth service I mentioned in [my post about moving to backend engineering](/writing/transitioning-to-backend-engineering). It's the biggest of the four, with 59 commits. It uses Huma on top of Chi, sqlc and Postgres, PASETO tokens, Redis for short-lived verification tokens and Resend for email. Users can register, verify their email, log in, and reset a forgotten password. Each login is stored as a session with the browser and IP address it came from.
+
+The big change is the layout. coffee-app grouped code by what kind of code it was. go-huma-auth groups it by what it's for:
+
+```bash
+go-huma-auth/
+├── cmd/server/main.go
+├── config/
+├── internal/
+│   ├── auth/
+│   │   ├── handler.go
+│   │   ├── service.go
+│   │   ├── repository.go
+│   │   ├── model.go
+│   │   └── payload.go
+│   ├── users/
+│   ├── session/
+│   └── middlewares/
+├── pkg/
+│   ├── token/
+│   ├── redis/
+│   ├── database/
+│   └── utils/
+└── sql/
+    ├── queries/
+    └── sqlc/
+```
+
+Everything about logging in lives in `internal/auth`. The handler reads the request, the service holds the rules, and the repository talks to Postgres and Redis. Things that aren't about this app, like making tokens or connecting to Redis, go in `pkg`.
+
+Dependencies come in through constructors now, not package variables:
+
+```go title=internal/auth/repository.go
+func NewRepository(database *sql.DB, tokenMaker *token.PasetoMaker, redis *redis.Store,
+	session *session.Repository) *Repository {
+	return &Repository{
+		Queries:    db.New(database),
+		db:         database,
+		tokenMaker: tokenMaker,
+		redis:      redis,
+		session:    session,
+	}
+}
+```
+
+Compare that with `var db *sql.DB` in coffee-app. Every dependency is in the function signature, so I can see what the repository needs without reading its body.
+
+It isn't finished, and parts of it are still wrong. The service holds a `*Repository` struct instead of an interface, so I can't swap the repository out in a test the way simplebank let me swap the store. `RegisterUser` ignores the error from `CreateUser`, which means a failed insert turns into a nil pointer panic. Both are on my list.
+
+## Testing the e-commerce API
+
+The fourth project is an e-commerce API I'm still building. It uses the same sqlc setup, and it's where I finally sorted out testing. I tried gomock and testify first. What stuck was Mockery generating mocks from the interfaces sqlc writes, so I can test the repository and the HTTP handlers without a database. I wrote that up in [Mock Testing with Go Mockery](/writing/mock-testing-with-go-mockery).
+
+## Where it led: Reevit
+
+_Added in September 2026._
+
+When I first published this, the e-commerce API was the biggest thing I'd written in Go. Today it's the backend of [Reevit](/work/reevit), the payments platform I wrote about in [Why I Built Reevit](/writing/why-i-built-reevit).
+
+Reevit sends each charge through a merchant's own Paystack, Hubtel or Flutterwave account. If that provider declines or stops answering, the backend sends the same charge to the next provider in the chain. The customer taps Pay once. The backend is Go, and so are two public pieces of it, the [Go SDK](https://github.com/Reevit-Platform/go-sdk) and the [CLI](https://github.com/Reevit-Platform/cli).
+
+Almost every hard part of it goes back to one of the small projects above.
+
+The transfer in simplebank had to happen in one transaction or not at all. A payment that fails over to a second provider has the same rule with more at stake, because the customer must be charged exactly once. So every request can carry an idempotency key, and the SDK builds one from the sorted request fields, so a retry of the same order within five minutes gets the same key.
+
+The auth service was the first time I stored secrets properly, with hashed passwords and PASETO tokens. Reevit holds something worse to leak, the merchants' provider API keys. Each key is encrypted with its own data key, that data key is wrapped by a key held in a KMS, and the plaintext only exists in memory for the call that needs it. It never gets logged.
+
+Reevit exists because of a webhook that sometimes fired and sometimes didn't, so its own webhooks had to be the part merchants never worry about. Every event is signed, and the SDK checks the signature like this:
+
+```go title=webhooks/verify.go
+func Sign(payload []byte, secret string) string {
+	mac := hmac.New(sha256.New, []byte(secret))
+	mac.Write(payload)
+	return SignaturePrefix + hex.EncodeToString(mac.Sum(nil))
+}
+
+func Verify(payload []byte, signature, secret string) bool {
+	if signature == "" || secret == "" {
+		return false
+	}
+	return hmac.Equal([]byte(Sign(payload, secret)), []byte(signature))
+}
+```
+
+`hmac.Equal` compares in constant time. Comparing the two strings with `==` would also pass every test, and leak timing information to anyone probing the endpoint. A valid signature isn't enough either, because a captured delivery can be sent again word for word. `VerifyWithTolerance` rejects anything signed more than five minutes ago, and the handlers the CLI generates skip a `delivery_id` they've already processed.
+
+The SDK's client is the coffee-app lesson in its final form. There's no package-level state. Everything the client needs comes in through the constructor, and optional settings use functional options:
+
+```go title=main.go
+client := reevit.NewClient("pfk_live_xxx", "org_123", reevit.WithTimeout(10*time.Second))
+
+payment, err := client.Payments.CreateIntent(ctx, req, reevit.WithIdempotencyKey(key))
+```
+
+And the CLI tool from my 2024 plans exists now. `reevit init` logs you in through the browser, detects your framework, creates test credentials for the project and wires up a working checkout. `reevit listen` forwards signed webhook events to your local server, and `reevit doctor` checks the setup. It's built with Cobra and has more test files than commands.
+
+## What changed between the first project and the fourth
+
+Side by side, the four projects come down to five changes.
+
+1. **Pass dependencies in.** A package-level `db` works until you want to test something. A constructor that takes the database makes the dependency visible and replaceable.
+2. **Write SQL, generate the Go.** sqlc removed the hand-written `Scan` calls, and with them a whole class of column-order bugs.
+3. **Put interfaces where tests need them.** simplebank's `Store` and sqlc's `Querier` are interfaces because tests needed a seam there, not because every struct needs one.
+4. **Group by feature.** `internal/auth` with its own handler, service and repository is easier to change than a `controllers` folder that knows about everything.
+5. **Check the error first.** Two of the bugs above come from using a value before checking the error that came with it. Go makes you write `if err != nil` often. It only helps if it comes first.
+
+None of this is new to experienced Go developers. I'm writing it down because I learned each point from something I built, not from a list like this one.
+
+## What's next
+
+In 2024 my plan was the e-commerce API, then a web server and a CLI tool. The CLI turned out to be Reevit's. go-huma-auth, simplebank and coffee-app are still public, bugs included, so if you're learning Go too, fork one, break it, or open a pull request. I'd like to see what you'd change.

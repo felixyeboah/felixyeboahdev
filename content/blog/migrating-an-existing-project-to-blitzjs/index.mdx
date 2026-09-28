@@ -1,0 +1,206 @@
+---
+title: Migrating an existing project to Blitzjs
+date: '2021-12-26T10:00:00.000Z'
+updated: '2021-12-26T10:00:00.000Z'
+subtitle: It was difficult deciding on moving my existing project from NextJS to BlitzJS
+categories: ['engineering', 'react']
+keywords: ['nextjs', 'react', 'javascript', 'trpc', 'blitzjs']
+slug: migrating-an-existing-project-to-blitzjs
+cover: blog/pexels-pawel-kalisinski-4187055
+bannerCredit: Photo by [Pawel Kalisinski](https://www.pexels.com/search/panel%20kalisinski/)
+type: 'blogPost'
+featured: false
+---
+
+It was difficult deciding on moving my existing project from NextJS to BlitzJS. But what makes BlitzJS better than NextJS? Should anyone use this framework? First of all, what is BlitzJS?
+
+## What is Blitz?
+
+Blitz.js is a full-stack React framework with a zero-API data layer built on Next.js Inspired by Ruby on Rails.
+
+Let’s see the main features and goodies of Blitz.js according to its creator’s words:
+
+1. “Zero-API” data layer lets you import server code directly into your React components instead of having to manually add API endpoints and do the client-side fetching and caching.
+2. Includes everything you need for production apps. Everything is end-to-end from the database to the frontend.
+3. Bring back the simplicity and conventions of frameworks like Ruby on Rails while preserving everything we love about React.
+
+This page on the BlitzJS docs talks more about Why BlitzJS is the best. Why Blitz?
+
+### Why did I move my project to Blitz?
+
+Initially developed with NextJS, everything was running smoothly until I hosted on Vercel; the issues started coming in. The issue was the serverless functions running on Vercel and the data running server-side rendering (SSR) in NextJS. I noticed that on some occasions I get This Serverless Function has timed out 504 GATEWAY_TIMEOUT and had no idea why I get the error. I made a lot of research and what I learnt was Vercel imposes some limits when using its platform. This includes a serverless function execution timeout, which is the amount of time that a serverless function is allowed to process an HTTP request before it must respond.
+
+Recently, they have silently reduced the serverless function execution timeout from 10s for the hobby plan, the 60s for the pro plan and 1000s for the enterprise plan to, respectively, 5s, 15s and 30s. This might be the reason why you're experiencing this error now.
+
+I didn't like the fact that they lowered these limits without warning their users (I wasn't warned, at least) and giving them time to adjust. This charged my decision on moving my project from NextJS.
+
+I started searching for a new framework that can handle the project well and lo and behold, I found out about BlitzJS on Youtube. I watched a couple of videos on it and in a few hours, I installed the framework.
+
+Let's look at the project structure.
+
+``` bash
+├── app/
+│ ├── core/
+│ │ ├── components/
+│ │ │ ├── form.tsx
+│ │ │ └── LabeledTextField.tsx
+│ │ ├── hooks/
+│ │ │ └── useCurrentUser.ts
+│ │ └── layouts/
+│ │ └── Layout.tsx
+│ ├── pages/
+│ │ ├── 404.tsx
+│ │ ├── _app.tsx
+│ │ ├── _document.tsx
+│ │ ├── index.test.tsx
+│ │ ├── _index.tsx
+│ │ └── projects/
+│ │ ├── [id]/
+│ │ │ └── edit.js
+│ │ ├── [id].js
+│ │ ├── index.js
+│ │ └── new.js
+│ ├── api/
+│ │ └── stripe-webhook.js
+│ ├── auth/
+│ │ ├── components/
+│ │ │ ├── LoginForm.tsx
+│ │ │ └── SignupForm.tsx
+│ │ ├── mutations/
+│ │ │ ├── login.ts
+│ │ │ ├── logout.ts
+│ │ │ └── signup.ts
+│ │ ├── pages/
+│ │ │ ├── login.tsx
+│ │ │ └── signup.tsx
+│ │ ├── auth-utils.ts
+│ │ └── validations.ts
+│ ├── users/
+│ │ └── queries/
+│ │ └── getCurrentUser.ts
+│ └── projects/
+│ ├── components/
+│ │ ├── Project.js
+│ │ ├── ProjectForm.js
+│ │ └── Projects.js
+│ ├── mutations/
+│ │ ├── createProject.js
+│ │ ├── createProject.test.js
+│ │ ├── deleteProject.js
+│ │ ├── deleteProject.test.js
+│ │ ├── updateProject.js
+│ │ └── updateProject.test.js
+│ └── queries/
+│ ├── getProject.js
+│ └── getProjects.js
+├── db/
+│ ├── index.ts
+│ ├── schema.prisma
+│ └── seeds.ts
+├── integrations/
+│ └── sentry.ts
+├── public/
+│ ├── favicon.ico*
+│ └── logo.png
+├── test/
+│ ├── setup.ts
+│ └── utils.tsx
+├── README.md
+├── babel.config.js
+├── blitz.config.js
+├── jest.config.js
+├── package.json
+├── tsconfig.json
+├── types.ts
+└── yarn.lock
+```
+
+##### app
+Contains all your core application code.
+
+- The file structure nested inside app/ can be anything you want, but we recommend the following:
+- First layer folders to be a "domain context", like core/, projects/, users/, billing/, etc.
+- All other folders like components/ and hooks/ go inside one of the above domain context folders
+- Special Folder Names
+- Can exist at any level of the hierarchy inside the app.
+- ***pages/*** expose a React component at a URL. Follows the same semantics as the Next.js pages/ folder.
+- ***api/*** expose a Node.js request handler at URL. Same semantics as Next.js pages/API/ folder.
+- ***queries/*** and ***mutations/*** are for your Blitz queries and mutations. Each query and mutation is exposed at a URL corresponding to its file path.
+
+##### db
+Contains database configuration, schema, and migration files. ***db/index.js*** exports your initialized database client so you can use it anywhere in your app.
+
+##### integrations
+Contains third-party integration code. Ex: auth0.js, twilio.js, etc. These files are a good place to instantiate a client with shared configuration.
+
+##### pages
+The top level pages folder and all nested pages folders inside app are merged together at build time. The build will fail if the same route is defined in two places.
+
+- This top-level pages folder is optional.
+- Has the same semantics as the Next.js pages folder. All files in here are mapped to the URL corresponding to their file paths.
+- While you can place any route files here, we recommend placing route files inside app. But if you want, you can instead place all your route files in this top-level folders instead of being spread out in various folders inside app
+
+##### api
+Same as Next.js ***pages/api*** folder, but not nested inside pages.
+
+##### public
+All files in here are served statically from your app's root URL
+
+##### blitz.config.js
+A configuration file with the same format as next.config.js
+
+##### Blitz CLI Overview
+BlitzJS comes with a few CLI commands that help to scaffold and makes working with BlitzJS faster and easier. It is opinionated and will guide you towards best practices, while flexible enough to allow you to build your project however you'd like.
+
+##### Blitz generate
+
+The Blitz CLI tool is quite automated. With this CLI tool, we can use the generate sub-command to scaffold all code we want in our Blitz app.
+
+``` bash
+blitz generate [type] [model]
+```
+
+blitz generate all project will generate the following files:
+
+``` bash
+app/pages/projects/[projectId]/edit.tsx
+app/pages/projects/[projectId].tsx
+app/pages/projects/_index.tsx
+app/pages/projects/new.tsx
+app/projects/components/ProjectForm.tsx
+app/projects/queries/getProject.ts
+app/projects/queries/getProjects.ts
+app/projects/mutations/createProject.ts
+app/projects/mutations/deleteProject.ts
+app/projects/mutations/updateProject.ts
+```
+
+##### Blitz codegen
+Use this command to generate the [Route Manifest](https://blitzjs.com/docs/route-manifest) and Prisma client (if Prisma schema is defined in ```package.json)```.
+
+##### Blitz install
+Use this command to install a Blitz Recipe into your project.
+
+Supports both official recipes and custom third-party recipes. Recipe names can be specified in any of the following formats:
+- ```blitz install select and install``` from the list of official Blitz recipes
+- ```blitz install official-recipe``` for an official recipe from the Blitz team
+- ```blitz install ./recipes/my-local-recipes.ts``` for a locally-authored recipe
+- ```blitz install github-user/my-published-recipe``` for a custom recipe hosted on GitHub
+
+Also, you can pass arguments to recipe itself in the form of key=value (if it accepts them):
+
+``` bash
+  $ blitz install my-recipe key=value
+```
+
+These are a few Blitz commands I can list here, I don't want to make this article longer than it is already. Go through the docs of BlitzJS and I promise you will love this framework. [BlitzJS Doc](https://blitzjs.com/docs/get-started)
+
+I moved my existing project from NextJS to BlitzJS within 2 weeks and within that time rame, it wasn't easy as it was a new framework I wasn't used to and I had to take time to learn whiles implementing.
+
+Prisma comes default with BlitzJS to interface with the DB and it helps a lot in terms of dealing with complex queries and mutations.
+
+Cloudinary was used as well. Cloudinary helps with uploading, transforming and optimization of photos.
+
+Chakra UI is a simple, modular and accessible component library that gives you the building blocks you need to build your React applications. This is the CSS library is used to build the UI of the project.
+
+I think I have convinced you enough why I chose to move my project from NextJS to BlitzJS. It's about time you check it out and start playing with this framework. This is missing but found Gem.

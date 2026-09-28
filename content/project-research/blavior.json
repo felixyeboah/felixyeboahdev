@@ -1,0 +1,112 @@
+{
+  "slug": "blavior",
+  "status": "live (single waitlist page)",
+  "url": "https://blavior.io/",
+  "checkedAt": "2026-09-27",
+  "pages": [
+    "https://blavior.io/"
+  ],
+  "evidence": {
+    "stack": [
+      {
+        "name": "Next.js",
+        "evidence": "x-powered-by: Next.js header; window.next.version = 15.5.6"
+      },
+      {
+        "name": "OpenNext on Cloudflare",
+        "evidence": "x-opennext: 1 and cf-placement headers; server: cloudflare"
+      },
+      {
+        "name": "Tailwind CSS",
+        "evidence": "\"tailwindcss v4.1.17\" banner in the stylesheet"
+      },
+      {
+        "name": "Cloudinary",
+        "evidence": "res.cloudinary.com/deltaops image URLs in the bundles"
+      },
+      {
+        "name": "Radix UI",
+        "evidence": "data-radix attributes (role select)"
+      }
+    ],
+    "hosting": "Cloudflare (OpenNext adapter)",
+    "other": [
+      "The site is one screen: no internal links; /about, /login, /calculator, /mortgage and /mortgage-calculator all return 404",
+      "The headline rotates: \"Sell Faster Today\", \"Calculate Your Mortgage\", \"Invest With Confidence\", \"Get Matched Fast\", each \"with Confidence\"",
+      "TAGLINE CHANGED: no mortgage calculator is live, only a rotating headline mentioning one. The old tagline and stage alt (\"a mortgage calculator and waitlist form\") overstate the page",
+      "\"+100 people on the waitlist\" is site copy, not used as a metric"
+    ]
+  },
+  "tagline": [
+    "A real estate connection platform,",
+    "opening with a waitlist for agents, developers and property owners."
+  ],
+  "credits": [
+    [
+      "Category",
+      "Real estate",
+      null
+    ],
+    [
+      "Built with",
+      "Next.js, Tailwind CSS",
+      "detected on the live site; deployed with OpenNext on Cloudflare"
+    ],
+    [
+      "Status",
+      "Pre-launch",
+      "waitlist open"
+    ]
+  ],
+  "stage": {
+    "src": "/assets/case/blavior-s0.jpg",
+    "w": 2160,
+    "h": 1350,
+    "alt": "Blavior waitlist page: \"Sell Faster Today with Confidence\" and a name, email and role form in a white panel beside a coastal property at dusk",
+    "bar": "blavior.io"
+  },
+  "brief": {
+    "statement": "A waitlist page for a property platform,",
+    "muted": "that sorts sign-ups before launch.",
+    "story": [
+      {
+        "h": "The product",
+        "body": [
+          "Blavior is a real estate connection platform: a place to find, sell or invest in property through verified agents, developers and property owners.",
+          "It is not open yet; the live site is the waitlist."
+        ]
+      },
+      {
+        "h": "The page",
+        "body": [
+          "One screen, one job. The headline cycles through what the platform will do, from selling faster to calculating a mortgage and getting matched.",
+          "The form asks for a name, an email and a role (agent, developer or property owner), so the list is segmented from the first sign-up."
+        ]
+      }
+    ]
+  },
+  "gallery": {
+    "label": "The page",
+    "title": "One screen, <span class=\"soft\">one form.</span>",
+    "items": [
+      {
+        "src": "/assets/case/blavior-s1.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Blavior waitlist with the headline on \"Get Matched Fast with Confidence\" and the role menu open: I’m an Agent, I’m a Developer, I’m a Property Owner",
+        "cap": "Role picker",
+        "note": "blavior.io",
+        "span": 12,
+        "bar": "blavior.io",
+        "wide": true
+      }
+    ]
+  },
+  "mobile": {
+    "src": "/assets/case/blavior-mobile.jpg",
+    "w": 780,
+    "h": 1688,
+    "alt": "Blavior on a phone: the waitlist panel slides up over the photo, with \"Calculate Your Mortgage with Confidence\" and the sign-up form"
+  },
+  "accent": "Matches the current theme (teal wordmark)."
+}

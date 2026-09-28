@@ -1,0 +1,226 @@
+---
+title: Migrating a project routes from legacy routes to typed-safe named routes
+date: '2022-07-31T10:00:00.000Z'
+updated: '2022-07-31T10:00:00.000Z'
+subtitle: One thing I haven't spoken much about is how I got here. How did I get here
+categories: ['engineering', 'react']
+keywords: ['routing', 'react', 'typescript', 'engineer']
+slug: migrating-a-project-from-legacy-routes-to-typesafe-named-routes
+cover: blog/pexels-photo
+bannerCredit: Photo by [Pixabay](https://www.pexels.com/search/pixabay/)
+type: 'blogPost'
+featured: true
+---
+
+
+<Callout variant="info">
+    The Grower Dashboard is a [Complete Farmer](https://completefarmer.com) product that enables farmers/investors take control of their farms and get up-to date information on their farms.
+</Callout>
+
+The Grower Dashboard presents a significant challenge due to its extensive network of routes, including nested routes. Complete Farmer's engineers face difficulties in organizing components within these routes, such as Modals and Tabs. As the product continues to expand, incorporating new pages and features becomes increasingly complex, posing scalability issues for the engineering team. However, the Grower Module Dashboard empowers farmers and investors to cultivate crops using data-driven protocols and access global markets to sell their produce competitively.
+
+Recognizing the need for a better solution to address the scaling and routing challenges within the product, I embarked on a quest for improvement. How can we enhance the routing aspect and ensure that most features can be accessed through routes rather than relying on application state?
+
+**The Problem**
+
+The Grower Dashboard is a crucial tool utilized by our clients, particularly growers. However, when a grower encounters an issue and reaches out to our support team for assistance, they often face challenges in navigating the platform to locate the specific case. To alleviate this difficulty, an alternative approach is to provide support with a direct link to the reported issue. This would streamline the navigation process and make it more efficient.
+
+As the product continues to scale, navigating the platform becomes increasingly complex due to the growing number of routes, including nested routes. As engineers, we constantly add new routes and make modifications to existing ones to accommodate the product's expansion. However, when a route undergoes changes, it requires thorough modifications across numerous components, resulting in significant challenges for our team.
+
+This issue becomes particularly demanding at times, as the intricate task of updating routes in multiple components can be time-consuming and arduous for our engineers.
+
+Sample routes we had in the past:
+
+```jsx title=Routes.js
+import React from 'react'
+import { Navigate, Routes, Route } from 'react-router-dom'
+import Pages from '../pages'
+import Splash from '../components/Blocks/Loading/Splash'
+import PrivateRoute from './PrivateRoute'
+
+const Router = () => {
+  return (
+    <React.Suspense fallback={<Splash />}>
+      <Routes>
+        <Route path='/' element={<Navigate to='/auth' />} />
+        <Route path='/auth/:token' element={<Pages.Auth />} />
+        <Route path='/auth' element={<Pages.Auth />} />
+        <Route
+          path='/dashboard-empty'
+          element={
+            <PrivateRoute
+              path='/dashboard-empty'
+              element={Pages.DashboardEmpty}
+            />
+          }
+        />
+        <Route
+          path='/profile'
+          element={<PrivateRoute path='/profile' element={Pages.Profile} />}
+        />
+
+        <Route
+          path='/onboarding'
+          element={
+            <PrivateRoute path='/onboarding' element={Pages.OnboardingNew} />
+          }
+        />
+        <Route
+          path='/dashboard'
+          element={<PrivateRoute path='/dashboard' element={Pages.Dashboard} />}
+        />
+        <Route path='/404' element={<Pages.NotFound />} />
+        <Route path='*' element={<Navigate to='/404' />} />
+      </Routes>
+    </React.Suspense>
+```
+
+**The Solution**
+
+To simplify the process for both engineers and growers, our team collectively decided to focus on improving the project's structure and implementing enhanced routing within the application, all while prioritizing performance.
+
+As the Lead Frontend Engineer, I took the initiative to begin restructuring the project by transitioning it from JavaScript to TypeScript. This switch allowed us to leverage the benefits of static typing and enhance the overall robustness of the codebase. Additionally, I embarked on thorough research to explore methods for incorporating type-safe named routes into our project. Although it presented some challenges along the way, I was determined to fulfill my role in supporting the team's objectives.
+
+Project structuring looks like this:
+
+```bash title=Project Structure
+ |-- src
+ |   |-- api
+ |   |-- assets
+ |   |  |-- fonts
+ |   |  |-- images
+ |   |  |-- styles
+ |   |-- components
+ |   |   |   |-- atoms
+ |   |   |   |-- cards
+ |   |   |   |-- forms
+ |   |-- contexts
+ |   |-- container
+ |   |-- helpers
+ |   |-- hooks
+ |   |-- pages
+ |   |   |-- auth
+ |   |   |   |-- components
+ |   |   |   |-- contexts
+ |   |   |   |-- hooks
+ |   |   |   |-- pages
+ |   |   |   |-- _index.tsx
+ |   |   |   |-- root.tsx
+ |   |   |-- dashboard
+ |   |   |-- farms
+ |   |   |-- lands
+ |   |   |-- marketplace
+ |   |   |-- onboarding
+ |   |   |-- profile
+ |   |-- routes
+ |   |   |-- privateRoutes.tsx
+ |   |   |-- router.tsx
+ |   |-- utils.ts
+```
+Let's go through the project structure; within the src folder, we have the api, assets, components, contexts, container, helpers, pages, routes, and utils folders respectively. I will explain what each folder contains and why I structure the project this way.
+
+**API folder**
+
+The api folder contains custom hooks created for querying and mutating data. These hooks are built on top on react query which makes it easier for our team to either query or mutate with data. It includes a single source of asynchronous function that works with any promise based method (including GET and POST methods) to fetch data from a server.
+
+**Assets folder**
+
+The assets folder contains three child folders(fonts, images, styles) for  CSS files, and any other static files and data.
+
+**Components folder**
+
+This folder holds reusable components that are shared across the project. It contains subfolders like atoms that contain tiny/small reusable components, the forms folder contains any form inputs and the cards folder contains any card components that can be shared/used in the project.
+
+**Context folder**
+
+The context folder is the parent folder that contains any state management files created with Context API as we use React Context API mostly.
+
+**Container folder**
+
+This folder holds the layout of the project. Eg: Sidebar, Navbar, Footer, etc.
+
+**Helpers folder**
+
+This folder contains any miscellaneous functions or utilities that are reusable and shared across the project.
+
+**Hooks folder**
+
+As the name implies, this folder also contains custom hooks created within the project for reusability.
+
+**Pages folder**
+
+This folder contains all the pages for our routes. The page folder also has subfolders depending on the number of pages we have. Each page is a folder that contains subfolders as well. Eg: auth folder. Within the dashboard folder, as seen above, we have components, contexts, hooks, pages folders, _index.tsx and root.tsx.
+
+- `components/` folder is for reusable components that are used only within the auth page. Any component within this folder isn't used in any part or any pages besides the auth page.
+- any context file within this folder doesn't leak out of this page.
+- we may have different hooks but some of the hooks might be created for per page usage and we store them here.
+- `pages/` folder within the auth any other page is the folder the child pages or sub-routes. eg: /farms/farm-details
+- `_index.tsx` is for the page itself. In this file, we render the components or what the user see when they visit the page. eg: /farms
+- `root.tsx` is to map all the routes for this page. We want to be able to track all the routes for a specific page in one file. Since we deal with a lot of routes and sub-routes, it will be better if we can have all the sub-routes of a page in one file
+
+**Routes folder**
+
+The routes folder contains two (2) files; privateRoute.tsx and router.tsx. The privateRoute file is where we have our logic that checks if a user is authenticated and authorized to access certain parts of the dashboard or pages. The router file contains all our parent/root routes for the project. You will soon see what I mean by root routes and sub-routes within this project.
+
+**Utils folder**
+
+This folder contains and third-party utility file that's been modified by us. We mostly customize third-party tools/packages to suit our use cases. This contains utilities like our routing system which was modified from the react-router package.
+
+Allow me to unveil our new routing system we created.
+
+```tsx title="Routes.tsx"
+type Route<Params = void> = {
+  path: string;
+  link: Params extends void ? () => string : (params: Params) => string;
+  section: Links;
+};
+
+function createRoute<Params = void>(
+  path: string,
+  section: Links
+): Route<Params> {
+  return {
+    path,
+    section,
+    // @ts-ignore
+    link: (params?: Params) => generatePath(path, params ?? {}),
+  };
+}
+
+// prettier-ignore
+const routes = {
+    root: createRoute('/', LINKS.ROOT),
+    token: createRoute<{token: string}>('auth/:token', LINKS.ROOT),
+    auth: createRoute<{token: string}>('auth', LINKS.ROOT),
+    logout: createRoute('logout', LINKS.ROOT),
+    // other routes
+};
+
+type RouteId = keyof typeof routes;
+
+// Use with <Route />
+// @ts-ignore
+export const pathTo: Record<RouteId, string> = Object.fromEntries(
+  Object.entries(routes).map(([id, route]) => [id, route.path])
+);
+
+// Use with <RouterLink />
+// @ts-ignore
+export const linkTo: {
+  [R in RouteId]: typeof routes[R]['link'];
+} = Object.keys(routes).reduce((acc, key) => {
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  acc[key] = routes[key].link;
+  return acc;
+}, {});
+
+// For Analytics
+export const sectionOf: Record<string, Links> = Object.fromEntries(
+  Object.entries(routes).map(([, route]) => [route.path, route.section])
+);
+```
+
+This routing system made it possible for us to put almost everything on our route. Just like on Remix.run, this takes the same approach but in a different way.
+
+Our engineers are happy working with this typed-safe routes which makes development easier and quicker.

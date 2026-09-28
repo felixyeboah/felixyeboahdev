@@ -1,0 +1,85 @@
+---
+title: Building my portfolio with Remix
+date: '2023-06-18T10:00:00.000Z'
+updated: '2023-06-18T10:00:00.000Z'
+subtitle: I am thrilled to present my brand-new portfolio website, a culmination of passion, creativity, and the power of modern web technologies.
+categories: ['engineering', 'remix']
+keywords: ['remix', 'react', 'prisma', 'framework', 'ssr', 'remix', 'mdx']
+slug: building-my-portfolio-with-remix
+cover: blog/photo-1682686581221-c126206d12f0
+bannerAlt: A Sheep on top of a hill
+bannerCredit: Photo by [Brian Wegman 🎃](https://unsplash.com/@trytoscareme)
+type: 'blogPost'
+featured: true
+colorFeatured: 'linear-gradient(90deg,#2E83FF -10%,#EB7D9F 50%, #FFCBBE 100%)'
+fontFeatured: '#E8E8FD'
+---
+
+<Info>
+    I would like to extend a special thanks and credit to [Kent C Dodds](https://kentcdodds.com/) for being a tremendous source of inspiration throughout the development of my portfolio. His expertise, teaching, and contributions to the web development community have played a significant role in shaping my understanding and approach.
+</Info>
+
+I am thrilled to present my brand-new portfolio website, a culmination of passion, creativity, and the power of modern web technologies. In this blog post, I will share the excitement of showcasing my work and the reasons behind choosing Remix and other cutting-edge tools. Join me on this journey as we explore the tech stack that powers my portfolio and the advantages that each technology brings to the table.
+
+## Why Remix?
+
+Remix has been the driving force behind my portfolio, providing an exceptional platform to unleash my creativity. Here's why Remix stood out:
+
+- Server-Side Rendering (SSR): Remix allows you to render React components on the server, enabling faster initial page loads and improved SEO. This means that users receive a fully rendered page from the server, reducing the time to interactive and providing a better user experience.
+- React Integration: Remix seamlessly integrates with React, empowering me to build interactive and engaging components. By harnessing the power of React's ecosystem, I can create dynamic and visually appealing elements that leave a lasting impression.
+- Universal Routing: Remix offers a unified routing solution that works on both the client and server. This feature simplifies navigation and enables server-rendered pages, ensuring consistent behavior and faster transitions between pages.
+- Built-in Data Loading and Caching: Remix provides a powerful data loader mechanism that allows you to fetch data from APIs or databases before rendering the page. It also includes built-in caching strategies, ensuring efficient data retrieval and reducing unnecessary requests.
+
+## Using MDX to create magic with my content
+
+By leveraging MDX (Markdown + JSX), Remix allows you to infuse your portfolio with rich and dynamic content. MDX combines the simplicity and readability of Markdown with the ability to embed JSX components directly within your content. This allows for the seamless integration of code snippets, interactive elements, and custom components to showcase your projects and skills.
+
+MDX excels in presenting code examples, API documentation, and tutorials within your portfolio. With MDX, you can effortlessly blend written explanations, code snippets, and interactive demos, creating a captivating experience for visitors.
+
+MDX's portable format enables content reuse across different platforms and frameworks. By utilizing MDX, you future-proof your portfolio content, ensuring it remains adaptable and easily maintainable.
+
+## Amplifying Visuals with Cloudinary
+
+Cloudinary is an indispensable tool for managing and optimizing images within your portfolio. Its Image Optimization capacity automatically optimizes images for different devices and network conditions. This ensures that this portfolio loads quickly, even on slower connections, providing an engaging user experience.
+
+With Cloudinary, you can dynamically transform images on-the-fly. This includes resizing, cropping, applying filters, and much more. Such transformations allow you to present your projects in the best possible light, adapting images to different layout requirements seamlessly. Also, Cloudinary leverages a global CDN network to deliver images efficiently. This ensures that your portfolio images load quickly from the closest edge location, regardless of the visitor's geographic location.
+
+## Remix, SQLite, and Prisma: Empowering Seamless Data Management
+
+Remix, together with SQLite and Prisma, provides an efficient and reliable data storage solution for this portfolio. Remix provides robust data loading mechanisms and built-in caching strategies. This ensures fast and efficient retrieval of data from APIs or databases, resulting in a responsive and interactive portfolio experience. By integrating SQLite with Remix, I have a seamless and scalable solution for storing and managing data, ensuring the performance of my portfolio.
+
+With Prisma serving as a powerful Object-Relational Mapping (ORM) tool and simplifying database interactions, I can perform complex queries, handle data relationships effortlessly, and ensure the security and integrity of my portfolio's data.
+
+## Caching Data and Utilizing SQLite for Efficient Storage
+
+To implement caching, I utilized SQLite as the underlying database engine. SQLite, a lightweight and self-contained database, provided a perfect solution for storing and managing cached data. Its simplicity, speed, and efficient disk storage made it an ideal choice for my portfolio.
+
+![PageSpeed Insight](https://res.cloudinary.com/felixyeboah/image/upload/v1687358875/felixyeboah/Screenshot_2023-06-21_at_14.47.03_ywxfab.webp)
+
+This screenshot shows the performance of my portfolio before implementing caching. As you can see, the page load time is 0.3 seconds. This is a good starting point, but we can do better.
+
+<Image
+  src="felixyeboah.dev/Screenshot_2023-06-21_at_14.47.03_exhbu1"
+  alt="Creating Event"
+  width={600}
+  height={379}
+/>
+
+[Metronome](https://metronome.sh/) performance metrics show that given the current page load time, the portfolio is performing well.
+
+
+## Automating Continuous Deployment with GitHub Actions and Fly.io
+
+GitHub Actions became the backbone of this deployment automation. With its intuitive workflow configuration, I could define custom deployment pipelines that triggered whenever changes were pushed to my repository. The ability to specify triggers, define build and test steps, and seamlessly integrate with my existing Git workflow made GitHub Actions the ideal choice for automating the deployment process.
+
+[Fly.io](https://fly.io), the exceptional serverless platform, provided the perfect stage for my portfolio. By leveraging the power of Fly.io, I could deploy my application effortlessly and benefit from its global edge network. This meant that my portfolio would be delivered to users from the nearest edge location, resulting in faster load times and an optimal browsing experience.
+
+The integration between GitHub Actions and Fly.io was seamless. As soon as changes were pushed to my repository, GitHub Actions would initiate the deployment pipeline. It would build and test my portfolio, generate the necessary artifacts, and securely deploy them to Fly.io. This automation eliminated the need for manual intervention, reducing human error and ensuring that my portfolio remained up-to-date with the latest changes.
+
+With GitHub Actions and Fly.io working hand in hand, I could focus on developing and enhancing my portfolio, knowing that the deployment process was taken care of. The continuous deployment pipeline provided a seamless experience, allowing me to iterate quickly and effortlessly share my work with the world.
+
+##
+
+### Conclusion
+
+My new portfolio, built with Remix and a suite of powerful technologies, showcases my creativity and skills in the best possible light. The combination of Remix's server-side rendering, MDX's dynamic content capabilities, Cloudinary's image management, and the efficient data storage with SQLite and Prisma has created a portfolio that stands out from the crowd. I am excited to share my work with the world and invite you to explore the seamless user experience, captivating visuals, and thoughtfully presented content that my portfolio has to offer.

@@ -1,0 +1,194 @@
+{
+  "slug": "css",
+  "status": "live (single page)",
+  "url": "https://techbycss.com/",
+  "checkedAt": "2026-09-27",
+  "pages": [
+    "https://techbycss.com/",
+    "https://techbycss.com/#about",
+    "https://techbycss.com/#solutions",
+    "https://techbycss.com/#why-us",
+    "https://techbycss.com/#contact"
+  ],
+  "evidence": {
+    "stack": [
+      {
+        "name": "Next.js",
+        "evidence": "x-powered-by: Next.js, Payload header; window.next.version = 15.5.6"
+      },
+      {
+        "name": "Payload CMS",
+        "evidence": "x-powered-by: Next.js, Payload header"
+      },
+      {
+        "name": "Tailwind CSS",
+        "evidence": "\"tailwindcss v4.1.14\" banner in the stylesheet"
+      },
+      {
+        "name": "GSAP",
+        "evidence": "GreenSock markers in the bundles"
+      },
+      {
+        "name": "Lenis",
+        "evidence": "html.lenis class at runtime"
+      },
+      {
+        "name": "Swiper",
+        "evidence": "swiper in the bundles"
+      }
+    ],
+    "hosting": "Served through Cloudflare (server: cloudflare, cf-ray); origin not identifiable",
+    "other": [
+      "All navigation is in-page anchors; the only route is /",
+      "Contact block shows info@css.com, which is not the company’s own domain; flag to Felix, not used in copy",
+      "Company legal name on the site: Connectivity Support Systems LTD, No. 8 Ataa Naate Street, Westlands, Accra"
+    ]
+  },
+  "tagline": [
+    "Communication and connectivity solutions",
+    "for businesses."
+  ],
+  "credits": [
+    [
+      "Category",
+      "Connectivity solutions",
+      null
+    ],
+    [
+      "Company",
+      "Connectivity Support Systems Ltd",
+      "Accra"
+    ],
+    [
+      "Built with",
+      "Next.js, Payload CMS, Tailwind CSS",
+      "detected on the live site"
+    ]
+  ],
+  "stage": {
+    "src": "/assets/case/css-s0.jpg",
+    "w": 2160,
+    "h": 1350,
+    "alt": "CSS homepage: \"We specialize in Communication & Connectivity Solutions\" in large white type over a black-to-teal gradient",
+    "bar": "techbycss.com"
+  },
+  "brief": {
+    "statement": "A one-page profile for a connectivity company,",
+    "muted": "from USSD and bulk SMS to internet for events.",
+    "story": [
+      {
+        "h": "The company",
+        "body": [
+          "Connectivity Support Systems (CSS) is an Accra company providing communication and connectivity tools for businesses, organisations and institutions.",
+          "It names finance, healthcare and e-commerce as the industries it is built for."
+        ]
+      },
+      {
+        "h": "The site",
+        "body": [
+          "A single scrolling page with four anchors: About, Solutions, Why us and Get in touch.",
+          "It moves from the company statement to its mission, vision and five values, then nine solutions, and ends on the address and contact details."
+        ]
+      }
+    ]
+  },
+  "notes": {
+    "label": "The solutions",
+    "title": "Nine services, <span class=\"soft\">one page.</span>",
+    "items": [
+      [
+        "Reach without data",
+        "USSD menus for balance checks, subscriptions and surveys, and bulk SMS for promotional and transactional messages."
+      ],
+      [
+        "Payments",
+        "Mobile money and online gateways integrated into business applications."
+      ],
+      [
+        "Software",
+        "Web and mobile applications, and APIs that connect payment platforms, CRMs and e-commerce systems."
+      ],
+      [
+        "Infrastructure",
+        "Cloud hosting for applications and data, and cybersecurity: encryption, network security and intrusion detection."
+      ],
+      [
+        "Events",
+        "On-demand internet for events, conferences and corporate gatherings."
+      ]
+    ],
+    "chips_label": "Stack",
+    "chips": [
+      "Next.js",
+      "Payload CMS",
+      "Tailwind CSS",
+      "GSAP",
+      "Lenis",
+      "Swiper"
+    ]
+  },
+  "gallery": {
+    "label": "The page",
+    "title": "Statement, values, <span class=\"soft\">solutions.</span>",
+    "items": [
+      {
+        "src": "/assets/case/css-s3.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Solution cards: USSD Solutions, Bulk SMS Services and Payment Platform Integration, then web, mobile and API development",
+        "cap": "Solutions",
+        "note": "#solutions",
+        "span": 12,
+        "bar": "techbycss.com/#solutions",
+        "wide": true
+      },
+      {
+        "src": "/assets/case/css-s1.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "\"About Our Company\": a line-art arrow beside \"We are a cutting-edge company dedicated to providing seamless communication and connectivity solutions\"",
+        "cap": "About",
+        "note": "#about",
+        "span": 6,
+        "bar": "techbycss.com/#about"
+      },
+      {
+        "src": "/assets/case/css-s2.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "\"Become the leading provider of communication and connectivity solutions in Africa\" beside value cards for innovation, reliability, customer-centricity and efficiency",
+        "cap": "Vision and values",
+        "note": "#about",
+        "span": 6,
+        "bar": "techbycss.com/#about"
+      },
+      {
+        "src": "/assets/case/css-s4.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Solution cards for cloud hosting and data, cybersecurity, and on-demand internet for events",
+        "cap": "More solutions",
+        "note": "#solutions",
+        "span": 6,
+        "bar": "techbycss.com/#solutions"
+      },
+      {
+        "src": "/assets/case/css-s5.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "\"Let’s Talk\": company name, Westlands address, email and phone above the footer",
+        "cap": "Contact",
+        "note": "#contact",
+        "span": 6,
+        "bar": "techbycss.com/#contact"
+      }
+    ]
+  },
+  "mobile": {
+    "src": "/assets/case/css-mobile.jpg",
+    "w": 780,
+    "h": 1688,
+    "alt": "CSS on a phone: \"We specialize in Communication & Connectivity Solutions\" centred over the teal gradient"
+  },
+  "accent": "Matches the current theme (mint glow on the logo blue)."
+}

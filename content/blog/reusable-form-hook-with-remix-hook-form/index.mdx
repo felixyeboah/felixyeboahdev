@@ -1,0 +1,512 @@
+---
+title: Reusable form hook with Remix Hook Form
+date: '2023-07-11T10:00:00.000Z'
+updated: '2023-07-11T10:00:00.000Z'
+subtitle: One of the primary features of Remix is simplifying interactions with the server to get data into components.
+categories: ['engineering', 'remix']
+keywords: ['remix', 'react', 'forms', 'zod', 'remix-hook-form']
+slug: reusable-form-hook-with-remix-hook-form
+cover: blog/pexels-valdemaras-d-1700731
+bannerAlt: Chapel desert middle east monastery
+bannerCredit: Photo by [Valdemaras D.](https://www.pexels.com/@valdemaras-d-784301/)
+type: 'blogPost'
+featured: false
+---
+
+
+Let's say want to build a Form in Remix for our application, and we want to utilize the [Remix Hook Form](https://github.com/Code-Forge-Net/remix-hook-form) library, and we want to use Zod to validate our form. In an application with multiple forms, it can become cumbersome to import the `Remix Hook Form` library in every page that requires a form. To simplify this process, we can create a custom hook library that handles the complexity of importing the library in all page.
+
+<Info>
+    This post assumes the basic understanding of either [Remix Hook Form](https://github.com/Code-Forge-Net/remix-hook-form) or [React Hook Form](https://react-hook-form.com/). Remix Hook Form is a powerful and lightweight wrapper around `react-hook-form` that streamlines the process of working with forms and form data in your Remix applications.
+</Info>
+
+The first approach is to create a hook component that import and use the library to create reusable hook.
+
+```tsx title=app/hooks/use-form.tsx
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import {
+  RemixFormProvider as FormProviderRemixHookForm,
+  useRemixForm as useFormRemixHookForm,
+  useRemixFormContext as useFormContextRemixHookForm,
+} from "remix-hook-form";
+import { Form } from "@remix-run/react";
+
+type FormProps = {
+  onSubmit?: Function;
+};
+
+type Mode = "onBlur" | "onChange" | "onSubmit" | "onTouched" | "all";
+type CriteriaMode = "firstError" | "all";
+export type ErrorOption = {
+  message?: string;
+  type?: string;
+  types?: Record<string, string>;
+};
+
+type HookResponse = {
+  formErrors: { [key: string]: {} | undefined };
+  resetForm: (values?: any) => void;
+  control: any;
+  setFormValue: (
+    name: string,
+    value: any,
+    config?: Record<string, unknown>
+  ) => void;
+  getFormValues: (payload?: string | string[]) => any;
+  validateForm: () => Promise<boolean>;
+  renderForm: (children: any, formProps?: FormProps) => any;
+  watchForm: (payload?: string | string[]) => any;
+  setFormError: (fieldName: string, err: any) => void;
+};
+
+type HookParams = {
+  onSubmit?: (data: Record<string, any>, e?: any) => any;
+  onError?: (errors: Record<string, unknown>, e?: any) => void;
+  callingSubmitManually?: boolean;
+
+  defaultValues?: { [x: string]: {} | undefined } | undefined;
+  mode?: Mode;
+  reValidateMode?: Exclude<Mode, "onTouched" | "all">;
+  criteriaMode?: CriteriaMode;
+  schema?: any;
+};
+
+/**
+ * Examples:
+ *
+ * setFormError("email", "This email is already used")
+ * setFormError("password", ["Too short", "Mix different characters"])
+ * setFormError("myField", { ...actual RHF error-compliant payload })
+ *
+ * @param setError
+ */
+const setFormErrorFactory =
+  (setError: {
+    (
+      name: string,
+      error: ErrorOption,
+      options?: { shouldFocus: boolean } | undefined
+    ): void;
+    (
+      name: string,
+      error: ErrorOption,
+      options?: { shouldFocus: boolean } | undefined
+    ): void;
+    (arg0: string, arg1: { type: string; message: any }): void;
+  }) =>
+  (fieldName: string, err: any) => {
+    if (typeof err === "string") {
+      setError(fieldName, { type: "manual", message: err });
+    } else if (Array.isArray(err)) {
+      setError(fieldName, { type: "manual", message: err[0] });
+    } else {
+      setError(fieldName, err);
+    }
+  };
+
+const defaultFormParams = {
+  mode: "onBlur" as Mode,
+  reValidateMode: "onBlur" as Exclude<Mode, "onTouched" | "all">,
+  criteriaMode: "all" as CriteriaMode,
+};
+
+export default function useForm(params: HookParams = {}): HookResponse {
+  const { onError, schema, ...otherParams } = params;
+
+  const useFormRemixHookFormPayload = useFormRemixHookForm({
+    ...defaultFormParams,
+    ...otherParams,
+    resolver: schema ? zodResolver(schema) : undefined,
+  });
+
+  const {
+    handleSubmit,
+    reset,
+    formState,
+    setValue,
+    getValues,
+    trigger,
+    watch,
+    setError,
+  } = useFormRemixHookFormPayload;
+
+  const { errors } = formState ?? {};
+
+  const renderForm = (children: React.ReactNode, formProps = {}) => (
+    <FormProviderRemixHookForm {...useFormRemixHookFormPayload}>
+      <Form onSubmit={handleSubmit} {...formProps}>
+        {children}
+      </Form>
+    </FormProviderRemixHookForm>
+  );
+
+  return {
+    formErrors: errors,
+    resetForm: reset,
+    setFormValue: setValue,
+    getFormValues: getValues,
+    validateForm: trigger,
+    renderForm,
+    watchForm: watch,
+    setFormError: setFormErrorFactory(setError),
+    ...useFormRemixHookFormPayload,
+  };
+}
+
+export function useFormContext() {
+  const { formState, watch, reset, getValues, setValue, trigger, setError } =
+    useFormContextRemixHookForm() ?? {};
+
+  const { errors } = formState ?? {};
+
+  return {
+    validateForm: trigger,
+    setFormError: setFormErrorFactory(setError),
+    // Aliasing
+    formErrors: errors,
+    resetForm: reset,
+    setFormValue: setValue,
+    getFormValues: getValues,
+    watchForm: watch,
+    ...useFormContextRemixHookForm,
+  };
+}
+
+export function FormContext(props: { children: any }) {
+  const { children } = props;
+
+  const context = useFormContext();
+
+  return children(context);
+}
+
+export function FormProvider(props: { [x: string]: any; children: any }) {
+  const { children, ...otherProps } = props;
+
+  const useFormRemixHookFormPayload = useFormRemixHookForm({
+    ...defaultFormParams,
+    ...otherProps,
+  });
+
+  return (
+    <FormProviderRemixHookForm {...useFormRemixHookFormPayload}>
+      {children}
+    </FormProviderRemixHookForm>
+  );
+}
+```
+
+This seems to work but there is one change I will like to make. If we want to swap out the Form component to use `fetcher.Form`, there will be no way to do that. To solve that, we can accept the component as a prop. Thanks to [Sergio Xalambri](https://twitter.com/sergiodxa) for this trick in his [post](https://sergiodxa.com/tutorials/create-a-reusable-form-component-in-remix).
+
+```tsx title=app/hooks/use-form.tsx
+//app/hooks/use-form.tsx
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { FormProps as RemixFormProps } from "@remix-run/react";
+
+import {
+  RemixFormProvider as FormProviderRemixHookForm,
+  useRemixForm as useFormRemixHookForm,
+  useRemixFormContext as useFormContextRemixHookForm,
+} from "remix-hook-form";
+import { Form } from "@remix-run/react";
+import {Component} from "react";
+
+type Mode = "onBlur" | "onChange" | "onSubmit" | "onTouched" | "all";
+type CriteriaMode = "firstError" | "all";
+export type ErrorOption = {
+  message?: string;
+  type?: string;
+  types?: Record<string, string>;
+};
+
+type HookResponse = {
+  formErrors: { [key: string]: {} | undefined };
+  resetForm: (values?: any) => void;
+  control: any;
+  setFormValue: (
+    name: string,
+    value: any,
+    config?: Record<string, unknown>
+  ) => void;
+  getFormValues: (payload?: string | string[]) => any;
+  validateForm: () => Promise<boolean>;
+  renderForm: (children: any, formProps?: RemixFormProps) => any;
+  watchForm: (payload?: string | string[]) => any;
+  setFormError: (fieldName: string, err: any) => void;
+};
+
+type HookParams = {
+  onSubmit?: (data: Record<string, any>, e?: any) => any;
+  onError?: (errors: Record<string, unknown>, e?: any) => void;
+  callingSubmitManually?: boolean;
+
+  defaultValues?: { [x: string]: {} | undefined } | undefined;
+  mode?: Mode;
+  reValidateMode?: Exclude<Mode, "onTouched" | "all">;
+  criteriaMode?: CriteriaMode;
+  schema?: any; // wil fix this and update
+  form?: React.ComponentType<RemixFormProps>; // addition here
+};
+
+/**
+ * Examples:
+ *
+ * setFormError("email", "This email is already used")
+ * setFormError("password", ["Too short", "Mix different characters"])
+ * setFormError("myField", { ...actual RHF error-compliant payload })
+ *
+ * @param setError
+ */
+const setFormErrorFactory =
+  (setError: {
+    (
+      name: string,
+      error: ErrorOption,
+      options?: { shouldFocus: boolean } | undefined
+    ): void;
+    (
+      name: string,
+      error: ErrorOption,
+      options?: { shouldFocus: boolean } | undefined
+    ): void;
+    (arg0: string, arg1: { type: string; message: any }): void;
+  }) =>
+  (fieldName: string, err: any) => {
+    if (typeof err === "string") {
+      setError(fieldName, { type: "manual", message: err });
+    } else if (Array.isArray(err)) {
+      setError(fieldName, { type: "manual", message: err[0] });
+    } else {
+      setError(fieldName, err);
+    }
+  };
+
+const defaultFormParams = {
+  mode: "onBlur" as Mode,
+  reValidateMode: "onBlur" as Exclude<Mode, "onTouched" | "all">,
+  criteriaMode: "all" as CriteriaMode,
+};
+
+export default function useForm(params: HookParams = {}): HookResponse {
+  const { onError, schema, form: Component = Form, ...otherParams } = params; // new component received
+
+  const useFormRemixHookFormPayload = useFormRemixHookForm({
+    ...defaultFormParams,
+    ...otherParams,
+    resolver: schema ? zodResolver(schema) : undefined,
+  });
+
+  const {
+    handleSubmit,
+    reset,
+    formState,
+    setValue,
+    getValues,
+    trigger,
+    watch,
+    setError,
+  } = useFormRemixHookFormPayload;
+
+  const { errors } = formState ?? {};
+
+  const renderForm = (children: React.ReactNode, formProps = {}) => (
+    <FormProviderRemixHookForm {...useFormRemixHookFormPayload}>
+      <Component onSubmit={handleSubmit} {...formProps}>
+        {children}
+      </Component>
+    </FormProviderRemixHookForm>
+  );
+
+  return {
+    formErrors: errors,
+    resetForm: reset,
+    setFormValue: setValue,
+    getFormValues: getValues,
+    validateForm: trigger,
+    renderForm,
+    watchForm: watch,
+    setFormError: setFormErrorFactory(setError),
+    ...useFormRemixHookFormPayload,
+  };
+}
+
+export function useFormContext() {
+  const { formState, watch, reset, getValues, setValue, trigger, setError } =
+    useFormContextRemixHookForm() ?? {};
+
+  const { errors } = formState ?? {};
+
+  return {
+    validateForm: trigger,
+    setFormError: setFormErrorFactory(setError),
+    // Aliasing
+    formErrors: errors,
+    resetForm: reset,
+    setFormValue: setValue,
+    getFormValues: getValues,
+    watchForm: watch,
+    ...useFormContextRemixHookForm,
+  };
+}
+
+export function FormContext(props: { children: any }) {
+  const { children } = props;
+
+  const context = useFormContext();
+
+  return children(context);
+}
+
+export function FormProvider(props: { [x: string]: any; children: any }) {
+  const { children, ...otherProps } = props;
+
+  const useFormRemixHookFormPayload = useFormRemixHookForm({
+    ...defaultFormParams,
+    ...otherProps,
+  });
+
+  return (
+    <FormProviderRemixHookForm {...useFormRemixHookFormPayload}>
+      {children}
+    </FormProviderRemixHookForm>
+  );
+}
+```
+
+Now, we can accept `fetcher.Form` from outside the hook which makes easy if one wants to swap out the Form component.
+
+Before we use this hook in all our pages, let's build a custom input component that utilizes the Remix Hook Form `useRemixFormContext` to register and create reusable input field component.
+
+```tsx title=app/components/fields.tsx
+//app/components/fields.tsx
+import { useRemixFormContext } from "remix-hook-form";
+
+const InputField = ({
+  name,
+  label,
+  ...props
+}: { name: string; label: string } & JSX.IntrinsicElements["input"]) => {
+  const {
+    register,
+    formState: { errors },
+  } = useRemixFormContext();
+
+  const error = Array.isArray(errors[name])
+    ? // @ts-ignore
+      errors[name].join(", ")
+    : errors[name]?.message || errors[name];
+
+  return (
+    <div>
+      <label htmlFor={name} style={{ display: "block" }}>
+        {label}
+      </label>
+      <input {...register(name)} {...props} />
+      {error && <p style={{ fontSize: "10px", color: "red" }}>{error}</p>}
+    </div>
+  );
+};
+
+export {InputField}
+```
+Finally, we can use the input field and hook in all our page.
+
+```tsx title=app/routes/projects.tsx
+//app/routes/projects.tsx
+import useForm from "~/hooks/use-form";
+import { getValidatedFormData } from "remix-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type ActionArgs, json } from "@remix-run/node";
+import FormInput from "~/components/fields";
+
+//schema
+const schema = z.object({
+  name: z.string().nonempty(),
+  email: z.string().email().nonempty(),
+  password: z.string().min(8),
+  image: z.preprocess((value) => {
+    if (Array.isArray(value)) {
+      // No preprocess needed if the value is already an array
+      return value;
+    } else if (value instanceof File && value.name !== "" && value.size > 0) {
+      // Wrap it in an array if the file is valid
+      return [value];
+    } else {
+      // Treat it as empty array otherwise
+      return [];
+    }
+  }, z.instanceof(File).array().min(1, "At least 1 file is required")),
+});
+
+type FormData = z.infer<typeof schema>;
+
+//resolvers
+const resolver = zodResolver(schema);
+
+//route action
+export const action = async ({ request }: ActionArgs) => {
+  const {
+    errors,
+    data,
+    receivedValues: defaultValues,
+  } = await getValidatedFormData<FormData>(request, resolver);
+  console.log({ errors, data, defaultValues });
+  if (errors) {
+    return json({ errors, defaultValues });
+  }
+  // Do something with the data
+  return json(data);
+};
+
+//client component
+export default function Index() {
+  const { renderForm } = useForm({
+    schema,
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  return renderForm(
+    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
+      <h1>Welcome to Remix</h1>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "4px",
+          width: "200px",
+        }}
+      >
+        <FormInput label="Name" name="name" />
+        <FormInput label="Email" name="email" />
+        <FormInput label="Password" name="password" type="password" />
+        <button
+          type="submit"
+          style={{
+            all: "unset",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#116D6E",
+            color: "white",
+            width: "100%",
+            height: "35px",
+            borderRadius: "6px",
+          }}
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+That's it. You can now use this hook in all pages that requires a form.
+
+I created same hook for react applications. You can find it here in my [repo](https://github.com/felixyeboah/packages/tree/main/form) on Github.

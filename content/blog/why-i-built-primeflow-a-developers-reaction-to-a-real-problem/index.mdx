@@ -1,0 +1,106 @@
+---
+title: 'Why I Built Primeflow: A Developer’s Reaction to a Real Problem'
+date: '2025-12-01T10:00:00.000Z'
+updated: '2025-12-01T10:00:00.000Z'
+subtitle: I built Primeflow to solve a real problem I faced as a developer. It started with a simple e-commerce app I built for a client selling natural spice products. Everything worked perfectly until the payments started failing. The webhook—the critical automated message from the Payment Service Provider (PSP)—became unreliable. Sometimes it fired, sometimes it was total silence.
+categories: ['review']
+keywords:
+  [
+    'payments',
+    'merchant',
+    'developer',
+    'integration',
+    'fallback',
+    'routing',
+    'fraud',
+    'security',
+  ]
+slug: why-i-built-primeflow-a-developers-reaction-to-a-real-problem
+cover: blog/photo-1726137569825-7535962addcd_eja9ae
+bannerAlt: A payment flow
+bannerCredit: Photo by [SumUp](https://unsplash.com/@sumup)
+type: 'blogPost'
+featured: true
+---
+
+## 📖 The Origin Story
+
+I didn’t set out to build a payment product. **Primeflow** started from a frustration common to many developers: **Payment integration fragility.**
+
+It began with an e-commerce app I built for a client selling natural spice products. Everything worked perfectly until the payments started failing. The webhook, the critical automated message from the Payment Service Provider (PSP) became unreliable. Sometimes it fired, sometimes it was total silence.
+
+Switching PSPs meant rewriting almost every part of the integration. It was a painful amount of work for something that should’ve been simple.
+
+**The Realization:**
+If I struggled like this with one client, how many other developers are silently dealing with the same problem? How many merchants accept broken payment flows as "normal"?
+
+Inspired by the enterprise architectures of companies like _Primer.io_, but simplified for builders starting from scratch, I decided to build a solution. Not a Frankenstein monster. Just something practical.
+
+---
+
+## 🚀 Core Philosophy
+
+The goal was simple. I wanted to build a "Universal Remote" for payments.
+
+1.  **A Single Integration Layer:** Developers integrate once.
+2.  **Consistent Data Structures:** Standardized request and response bodies so switching PSPs never requires rewriting business logic.
+3.  **Zero Downtime:** If your app communicates with Primeflow, it shouldn't matter if the backend forwards to Hubtel, Paystack, or Stripe.
+
+---
+
+## ✨ Key Features
+
+### 🔄 Automatic Fallback Routing
+
+_The biggest win for merchants._
+We connect multiple PSPs—one as default, one as backup. If **PSP A** has issues or goes offline, Primeflow:
+
+- Automatically forwards the transaction to **PSP B**.
+- Checks health in real-time.
+- Keeps the business running without manual toggles or emergency code rewrites.
+
+### 🛡️ Merchant-First Fraud Control
+
+Most PSPs run their own fraud checks, but Primeflow adds a layer of **merchant-level control** _before_ the transaction leaves the system.
+
+- **Geography:** Apply rules based on country.
+- **Transaction Limits:** Set rules based on amounts.
+- **Blocklists:** Block specific BIN ranges or card types.
+- **Custom Policies:** It’s like checking who’s at the door before opening it—not after.
+
+### 🔐 Enterprise-Grade Security
+
+We treat merchant credentials as secrets in every possible sense.
+
+- **Envelope Encryption:** Merchant client/secret keys are encrypted using a temporary Data Encryption Key (DEK), which is protected by a KMS-managed Master Key (KEK).
+- **In-Memory Decryption:** Keys are only decrypted at call-time.
+- **Zero Leakage:** Nothing is stored in plain text. Nothing is leaked to logs. Nothing touches external traffic until encrypted.
+
+---
+
+## 🛠 Status & Roadmap
+
+The current version is live and serving early clients (including the original spice merchant!). We are actively pushing the product further to give merchants full control.
+
+**Currently Building:**
+
+- **BYOK (Bring Your Own Key):** Full support for merchants to securely input their own provider API keys.
+- **Custom Notifications:** Configurable Email and SMS templates.
+- **Team Alerts:** Webhooks for Slack, Microsoft Teams, and other platforms.
+- **Post-Payment Actions:** Trigger workflows directly from the dashboard after a successful transaction.
+
+---
+
+## 💡 Why This Matters
+
+No developer wants to spend days relearning PSP integrations every time a provider changes. And no merchant wants to lose business just because a webhook decided not to behave today.
+
+**Primeflow is built for:**
+
+- **Developers** building payment features who want a clean, unified API.
+- **Merchants** who depend on stable transactions.
+- **Teams** requiring secure, flexible, encrypted payment routing.
+
+It’s not the final version. But it’s a start I believe in.
+
+> _"Not glamorous. Just useful. And sometimes, that’s all innovation really needs to be."_

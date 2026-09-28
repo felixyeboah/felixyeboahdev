@@ -1,0 +1,252 @@
+{
+  "slug": "the-rumson",
+  "status": "live",
+  "url": "https://therumson.com/",
+  "checkedAt": "2026-09-27",
+  "pages": [
+    "https://therumson.com/",
+    "https://therumson.com/menu",
+    "https://therumson.com/about",
+    "https://therumson.com/events",
+    "https://therumson.com/contact",
+    "https://therumson.com/auth/login",
+    "https://therumson.com/visit",
+    "https://therumson.com/menu/cmmqkctl2000iqeosi00q0bep",
+    "https://therumson.com/menu/cmmqkcss4000gqeoseu02njye",
+    "https://therumson.com/menu/cmmqkcpk10008qeos6lk2mhoo",
+    "https://therumson.com/reservations",
+    "https://therumson.com/blog",
+    "https://therumson.com/legal/privacy-policy",
+    "https://therumson.com/legal/terms",
+    "https://therumson.com/menu/cmmqkcr60000cqeos2m84hvjv",
+    "https://therumson.com/menu/cmmqkcuei000kqeosux72s29a",
+    "https://therumson.com/menu/cmmqkcrzd000eqeos5t1smf68",
+    "https://therumson.com/menu/cmmqkcqcx000aqeosz5clza7i",
+    "https://therumson.com/menu/cmmqkcxgl000sqeostxnp8o5r",
+    "https://therumson.com/menu/cmmqkcwra000qqeos7wnl5ls8",
+    "https://therumson.com/menu/cmmqkcw0g000oqeosv4cs3cdc",
+    "https://therumson.com/menu/cmmqkcy9i000uqeos7gqcx4rm",
+    "https://therumson.com/menu/cmmqkcyxm000wqeosm9n7se0p",
+    "https://therumson.com/menu/cmmqkcznp000yqeosku0gpqi9",
+    "https://therumson.com/menu/cmmqkd1730012qeosqvlh5wia",
+    "https://therumson.com/menu/cmmqkd0gr0010qeosogdzxnr1",
+    "https://therumson.com/auth/forgot-password",
+    "https://therumson.com/auth/signup",
+    "https://therumson.com/blog/second-post",
+    "https://therumson.com/blog/first-post",
+    "https://therumson.com/checkout (reached by adding Kelewele with Groundnuts to the cart)"
+  ],
+  "evidence": {
+    "stack": [
+      {
+        "name": "Next.js",
+        "evidence": "x-powered-by: Next.js header; window.next.version = 16.2.12"
+      },
+      {
+        "name": "React 19",
+        "evidence": "react-dom 19.2.8 in the bundles"
+      },
+      {
+        "name": "Reevit",
+        "evidence": "checkout renders a ReevitCheckout component (publicKey, amount, currency) via getReevitCheckoutConfig; CSP connect-src allows https://*.reevit.io"
+      },
+      {
+        "name": "Paystack",
+        "evidence": "CSP script-src/frame-src/form-action allow js.paystack.co and checkout.paystack.com; PaystackBridge in the bundles"
+      },
+      {
+        "name": "Better Auth",
+        "evidence": "better-auth in the bundles (sign-in, sign-up, forgot password)"
+      },
+      {
+        "name": "Turso",
+        "evidence": "CSP connect-src allows https://*.turso.io"
+      },
+      {
+        "name": "Cloudflare R2",
+        "evidence": "CSP img-src allows *.r2.dev / r2.cloudflarestorage.com"
+      },
+      {
+        "name": "Radix UI",
+        "evidence": "data-radix attributes"
+      }
+    ],
+    "hosting": "Cloudflare (server: cloudflare, cf-placement header suggests Workers)",
+    "other": [
+      "PLACEHOLDERS ON THE LIVE SITE: phone \"+233 30 000 0000\" (visible in the reservations screenshot, s4) and WhatsApp link wa.me/233300000000; cookie banner reads \"This site doesn’t use cookies yet, but we added this banner to demo it to you.\"; the Journal holds seed posts by \"Tony Stark\" and \"Elon Musk\"; /visit (linked from the footer) returns 404; the heritage page names Chef Kojo Mensah and then \"Marcus\"",
+      "Footer address \"12 Aviation Road, Labone\" differs from \"Labone Social Club, Labone\" elsewhere",
+      "Payload markers appear in the bundles but the header is plain \"Next.js\"; not claimed",
+      "Checkout total, tax and self-pickup lines are live UI for a single test item; no order was placed",
+      "Related portfolio entry: Reevit (the checkout provider)"
+    ]
+  },
+  "tagline": [
+    "Elevated Ghanaian comfort food in the heart of Labone,",
+    "with online ordering for dine-in, takeaway and delivery."
+  ],
+  "credits": [
+    [
+      "Category",
+      "Restaurant",
+      null
+    ],
+    [
+      "Built with",
+      "Next.js, React, Better Auth",
+      "detected on the live site"
+    ],
+    [
+      "Payments",
+      "Reevit",
+      "with Paystack; detected on the live site"
+    ]
+  ],
+  "stage": {
+    "src": "/assets/case/the-rumson-s0.jpg",
+    "w": 2160,
+    "h": 1350,
+    "alt": "The Rumson homepage: \"Food worth coming back for.\" in dark green and red, with Order now and Find us buttons beside an \"Est. 2024\" card",
+    "bar": "therumson.com"
+  },
+  "related": [
+    "reevit"
+  ],
+  "brief": {
+    "statement": "A restaurant site that takes the order",
+    "muted": "and the booking, not just the menu.",
+    "story": [
+      {
+        "h": "The restaurant",
+        "body": [
+          "The Rumson serves Ghanaian comfort food in Labone, Accra, every day from 11am to 11pm: goat pepper soup, kelewele with groundnuts, oxtail sauce, jollof.",
+          "It opened in 2024 for dine-in, takeaway and delivery."
+        ]
+      },
+      {
+        "h": "Ordering",
+        "body": [
+          "The menu works like a shop: search, a price filter, sorting and ten categories from small plates to drinks.",
+          "Every dish has its own page with dietary tags and a picture. The cart shows tax and takes a promo code, and checkout runs in three steps (details, delivery, payment) with payment through Reevit."
+        ]
+      },
+      {
+        "h": "Everything else",
+        "body": [],
+        "list": [
+          [
+            "Reservations.",
+            "Party size, a date, lunch or dinner seatings every half hour, the occasion and any special requests."
+          ],
+          [
+            "Accounts.",
+            "Sign-up and sign-in for membership and faster checkout."
+          ],
+          [
+            "The rest.",
+            "Heritage, events, a journal and contact with WhatsApp."
+          ]
+        ]
+      }
+    ]
+  },
+  "notes": {
+    "label": "Under the hood",
+    "title": "Menu, cart and table, <span class=\"soft\">in one place.</span>",
+    "items": [
+      [
+        "A menu that filters",
+        "Search, a price range, sorting and category tabs over the full menu."
+      ],
+      [
+        "Dish pages",
+        "Dietary tags, a quantity picker and a choice between Add to cart and Order now."
+      ],
+      [
+        "Three-step checkout",
+        "Details, delivery method, then payment, with delivery by region and city or free self-pickup."
+      ],
+      [
+        "Reevit payments",
+        "The checkout hands the charge to Reevit, with Paystack behind it."
+      ],
+      [
+        "Table bookings",
+        "Lunch and dinner slots every half hour, with the occasion and special requests."
+      ]
+    ],
+    "chips_label": "Stack",
+    "chips": [
+      "Next.js",
+      "React 19",
+      "Better Auth",
+      "Reevit",
+      "Paystack",
+      "Turso",
+      "Cloudflare"
+    ]
+  },
+  "gallery": {
+    "label": "The site",
+    "title": "From the menu <span class=\"soft\">to the table.</span>",
+    "items": [
+      {
+        "src": "/assets/case/the-rumson-s1.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "\"What’s on the table\": goat pepper soup, grilled skewers and kelewele with groundnuts, each with a description and price in cedis",
+        "cap": "Kitchen highlights",
+        "note": "Home · therumson.com",
+        "span": 12,
+        "bar": "therumson.com",
+        "wide": true
+      },
+      {
+        "src": "/assets/case/the-rumson-s2.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Menu page: search, price and sort controls above ten category tabs and the first dish photographs",
+        "cap": "The menu",
+        "note": "/menu",
+        "span": 6,
+        "bar": "therumson.com/menu"
+      },
+      {
+        "src": "/assets/case/the-rumson-s3.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Dish page for Kelewele with Groundnuts: Chef’s pick, vegetarian and gluten-free tags, GH₵49, Add to cart and Order now",
+        "cap": "Dish page",
+        "note": "/menu/[dish]",
+        "span": 6,
+        "bar": "therumson.com/menu"
+      },
+      {
+        "src": "/assets/case/the-rumson-s4.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Reservations: guest counter, date field and lunch and dinner time slots beside How it works and Good to know panels",
+        "cap": "Reservations",
+        "note": "/reservations",
+        "span": 6,
+        "bar": "therumson.com/reservations"
+      },
+      {
+        "src": "/assets/case/the-rumson-s5.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Checkout step one: customer data and delivery address beside the order items, tax, self-pickup and a promo code field",
+        "cap": "Checkout",
+        "note": "/checkout",
+        "span": 6,
+        "bar": "therumson.com/checkout"
+      }
+    ]
+  },
+  "mobile": {
+    "src": "/assets/case/the-rumson-mobile.jpg",
+    "w": 780,
+    "h": 1688,
+    "alt": "The Rumson on a phone: \"Food worth coming back for.\" with full-width Order now and Find us buttons"
+  },
+  "accent": "Matches the current theme (red #C91A29 CTA over dark green #1B3C35)."
+}

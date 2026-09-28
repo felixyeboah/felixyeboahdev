@@ -1,0 +1,22 @@
+{
+  "default": "/static/og/default.png",
+  "2023-mid-year-review": "/static/og/fb75d4c5.png",
+  "building-my-portfolio-with-remix": "/static/og/e8905327.png",
+  "dealing-with-burnout-as-a-developer": "/static/og/f3d0e594.png",
+  "forms-with-fetcher-and-zod": "/static/og/706f10c0.png",
+  "framework-wars-2022": "/static/og/f57c40f9.png",
+  "how-i-got-here-pt-1-the-childhood": "/static/og/e8640ce0.png",
+  "how-i-got-here-pt-2-the-software-development-journey": "/static/og/ee192f19.png",
+  "how-i-got-here-pt-3-the-love-life": "/static/og/02853ca6.png",
+  "how-i-got-sold-on-remix": "/static/og/2dac331b.png",
+  "how-to-think-in-remix": "/static/og/b99d0717.png",
+  "migrating-a-project-from-legacy-routes-to-typesafe-named-routes": "/static/og/43fa2fbb.png",
+  "migrating-an-existing-project-to-blitzjs": "/static/og/f9d2fbbf.png",
+  "mock-testing-with-go-mockery": "/static/og/08d5f823.png",
+  "my-2021-in-review": "/static/og/8fe8af7c.png",
+  "my-2024-in-review": "/static/og/b7cc4412.png",
+  "reusable-form-hook-with-remix-hook-form": "/static/og/eb2003d5.png",
+  "review-of-my-time-at-primer": "/static/og/133c5b62.png",
+  "transitioning-to-backend-engineering": "/static/og/9c7a5e0d.png",
+  "understanding-the-call-apply-and-bind-functions-in-javascript": "/static/og/ad964b9c.png"
+}

@@ -1,0 +1,248 @@
+{
+  "slug": "dasheen-atelier",
+  "status": "live",
+  "url": "https://dasheenatelier.com/",
+  "checkedAt": "2026-09-27",
+  "pages": [
+    "https://dasheenatelier.com/",
+    "https://dasheenatelier.com/measure",
+    "https://dasheenatelier.com/products",
+    "https://dasheenatelier.com/school",
+    "https://dasheenatelier.com/about",
+    "https://dasheenatelier.com/book",
+    "https://dasheenatelier.com/bridal",
+    "https://dasheenatelier.com/traditional",
+    "https://dasheenatelier.com/enquiries",
+    "https://dasheenatelier.com/dashboard",
+    "https://dasheenatelier.com/products?category=1",
+    "https://dasheenatelier.com/products?category=2",
+    "https://dasheenatelier.com/products?category=3",
+    "https://dasheenatelier.com/products?category=4",
+    "https://dasheenatelier.com/products/the-velloria-gown",
+    "https://dasheenatelier.com/products/the-solenne-gown",
+    "https://dasheenatelier.com/products/the-aurelle-gown",
+    "https://dasheenatelier.com/products/the-aseda-ensemble",
+    "https://dasheenatelier.com/products/the-verdelle-gown",
+    "https://dasheenatelier.com/products/the-elaria-gown",
+    "https://dasheenatelier.com/products/the-amarante-gown",
+    "https://dasheenatelier.com/products/the-lan-gown",
+    "https://dasheenatelier.com/careers",
+    "https://dasheenatelier.com/apply",
+    "https://dasheenatelier.com/posts",
+    "https://dasheenatelier.com/faqs",
+    "https://dasheenatelier.com/privacy",
+    "https://dasheenatelier.com/terms",
+    "https://dasheenatelier.com/products/the-celestine-gown",
+    "https://dasheenatelier.com/products/chiffon-luxe-gown",
+    "https://dasheenatelier.com/checkout (reached by adding The Velloria Gown to the cart)"
+  ],
+  "evidence": {
+    "stack": [
+      {
+        "name": "Next.js",
+        "evidence": "x-powered-by: Next.js, Payload header; window.next.version = 16.3.1"
+      },
+      {
+        "name": "Payload CMS",
+        "evidence": "x-powered-by: Next.js, Payload header"
+      },
+      {
+        "name": "Reevit",
+        "evidence": "checkout calls /api/reevit/checkout and /api/reevit/verify and renders a ReevitCheckout component; copy reads \"Payment is handled securely by Reevit\" and \"Secure payment powered by Reevit\""
+      },
+      {
+        "name": "GSAP",
+        "evidence": "\"gsap\" / GreenSock markers in the bundles"
+      },
+      {
+        "name": "Lenis",
+        "evidence": "html.lenis class at runtime"
+      },
+      {
+        "name": "Swiper",
+        "evidence": "Swiper in the bundles"
+      },
+      {
+        "name": "ImageKit",
+        "evidence": "ik.imagekit.io image URLs in the bundles"
+      }
+    ],
+    "hosting": "Served through Cloudflare (server: cloudflare, cf-ray); origin not identifiable",
+    "other": [
+      "Shop shows 16 styles, made to order, priced in GH₵ (GH₵2,500 to GH₵12,000); one style marked sold out",
+      "Pages not visited individually: three further product pages, /auth/forgot-password and three career detail pages (/careers/beaders, /fashion-fellows, /seamstresses)",
+      "/posts (Journal) currently shows \"Search produced no results\"; /cart returns 404 (cart is a drawer)",
+      "studiotheon.com lists Dasheen Atelier as a StudioTheon project (brand identity, UI/UX, web development)",
+      "Related portfolio entry: Reevit (the checkout provider)"
+    ]
+  },
+  "tagline": [
+    "Made-to-measure bridal and traditional wear,",
+    "finished by hand in Accra."
+  ],
+  "credits": [
+    [
+      "Category",
+      "Fashion",
+      null
+    ],
+    [
+      "Built with",
+      "Next.js, Payload CMS",
+      "detected on the live site"
+    ],
+    [
+      "Payments",
+      "Reevit",
+      "hosted checkout, detected on the live site"
+    ]
+  ],
+  "stage": {
+    "src": "/assets/case/dasheen-atelier-s0.jpg",
+    "w": 2160,
+    "h": 1350,
+    "alt": "Dasheen Atelier homepage: \"Dressed for life’s greatest moments\" beside a bride in a beaded off-shoulder gown framed in a doorway",
+    "bar": "dasheenatelier.com"
+  },
+  "related": [
+    "reevit",
+    "studio-theon"
+  ],
+  "brief": {
+    "statement": "A fashion house, a shop and a school,",
+    "muted": "on one site, with payments on Reevit.",
+    "story": [
+      {
+        "h": "The house",
+        "body": [
+          "Dasheen Atelier is an Accra fashion house making made-to-measure bridal and traditional wear: wedding gowns, bridesmaids, mothers of the bride, and kente, lace and ceremonial pieces.",
+          "Every garment is patterned to the client’s measurements, refined across fittings and finished by hand."
+        ]
+      },
+      {
+        "h": "The shop",
+        "body": [
+          "The collection is sold online, each piece made to order in a custom size.",
+          "A gown page offers Add to cart or Book a fitting. The cart opens as a drawer, and checkout collects delivery details before handing payment to Reevit."
+        ],
+        "list": [
+          [
+            "Appointments.",
+            "Four steps (service, schedule, details, confirm) across six session types, from a styling session to a virtual consultation."
+          ],
+          [
+            "Measurements.",
+            "A measuring studio walks clients through the right measurements for womenswear or menswear."
+          ]
+        ]
+      },
+      {
+        "h": "The school",
+        "body": [
+          "A one-year professional certificate in morning and evening cohorts, taught over six modules from sewing foundations to bespoke finishing.",
+          "Applicants apply in two steps, and students sign in to a portal for their measurements, programme and documents."
+        ]
+      }
+    ]
+  },
+  "notes": {
+    "label": "Under the hood",
+    "title": "Made to order, <span class=\"soft\">end to end.</span>",
+    "items": [
+      [
+        "Made-to-order catalogue",
+        "Sixteen styles across bridal, bridesmaids, mothers and traditional, each sold in a custom size."
+      ],
+      [
+        "Booking in four steps",
+        "Pick a service, a slot and your details; a summary panel fills in as you go."
+      ],
+      [
+        "Reevit checkout",
+        "Payment runs through Reevit, so card details never touch the store’s own servers."
+      ],
+      [
+        "Admissions and portal",
+        "A two-step application for the fashion school and a sign-in for students and clients."
+      ],
+      [
+        "Careers",
+        "Open roles for beaders, fashion fellows and seamstresses, each with its own page."
+      ]
+    ],
+    "chips_label": "Stack",
+    "chips": [
+      "Next.js",
+      "Payload CMS",
+      "Reevit",
+      "GSAP",
+      "Lenis",
+      "Swiper",
+      "ImageKit"
+    ]
+  },
+  "gallery": {
+    "label": "The site",
+    "title": "Shop, book, <span class=\"soft\">learn.</span>",
+    "items": [
+      {
+        "src": "/assets/case/dasheen-atelier-s1.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "\"Find your occasion\": Bridal, Bridesmaids, Mothers and Traditional category cards with portrait photography",
+        "cap": "Shop by occasion",
+        "note": "Home · dasheenatelier.com",
+        "span": 12,
+        "bar": "dasheenatelier.com",
+        "wide": true
+      },
+      {
+        "src": "/assets/case/dasheen-atelier-s2.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Product page for The Velloria Gown: GH₵9,700, made to order, custom size, Add to cart and Book a fitting",
+        "cap": "Product page",
+        "note": "/products/the-velloria-gown",
+        "span": 6,
+        "bar": "dasheenatelier.com/products/the-velloria-gown"
+      },
+      {
+        "src": "/assets/case/dasheen-atelier-s5.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Secure checkout: \"Where should we send your order?\" with contact and delivery fields beside an order summary and a Pay securely button powered by Reevit",
+        "cap": "Checkout on Reevit",
+        "note": "/checkout",
+        "span": 6,
+        "bar": "dasheenatelier.com/checkout"
+      },
+      {
+        "src": "/assets/case/dasheen-atelier-s3.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Booking step one, \"What can we help you with?\": personal styling, custom tailoring, bridal consultation and VIP shopping cards beside a booking summary",
+        "cap": "Appointments",
+        "note": "/book",
+        "span": 6,
+        "bar": "dasheenatelier.com/book"
+      },
+      {
+        "src": "/assets/case/dasheen-atelier-s4.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Fashion school hero: \"Learn the craft of couture\" over a student sketching with a tape measure",
+        "cap": "Fashion school",
+        "note": "/school",
+        "span": 6,
+        "bar": "dasheenatelier.com/school"
+      }
+    ]
+  },
+  "mobile": {
+    "src": "/assets/case/dasheen-atelier-mobile.jpg",
+    "w": 780,
+    "h": 1688,
+    "alt": "Dasheen Atelier on a phone: \"Dressed for life’s greatest moments\" with Book an appointment and Explore the collection"
+  },
+  "accent": "The live site now pairs a deep green header (#0D3C36) with cream and a gold logo; the current theme is cognac (#B08565) on taupe. Consider a deep-green tint with the cognac accent."
+}

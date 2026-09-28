@@ -1,0 +1,209 @@
+{
+  "slug": "waytu",
+  "status": "live",
+  "url": "https://www.waytu.io/",
+  "checkedAt": "2026-09-27",
+  "pages": [
+    "https://www.waytu.io/",
+    "https://www.waytu.io/about",
+    "https://www.waytu.io/how-it-works",
+    "https://www.waytu.io/safety",
+    "https://www.waytu.io/contact",
+    "https://www.waytu.io/terms",
+    "https://www.waytu.io/privacy",
+    "https://www.waytu.io/cookie-policy"
+  ],
+  "evidence": {
+    "stack": [
+      {
+        "name": "Astro",
+        "evidence": "/_astro/ asset paths in the HTML and Astro runtime markers in the bundles"
+      },
+      {
+        "name": "Tailwind CSS",
+        "evidence": "\"tailwindcss v4.1.17\" banner in the stylesheet"
+      },
+      {
+        "name": "Lenis",
+        "evidence": "html.lenis class at runtime and Lenis in the bundles"
+      },
+      {
+        "name": "Tawk.to",
+        "evidence": "embed.tawk.to live-chat widget loaded on every page"
+      },
+      {
+        "name": "Google Analytics / Tag Manager",
+        "evidence": "googletagmanager.com gtag script"
+      }
+    ],
+    "hosting": "Netlify (server: Netlify, x-nf-request-id headers)",
+    "other": [
+      "White paper hosted on Notion (false-alarm-a05.notion.site)",
+      "Every \"Join the Waitlist\" / \"Join The Community\" button opens the same modal form (name, email, Ghana phone number, \"Do you own a car?\", \"Interested in sharing rides in your car?\")",
+      "Apps are shown as \"Coming soon to App Store / Google Play\"; no app links are live",
+      "Site copy contains marketing figures (up to 60% savings, 1k+ active users) and three testimonials; not verified, deliberately not used",
+      "About page says \"serve thousands of users across Ghana and Nigeria\" while the contact FAQ says \"currently launching in Accra\"; the case study avoids both claims"
+    ]
+  },
+  "tagline": [
+    "Community-driven ride-sharing",
+    "that pairs nearby commuters for a cheaper, greener trip."
+  ],
+  "credits": [
+    [
+      "Category",
+      "Ride-sharing",
+      null
+    ],
+    [
+      "Built with",
+      "Astro, Tailwind CSS",
+      "detected on the live site"
+    ],
+    [
+      "Hosting",
+      "Netlify",
+      "detected on the live site"
+    ],
+    [
+      "Status",
+      "Pre-launch",
+      "waitlist open; apps coming to iOS and Android"
+    ]
+  ],
+  "stage": {
+    "src": "/assets/case/waytu-s0.jpg",
+    "w": 2160,
+    "h": 1350,
+    "alt": "Waytu homepage: \"Community-driven ride-sharing\" with Join the Waitlist and Read White Paper buttons beside a commuter checking his phone in a car",
+    "bar": "waytu.io"
+  },
+  "brief": {
+    "statement": "A launch site for a ride-sharing app,",
+    "muted": "built to fill the waitlist before the apps ship.",
+    "story": [
+      {
+        "h": "The product",
+        "body": [
+          "Waytu pairs commuters who live near each other and travel the same way, so they can share the car and split the cost.",
+          "It was founded in Accra in 2024 and is launching there first, with other cities in Ghana and Nigeria in its plans."
+        ]
+      },
+      {
+        "h": "The site",
+        "body": [
+          "Five pages: home, about, how it works, safety and contact, plus the legal pages.",
+          "Every call to action opens the same waitlist form. It asks whether you own a car and whether you would share rides in it, so the team can tell drivers from riders before launch."
+        ]
+      },
+      {
+        "h": "Trust first",
+        "body": [
+          "A stranger’s car is a hard sell, so a whole page is given to safety."
+        ],
+        "list": [
+          [
+            "Verified.",
+            "Sign-up with a phone number and a government-issued ID."
+          ],
+          [
+            "Tracked.",
+            "Live location shared with trusted contacts during a ride."
+          ],
+          [
+            "Rated.",
+            "Riders and drivers review each other after every trip."
+          ],
+          [
+            "Fair.",
+            "Costs are split on distance and fuel."
+          ]
+        ]
+      }
+    ]
+  },
+  "notes": {
+    "label": "On the site",
+    "title": "Built to answer <span class=\"soft\">“is this safe?”</span>",
+    "items": [
+      [
+        "One waitlist, two audiences",
+        "A single modal form collects contact details and whether the person has a car to share, from any page."
+      ],
+      [
+        "Four steps",
+        "Sign up and verify, find or offer a ride, connect and coordinate, rate and review: the same flow on the homepage and its own page."
+      ],
+      [
+        "A safety page",
+        "Identity checks, live tracking, an emergency button and guidance for before, during and after a ride."
+      ],
+      [
+        "Somewhere to ask",
+        "A contact form with subjects from safety concerns to partnerships, and a live-chat widget on every page."
+      ]
+    ],
+    "chips_label": "Stack",
+    "chips": [
+      "Astro",
+      "Tailwind CSS",
+      "Lenis",
+      "Tawk.to",
+      "Google Analytics",
+      "Netlify"
+    ]
+  },
+  "gallery": {
+    "label": "The site",
+    "title": "Home, safety <span class=\"soft\">and the waitlist.</span>",
+    "items": [
+      {
+        "src": "/assets/case/waytu-s1.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Feature cards: Real-time Matching with a matched route line, a green Eco-friendly card, Community Driven and Cost Sharing",
+        "cap": "Features",
+        "note": "Home · waytu.io",
+        "span": 6,
+        "bar": "waytu.io"
+      },
+      {
+        "src": "/assets/case/waytu-s2.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "\"Start your journey in four simple steps\": Sign Up, Find or Offer, Connect & Ride, Rate & Review, with a Great Ride! badge",
+        "cap": "Four steps",
+        "note": "Home · waytu.io",
+        "span": 6,
+        "bar": "waytu.io"
+      },
+      {
+        "src": "/assets/case/waytu-s3.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Safety page: \"Your Safety is Our Priority\" above cards for identity verification, real-time tracking and an emergency button",
+        "cap": "Safety",
+        "note": "/safety",
+        "span": 6,
+        "bar": "waytu.io/safety"
+      },
+      {
+        "src": "/assets/case/waytu-s4.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Join the Waitlist form: name, email, Ghana phone number, \"Do you own a car?\" and \"Interested in sharing rides in your car?\"",
+        "cap": "Waitlist form",
+        "note": "Modal · every page",
+        "span": 6,
+        "bar": "waytu.io"
+      }
+    ]
+  },
+  "mobile": {
+    "src": "/assets/case/waytu-mobile.jpg",
+    "w": 780,
+    "h": 1688,
+    "alt": "Waytu on a phone: the \"Community-driven ride-sharing\" headline, Join the Waitlist and Read White Paper buttons, and \"Coming soon to App Store, Google Play\""
+  },
+  "accent": "Matches the current theme (#3EAE04 wordmark and CTA green)."
+}

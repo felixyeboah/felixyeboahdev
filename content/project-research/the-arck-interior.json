@@ -1,0 +1,208 @@
+{
+  "slug": "the-arck-interior",
+  "status": "live",
+  "url": "https://thearckinteriorltd.com/",
+  "checkedAt": "2026-09-27",
+  "pages": [
+    "https://thearckinteriorltd.com/",
+    "https://thearckinteriorltd.com/kitchens",
+    "https://thearckinteriorltd.com/wardrobes (menu link)",
+    "https://thearckinteriorltd.com/tv-units (menu link)",
+    "https://thearckinteriorltd.com/offices (menu link)",
+    "https://thearckinteriorltd.com/vanity-units (menu link)",
+    "https://thearckinteriorltd.com/contact (menu link)"
+  ],
+  "evidence": {
+    "stack": [
+      {
+        "name": "Next.js",
+        "evidence": "x-powered-by: Next.js, Payload header; window.next.version = 16.2.6"
+      },
+      {
+        "name": "Payload CMS",
+        "evidence": "x-powered-by: Next.js, Payload header"
+      },
+      {
+        "name": "GSAP",
+        "evidence": "\"gsap\" / GreenSock markers in the bundles"
+      },
+      {
+        "name": "Lenis",
+        "evidence": "html.lenis class at runtime"
+      },
+      {
+        "name": "Radix UI",
+        "evidence": "data-radix attributes (service detail dialogs)"
+      }
+    ],
+    "hosting": "Vercel (server: Vercel, x-vercel-id, x-vercel-cache)",
+    "other": [
+      "Menu opens a drawer with Kitchens, Wardrobes, TV Units, Offices, Vanity Units and Contact; /kitchens shows only an intro line and the contact band (no items yet)",
+      "Only /kitchens was opened directly; the other category pages are linked from the menu and assumed to share its template",
+      "Testimonials use generic names (Sarah Johnson, Michael Chen, etc.); not used",
+      "\"For over 6 years\" and \"8–12 weeks\" are the studio’s own copy"
+    ]
+  },
+  "tagline": [
+    "Thoughtfully designed kitchens and living spaces",
+    "that reflect your personality and style."
+  ],
+  "credits": [
+    [
+      "Category",
+      "Interior design",
+      null
+    ],
+    [
+      "Built with",
+      "Next.js, Payload CMS",
+      "detected on the live site"
+    ],
+    [
+      "Hosting",
+      "Vercel",
+      "detected on the live site"
+    ]
+  ],
+  "stage": {
+    "src": "/assets/case/the-arck-interior-s0.jpg",
+    "w": 2160,
+    "h": 1350,
+    "alt": "The Arck Interior homepage: \"Home is where style meets comfort\" over a dark kitchen with walnut cabinetry and a lit splashback, with a Get free consultation button",
+    "bar": "thearckinteriorltd.com"
+  },
+  "brief": {
+    "statement": "A showroom for kitchens and living spaces",
+    "muted": "that ends in a free consultation.",
+    "story": [
+      {
+        "h": "The studio",
+        "body": [
+          "The Arck Interior designs and fits kitchens, living rooms and offices, along with wardrobes, TV units and vanity units, from its base off the Kwashieman–Ofankor highway in Accra.",
+          "By its own account it has been doing this for more than six years."
+        ]
+      },
+      {
+        "h": "The site",
+        "body": [
+          "One long homepage carries the pitch: the hero kitchen, a gallery, four service cards and the process.",
+          "Each service card opens a detailed list. Kitchen design, for example, runs from layout and custom cabinetry to countertops and surfaces."
+        ]
+      },
+      {
+        "h": "The process",
+        "body": [
+          "Five steps, most projects finishing within 8 to 12 weeks."
+        ],
+        "list": [
+          [
+            "Consultation.",
+            "An in-home visit to measure the space and agree the budget."
+          ],
+          [
+            "3D design.",
+            "Photorealistic renderings and floor plans before any work starts."
+          ],
+          [
+            "Refine, source, install.",
+            "Feedback rounds, then materials, trades and installation are managed for the client."
+          ]
+        ]
+      }
+    ]
+  },
+  "notes": {
+    "label": "On the site",
+    "title": "From first visit <span class=\"soft\">to installation.</span>",
+    "items": [
+      [
+        "Service detail dialogs",
+        "Kitchen, living room, consultation and specialty services each open a full list of what is included."
+      ],
+      [
+        "Five-step process",
+        "Consultation, 3D design, feedback and refinement, sourcing and planning, then installation."
+      ],
+      [
+        "Consultation form",
+        "Opens over the page from any Get in touch button, beside the address, phone and email."
+      ],
+      [
+        "Category pages",
+        "A menu drawer leads to kitchens, wardrobes, TV units, offices and vanity units."
+      ]
+    ],
+    "chips_label": "Stack",
+    "chips": [
+      "Next.js",
+      "Payload CMS",
+      "GSAP",
+      "Lenis",
+      "Vercel"
+    ]
+  },
+  "gallery": {
+    "label": "The site",
+    "title": "Services, process <span class=\"soft\">and the first call.</span>",
+    "items": [
+      {
+        "src": "/assets/case/the-arck-interior-s2.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "\"Complete Design Solutions for Your Home\": photo cards for kitchen design, living room design, full-service consultation and custom solutions",
+        "cap": "Services",
+        "note": "Home · thearckinteriorltd.com",
+        "span": 12,
+        "bar": "thearckinteriorltd.com",
+        "wide": true
+      },
+      {
+        "src": "/assets/case/the-arck-interior-s1.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "\"Crafting Spaces That Inspire Daily Living\" with the studio introduction above a two-up kitchen gallery",
+        "cap": "Introduction",
+        "note": "Home",
+        "span": 6,
+        "bar": "thearckinteriorltd.com"
+      },
+      {
+        "src": "/assets/case/the-arck-interior-s3.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "\"Your Dream Space in Five Simple Steps\": consultation, 3D design, feedback and refine, sourcing and planning, commission and installation",
+        "cap": "Process",
+        "note": "Home",
+        "span": 6,
+        "bar": "thearckinteriorltd.com"
+      },
+      {
+        "src": "/assets/case/the-arck-interior-s4.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Kitchen Design & Renovation dialog listing space planning, custom cabinetry and countertop options over the dimmed service cards",
+        "cap": "Service detail",
+        "note": "Dialog · home",
+        "span": 6,
+        "bar": "thearckinteriorltd.com"
+      },
+      {
+        "src": "/assets/case/the-arck-interior-s5.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Consultation form: \"Create your dream space with us.\" with name, email, phone and message fields beside the studio’s details",
+        "cap": "Consultation form",
+        "note": "Dialog · home",
+        "span": 6,
+        "bar": "thearckinteriorltd.com"
+      }
+    ]
+  },
+  "mobile": {
+    "src": "/assets/case/the-arck-interior-mobile.jpg",
+    "w": 780,
+    "h": 1688,
+    "alt": "The Arck Interior on a phone: \"Home is where style meets comfort\" over the walnut kitchen with Get free consultation"
+  },
+  "accent": "The brand mark is green (logo tile); the current walnut theme (#A0662E) comes from the hero photo and still reads well. Keep walnut, or use the logo green as a secondary."
+}

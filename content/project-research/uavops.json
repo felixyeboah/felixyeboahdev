@@ -1,0 +1,227 @@
+{
+  "slug": "uavops",
+  "status": "live",
+  "url": "https://uavops.vercel.app/",
+  "checkedAt": "2026-09-27",
+  "pages": [
+    "https://uavops.vercel.app/",
+    "https://uavops.vercel.app/contact",
+    "https://uavops.vercel.app/start-project",
+    "https://uavops.vercel.app/services",
+    "https://uavops.vercel.app/resources/fresh-insights-on-drone-data-trends-and-smarter-operations-2026-industry-outlook-for-decision-makers",
+    "https://uavops.vercel.app/resources/how-construction-teams-use-drones-to-speed-up-site-work",
+    "https://uavops.vercel.app/resources/industrial-inspections-caged-drones-reduce-outage-risk-at-power-stations",
+    "https://uavops.vercel.app/resources",
+    "https://uavops.vercel.app/terms-and-conditions",
+    "https://uavops.vercel.app/privacy-policy",
+    "https://uavops.vercel.app/resources/innovative-drone-meter-reading-boosts-utility-resilience-in-accra",
+    "https://uavops.vercel.app/resources/drone-healthcare-logistics-in-africa-slashes-delivery-times-and-reduces-spoilage-2025-white-paper-shows",
+    "https://uavops.vercel.app/resources/esas-biomass-satellite-launch-a-milestone-in-mapping-forest-carbon",
+    "https://uavops.vercel.app/resources/coastal-protection-in-west-africa-gets-a-drone-boost-as-waca-var-deploys-aerial-mapping-for-climate-resilience",
+    "https://uavops.vercel.app/resources/mining-industry-sees-rising-demand-for-drone-technology-across-africa",
+    "https://uavops.vercel.app/resources/why-drones-are-better-than-satellites-for-detailed-site-work",
+    "https://uavops.vercel.app/resources/drone-laws-in-africa-what-you-need-to-know",
+    "https://uavops.vercel.app/resources/keeping-mining-sites-safe-with-drone-monitoring",
+    "https://uavops.vercel.app/resources/drones-in-africa-are-they-worth-it-real-economic-value-across-agriculture-healthcare-mapping-and-security"
+  ],
+  "evidence": {
+    "stack": [
+      {
+        "name": "Next.js",
+        "evidence": "x-powered-by: Next.js, Payload header; /_next/ assets; window.next.version = 15.5.9"
+      },
+      {
+        "name": "Payload CMS",
+        "evidence": "x-powered-by: Next.js, Payload header; /api/media URLs"
+      },
+      {
+        "name": "Tailwind CSS",
+        "evidence": "\"tailwindcss v4.1.11\" banner in the stylesheet"
+      },
+      {
+        "name": "GSAP",
+        "evidence": "GreenSock markers in the bundles"
+      },
+      {
+        "name": "Lenis",
+        "evidence": "html.lenis class at runtime"
+      },
+      {
+        "name": "ImageKit",
+        "evidence": "ik.imagekit.io requests"
+      },
+      {
+        "name": "Calendly",
+        "evidence": "calendly.com/uavopsafrica/30min used by Book a call"
+      }
+    ],
+    "hosting": "Vercel (vercel.app domain; server: Vercel, x-vercel-id)",
+    "other": [
+      "Nav items Technologies and Industries are menus without their own crawled pages; \"About Us\" in the footer did not resolve to a separate page in the crawl",
+      "Resources articles cite outside figures (market sizes, delivery-time reductions); not used as project claims"
+    ]
+  },
+  "tagline": [
+    "High-precision aerial intelligence",
+    "that helps organisations make faster, safer and better-informed decisions."
+  ],
+  "credits": [
+    [
+      "Category",
+      "Aerial data intelligence",
+      null
+    ],
+    [
+      "Built with",
+      "Next.js, Payload CMS, Tailwind CSS",
+      "detected on the live site"
+    ],
+    [
+      "Hosting",
+      "Vercel",
+      "detected on the live site"
+    ]
+  ],
+  "stage": {
+    "src": "/assets/case/uavops-s0.jpg",
+    "w": 2160,
+    "h": 1350,
+    "alt": "UAVOps homepage: \"Make Better Decisions with Reliable Aerial Data\" under a hovering drone, with a survey area drawn over the landscape and industry tabs from research to oil and gas",
+    "bar": "uavops.vercel.app"
+  },
+  "brief": {
+    "statement": "Drone survey work, explained for the people who buy it,",
+    "muted": "with a short path to starting a project.",
+    "story": [
+      {
+        "h": "The company",
+        "body": [
+          "UAVOps collects and processes aerial data for organisations across Africa, in research, forestry, mining, agriculture, oil and gas, energy, construction and surveying.",
+          "What clients receive are working files: orthomosaics, NDVI layers, terrain models and 3D visualisations."
+        ]
+      },
+      {
+        "h": "The site",
+        "body": [
+          "The homepage opens on an industry switcher, then sets out the problem (incomplete, outdated data) and the method: plan, collect, process and analyse, act.",
+          "The services page covers ten service lines, each with its own deliverables and a Request service button."
+        ]
+      },
+      {
+        "h": "Getting started",
+        "body": [],
+        "list": [
+          [
+            "Request.",
+            "A multi-step project form with a progress bar: contact, industry, then scope, dates, site and the outputs needed."
+          ],
+          [
+            "Talk.",
+            "Book a call opens a 30-minute Calendly slot."
+          ],
+          [
+            "Read.",
+            "A resources library of news, guides, case studies and blog posts, filterable by type."
+          ]
+        ]
+      }
+    ]
+  },
+  "notes": {
+    "label": "On the site",
+    "title": "Ten services, <span class=\"soft\">one request form.</span>",
+    "items": [
+      [
+        "Industry switcher",
+        "Tabs under the hero move between research, forestry, mining, agriculture, oil and gas, energy, construction and surveying."
+      ],
+      [
+        "Plan, collect, process, act",
+        "The method is set out step by step, with mission-planning and processed-map imagery."
+      ],
+      [
+        "Deliverables per service",
+        "Each service line lists what the client gets, from orthomosaic maps to boundary surveys."
+      ],
+      [
+        "Content in Payload",
+        "Articles, news, guides and case studies are published from the CMS into one resources library."
+      ]
+    ],
+    "chips_label": "Stack",
+    "chips": [
+      "Next.js",
+      "Payload CMS",
+      "Tailwind CSS",
+      "GSAP",
+      "Lenis",
+      "ImageKit",
+      "Calendly",
+      "Vercel"
+    ]
+  },
+  "gallery": {
+    "label": "The site",
+    "title": "Problem, method, <span class=\"soft\">services.</span>",
+    "items": [
+      {
+        "src": "/assets/case/uavops-s2.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "\"Planning\": flight missions configured on terrain data, beside a survey grid illustration, a processed site map and mission-planning software",
+        "cap": "Plan, collect, process",
+        "note": "Home · uavops.vercel.app",
+        "span": 12,
+        "bar": "uavops.vercel.app",
+        "wide": true
+      },
+      {
+        "src": "/assets/case/uavops-s1.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "\"Decisions Are Only as Good as the Data Behind Them\": three cards on limited visibility, slow data collection and data that doesn’t drive action",
+        "cap": "The problem",
+        "note": "Home",
+        "span": 6,
+        "bar": "uavops.vercel.app"
+      },
+      {
+        "src": "/assets/case/uavops-s3.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Services hero: \"Aerial Data, Tailored to Your Mission\" over a quadcopter against the sky",
+        "cap": "Services",
+        "note": "/services",
+        "span": 6,
+        "bar": "uavops.vercel.app/services"
+      },
+      {
+        "src": "/assets/case/uavops-s4.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Service list: aerial data collection, infrastructure monitoring and environmental solutions beside a terrain model with a deliverables panel",
+        "cap": "Service lines",
+        "note": "/services",
+        "span": 6,
+        "bar": "uavops.vercel.app/services"
+      },
+      {
+        "src": "/assets/case/uavops-s5.jpg",
+        "w": 2160,
+        "h": 1350,
+        "alt": "Resources: a featured article on 2026 drone data trends above the latest blog posts",
+        "cap": "Resources",
+        "note": "/resources",
+        "span": 6,
+        "bar": "uavops.vercel.app/resources"
+      }
+    ]
+  },
+  "mobile": {
+    "src": "/assets/case/uavops-mobile.jpg",
+    "w": 780,
+    "h": 1688,
+    "alt": "UAVOps on a phone: the drone, the headline \"Make Better Decisions with Reliable Aerial Data\" and the industry tabs"
+  },
+  "accent": "Matches the current theme (aerial blue from the navy headline)."
+}

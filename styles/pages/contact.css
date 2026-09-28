@@ -1,0 +1,53 @@
+/* Contact page */
+.cgrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(16px,2vw,24px);align-items:start;padding-bottom:clamp(72px,8vw,128px)}
+.card{position:relative;overflow:hidden;border-radius:clamp(22px,2.4vw,32px);background:var(--bg-2);border:1px solid var(--line);padding:clamp(22px,3.4vw,48px)}
+.card--glow::before{content:"";position:absolute;right:-30%;top:-50%;width:90%;aspect-ratio:1;border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,rgba(212,255,58,.06),rgba(212,255,58,0))}
+.form{position:relative;display:grid;gap:22px}
+.form__row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{display:grid;gap:8px;min-width:0}
+.field label,.field legend{color:var(--muted)}
+.field label b,.field legend b{color:var(--accent);font-weight:400}
+.field input[type=text],.field input[type=email],.field textarea{
+  width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line-2);border-radius:14px;
+  padding:14px 16px;transition:border-color .25s var(--ease),background-color .25s var(--ease);-webkit-appearance:none;appearance:none}
+.field textarea{min-height:180px;resize:vertical;line-height:1.55}
+.field input::placeholder,.field textarea::placeholder{color:var(--dim)}
+.field input:hover,.field textarea:hover{border-color:rgba(242,239,233,.28)}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--accent);background:#0E0E10}
+.field [aria-invalid="true"]{border-color:#FF7A59}
+.field__err{min-height:0;color:#FF9A80;font-size:13px}
+.field__err:empty{display:none}
+.field__hint{color:var(--dim);font-size:13px}
+fieldset.field{border:0;margin:0;padding:0}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{position:relative;cursor:pointer}
+.pill input{position:absolute;opacity:0;width:1px;height:1px}
+.pill span{display:inline-flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line-2);color:var(--ink-2);font-size:14px;transition:all .25s var(--ease)}
+.pill:hover span{border-color:var(--ink-2);color:var(--ink)}
+.pill input:checked + span{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.pill input:focus-visible + span{outline:2px solid var(--accent);outline-offset:3px}
+.form__foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-top:8px;border-top:1px solid var(--line)}
+.form__foot p{color:var(--dim);font-size:13px;max-width:36ch}
+.sent{display:none;gap:14px;padding:18px;border-radius:16px;border:1px solid rgba(212,255,58,.35);background:rgba(212,255,58,.04)}
+.sent.is-on{display:grid}
+.sent p{color:var(--ink-2);font-size:15px}
+.sent strong{color:var(--ink);font-weight:500}
+.sent__btns{display:flex;flex-wrap:wrap;gap:8px}
+.aside{display:grid;gap:clamp(16px,2vw,24px)}
+.aside h2{color:var(--dim);margin-bottom:14px}
+.bigmail{display:inline-block;font-size:clamp(1.5rem,2.6vw,2.4rem);letter-spacing:-.045em;font-weight:500;line-height:1.1;overflow-wrap:anywhere;
+  background:linear-gradient(var(--accent),var(--accent)) 0 100% / 0 2px no-repeat;padding-bottom:4px;transition:background-size .6s var(--ease-out)}
+.bigmail:hover{background-size:100% 2px}
+.aside .copy{margin-top:18px;--h:44px;font-size:13px}
+.links li{border-top:1px solid var(--line)}
+.links li:last-child{border-bottom:1px solid var(--line)}
+.links a{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;transition:color .25s var(--ease)}
+.links a span{font-family:var(--mono);font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:8px}
+.links a svg{width:13px;height:13px;transition:transform .4s var(--ease-out)}
+.links a:hover{color:var(--accent)}
+.links a:hover svg{transform:translate(2px,-2px)}
+.time{font-size:clamp(2rem,3.4vw,3rem);letter-spacing:-.05em;font-weight:500;line-height:1;font-variant-numeric:tabular-nums}
+.time span{color:var(--muted);font-size:.5em;letter-spacing:0;margin-left:6px}
+.status{display:flex;align-items:center;gap:10px;color:var(--ink-2);margin-top:12px}
+@media (max-width:1000px){.cgrid{grid-template-columns:1fr}}
+@media (max-width:600px){.form__row{grid-template-columns:1fr}.form__foot .btn{width:100%;justify-content:center}}

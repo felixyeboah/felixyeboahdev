@@ -1,0 +1,15 @@
+/* Work index: tiles, archive rows and chips come from site.css */
+.worklist{padding-bottom:clamp(72px,8vw,128px)}
+.fbar .seg{flex:none}
+html:not(.js) .fbar{display:none}
+.work .tile[hidden],.arch li[hidden]{display:none}
+/* "your project" cell: fills the last grid slot when an odd number of projects is showing */
+.tile--cta .tile__img--empty{display:grid;place-items:center;background:repeating-linear-gradient(135deg,transparent 0 10px,rgba(242,239,233,.025) 10px 11px),var(--bg-2)}
+.tile--cta .tile__img--empty span{font-size:clamp(1.6rem,3vw,2.6rem);letter-spacing:-.04em;font-weight:500;color:var(--dim);transition:color .4s var(--ease)}
+.tile--cta:hover .tile__img--empty span{color:var(--ink-2)}
+.tile--cta .tile__idx .dot{align-self:center}
+@media (max-width:760px){ .tile--cta{display:none !important} }
+.arch--solo{margin-top:0}
+.arch__label b{font-weight:400;color:var(--ink-2)}
+.worklist [data-pane][hidden]{display:none}
+.outro{padding-top:clamp(40px,5vw,72px)}

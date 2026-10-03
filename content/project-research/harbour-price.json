@@ -1,0 +1,89 @@
+{
+  "slug": "harbour-price",
+  "status": "completed",
+  "url": "https://harbourprice.com/",
+  "checkedAt": "2026-10-03",
+  "sourceRepository": "harbour-price",
+  "timeline": {
+    "started": "2026-09",
+    "completed": "2026-10",
+    "evidence": "Owner confirms the project started last month and is completed. Project-specific CHANGELOG.md entries begin September 27, 2026; the first Git commit is September 28. The source includes work through October 3. No exact build duration is claimed."
+  },
+  "summary": "A complete commerce platform for an Accra grocery business, connecting four counters with online shopping, hot meals, in-store sales, kitchen stock and delivery operations.",
+  "audience": [
+    "Household shoppers in Accra",
+    "Restaurants, caterers and resellers buying wholesale",
+    "Cashiers, kitchen staff, packing teams, dispatchers and riders"
+  ],
+  "pages": [
+    "https://harbourprice.com/",
+    "https://harbourprice.com/shop",
+    "https://harbourprice.com/shop/tilapia-whole-cleaned-1kg",
+    "https://harbourprice.com/about",
+    "https://harbourprice.com/hot-food",
+    "https://harbourprice.com/hot-food/build",
+    "https://harbourprice.com/checkout",
+    "https://kiosk.harbourprice.com/kiosk"
+  ],
+  "evidence": {
+    "business": {
+      "description": "Harbour-direct fish sales grew into cold store, groceries, farm produce and hot meals under one roof.",
+      "sources": ["README.md", "apps/web/modules/shared/lib/copy.tsx", "https://harbourprice.com/about"]
+    },
+    "implementedFeatures": [
+      { "name": "Storefront and product detail", "evidence": "README.md; apps/web/app/(marketing)/shop; public shop and product pages inspected in a browser. Server filters, category counts, pack sizes, freshness and delivery estimates." },
+      { "name": "Shared basket and checkout", "evidence": "README.md; packages/api/modules/commerce; groceries and hot food, delivery or collection, GhanaPost GPS, slots, promotions and server-priced totals. Source-verified; no order or payment submitted." },
+      { "name": "Hot-food ordering", "evidence": "apps/web/app/(marketing)/hot-food; menu, protein options and build-your-own plates. The live catalogue was empty during the visit; populated meal screens are not represented by portfolio screenshots." },
+      { "name": "Customer accounts and order tracking", "evidence": "README.md; packages/api/modules/account; orders, reorder, lists, addresses, business applications and privacy-limited public tracking." },
+      { "name": "Back office", "evidence": "README.md; packages/api/modules/storeadmin; orders, kitchen, packing, catalogue, stock, promotions, payments, reports, staff and dispatch." },
+      { "name": "POS", "evidence": "README.md; CHANGELOG.md; packages/api/modules/pos; cashier PINs, branches, shifts, split payments, receipts, returns and eligible offline sales." },
+      { "name": "Rider app", "evidence": "README.md; CHANGELOG.md; assigned runs, bag checks, handover codes and collections." },
+      { "name": "Self-order kiosk", "evidence": "apps/web/app/(kiosk)/kiosk/page.tsx; real ordering is the default. Live welcome, eat-in/takeaway and browsing steps inspected; no order submitted." },
+      { "name": "Kitchen stock", "evidence": "packages/api/modules/kitchenstock/router.ts; recipes, cook batches, counts, waste, purchasing and reports." },
+      { "name": "Installable staff apps", "evidence": "docs/runbooks/pwa.md; distinct kiosk, POS, backoffice and rider identities. Installation alone does not make actions or payments work offline. Only an already-open POS retains its eligible offline sale queue." }
+    ],
+    "stack": [
+      { "name": "Next.js 16, React 19, TypeScript", "evidence": "apps/web/package.json" },
+      { "name": "Tailwind CSS 4, REUI/Radix", "evidence": "AGENTS.md; apps/web/package.json; tooling/tailwind/theme.css" },
+      { "name": "TanStack Query, nuqs", "evidence": "apps/web/package.json; AGENTS.md" },
+      { "name": "oRPC, Hono, Zod", "evidence": "README.md; packages/api" },
+      { "name": "Prisma, Turso/libSQL", "evidence": "AGENTS.md; packages/database" },
+      { "name": "Better Auth", "evidence": "README.md; packages/auth" },
+      { "name": "Hubtel payments and SMS", "evidence": "CHANGELOG.md (2026-10-02); AGENTS.md. README payment information is stale. Paystack remains for migrated records and subscriptions." },
+      { "name": "Resend", "evidence": "AGENTS.md; README.md" },
+      { "name": "Cloudflare Workers, OpenNext, R2", "evidence": "apps/web/wrangler.jsonc; AGENTS.md" }
+    ],
+    "visualDirection": {
+      "palette": { "navy": "#0E3A5F", "royal": "#1E5BD8", "ice": "#E4F0FB", "coral": "#F26B3A" },
+      "typefaces": ["Fraunces", "Manrope"],
+      "sources": ["tooling/tailwind/theme.css", "apps/web/modules/shared/components/Document.tsx"],
+      "portfolioTreatment": "Existing reusable case-study layout with a navy-and-ice hero, alternating screenshot chapters and a desktop/mobile composition."
+    },
+    "limitations": [
+      "Source inspection verifies implementation; external payments, notifications and staff workflows were not exercised end to end.",
+      "The live hot-food menu and plate builder had no populated meals or ingredients during capture. The local preview showed the same empty menu.",
+      "Checkout was reached with a product in the browser basket, but its summary showed a retry state. No customer details, order or payment were submitted; this screen was excluded from the gallery.",
+      "Demo prices, delivery times, address and opening hours remain illustrative in README. Screenshots document UI, not performance or confirmed commercial terms.",
+      "No customer data, staff accounts, order records, credentials or measured business outcomes are included."
+    ]
+  },
+  "screenshots": [
+    { "src": "/assets/case/harbour-price-s0.jpg", "url": "https://harbourprice.com/", "w": 1440, "h": 900, "view": "Desktop homepage; also used for the project cover" },
+    { "src": "/assets/case/harbour-price-s1.jpg", "url": "https://harbourprice.com/shop", "w": 1440, "h": 900, "view": "Product grid and filters, scrolled to the first row" },
+    { "src": "/assets/case/harbour-price-s2.jpg", "url": "https://harbourprice.com/shop/tilapia-whole-cleaned-1kg", "w": 1440, "h": 900, "view": "Product detail" },
+    { "src": "/assets/case/harbour-price-s3.jpg", "url": "https://kiosk.harbourprice.com/kiosk", "w": 1440, "h": 900, "view": "Eat-in or takeaway choice" },
+    { "src": "/assets/case/harbour-price-s4.jpg", "url": "https://harbourprice.com/about", "w": 1440, "h": 900, "view": "Brand story" },
+    { "src": "/assets/case/harbour-price-s5.jpg", "url": "https://kiosk.harbourprice.com/kiosk", "w": 1440, "h": 900, "view": "Kiosk welcome" },
+    { "src": "/assets/case/harbour-price-mobile.jpg", "url": "https://harbourprice.com/", "w": 390, "h": 844, "view": "Mobile homepage" }
+  ],
+  "portfolioContext": {
+    "previousProjectCount": 15,
+    "projectCount": 16,
+    "group": "commerce",
+    "featuredCount": 6,
+    "position": "Newest project, first on the homepage and work index",
+    "existingFeaturedProjects": ["Reevit", "Miss Cookie Spices", "Waytu", "Drobotix", "Studio Theon"],
+    "archiveChange": "Dasheen Atelier moves from the homepage feature grid to More work. All existing project pages remain available.",
+    "sources": ["lib/site/projects.ts", "lib/site/project-details.ts", "app/work/[slug]/page.tsx"]
+  }
+}

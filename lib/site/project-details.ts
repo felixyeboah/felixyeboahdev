@@ -15,7 +15,7 @@
      gallery     (NN) grid of framed images (Cloudinary id OR local src)
      facts       (NN) big numbers + optional status panel
      quote       pull quote (unnumbered)
-     next        always: next project tile (wraps 15 -> 1), then "All work"
+     next        always: next project tile (wraps the last project -> first), then "All work"
    (NN) = section number, counted over the blocks actually present.
 
    Field reference (all optional unless marked *):
@@ -203,6 +203,166 @@ export const fw = (name: string, tracking: number) =>
 export const isLong = (name: string) => name.includes(' ') && name.length > 10;
 
 export const DETAILS: Record<string, ProjectDetail> = {
+    'harbour-price': {
+        rich: true,
+        description: 'Harbour Price: a complete commerce platform for Accra, connecting groceries, hot meals, in-store sales and delivery. Designed and built by Felix Yeboah.',
+        status: 'Completed',
+        tagline: ['Four counters. One basket.', 'From the harbour to your doorstep.'],
+        credits: [
+            { k: 'Role', v: 'Design & engineering' },
+            { k: 'Services', v: 'Brand website, e-commerce, store operations' },
+            { k: 'Stack', v: 'Next.js, TypeScript, Prisma', note: 'Turso, Hubtel & Cloudflare' },
+            { k: 'Year', v: '2026', note: 'September–October · completed' },
+        ],
+        stage: {
+            src: '/assets/case/harbour-price-s0.jpg',
+            w: 1440,
+            h: 900,
+            url: 'harbourprice.com',
+            alt: 'Harbour Price homepage: fishermen unloading the morning catch beneath the headline “Harbour prices. For everything you buy.”',
+            cap: ['harbourprice.com · the storefront', 'Captured from the live site'],
+        },
+        brief: {
+            statement: 'Bring the whole shop online,',
+            muted: 'and connect the work behind the counter.',
+            story: [
+                {
+                    h: 'The business',
+                    body: [
+                        'Harbour Price began with fish bought straight off the boats. Today, the Accra business brings a cold store, groceries, farm produce and a hot-meals kitchen under one roof.',
+                        'The same shop serves households filling a basket and restaurants, caterers and resellers buying in bulk.',
+                    ],
+                },
+                {
+                    h: 'The brief',
+                    body: [
+                        'Make all four counters feel like one shop. Customers should find what they need, understand the pack and choose delivery or collection without juggling separate orders.',
+                        'Behind each order, staff need to sell, cook, check stock, pack and hand it over to a rider.',
+                    ],
+                },
+                {
+                    h: 'The build',
+                    list: [
+                        { b: 'One basket.', t: 'Groceries and hot meals share checkout, with separate fulfilment where needed.' },
+                        { b: 'One operation.', t: 'The storefront, till, kitchen, kiosk and rider tools connect to the same business.' },
+                        { b: 'A familiar way to pay.', t: 'Hubtel for Mobile Money, cards and customer SMS.' },
+                    ],
+                },
+            ],
+        },
+        chapters: {
+            label: 'The experience',
+            title: ['From the first browse', 'to the counter.'],
+            aside: ['Three views', 'from the live product'],
+            items: [
+                {
+                    label: 'Shopping',
+                    title: 'The whole basket, in one place.',
+                    body: 'Fish, chicken, pantry staples and fresh produce sit on the same shelf. Category counts, pack sizes and filters help customers narrow the shop, while quantity and Add to cart stay on each card.',
+                    chips: ['Cold store', 'Grocery', 'Farm market'],
+                    broad: true,
+                    src: '/assets/case/harbour-price-s1.jpg',
+                    url: 'harbourprice.com/shop',
+                    alt: 'Harbour Price shop with filter pills and product cards showing packaged fish, chicken and tomatoes, prices, quantities and Add to cart',
+                    cap: 'The shared shop',
+                    note: '/shop',
+                },
+                {
+                    label: 'Product detail',
+                    title: 'Know the pack before it arrives.',
+                    body: 'A pack photograph, weight, source and storage details sit next to the price. Delivery and collection options are visible before adding it to the basket, with the journey from harbour to freezer further down the page.',
+                    chips: ['Pack details', 'Freshness', 'Delivery or collection'],
+                    src: '/assets/case/harbour-price-s2.jpg',
+                    url: 'harbourprice.com/shop/tilapia-whole-cleaned-1kg',
+                    alt: 'Tilapia product page with a sealed fish pack, harbour-direct and frozen labels, quantity controls and delivery or collection information',
+                    cap: 'From the harbour to your freezer',
+                    note: 'Product detail',
+                },
+                {
+                    label: 'Self-order kiosk',
+                    title: 'The same kitchen, at the counter.',
+                    body: 'The hot-meals kiosk starts with a simple choice: eat in or take away. Large touch targets lead into choosing a pack or building a plate, reviewing the order and paying, with help always within reach.',
+                    chips: ['Touchscreen ordering', 'Eat in', 'Take away'],
+                    src: '/assets/case/harbour-price-s3.jpg',
+                    url: 'kiosk.harbourprice.com',
+                    alt: 'Harbour Price self-order kiosk with large Eat in and Take away cards, a four-step progress bar and a Need help button',
+                    cap: 'Ordering at the counter',
+                    note: 'Self-order kiosk',
+                },
+            ],
+        },
+        compose: {
+            label: 'Every screen',
+            title: ['Harbour prices,', 'in your pocket.'],
+            aside: ['Desktop 1440', 'Mobile 390'],
+            desktop: '/assets/case/harbour-price-s0.jpg',
+            url: 'harbourprice.com',
+            mobile: '/assets/case/harbour-price-mobile.jpg',
+            alt: 'Harbour Price on a phone, with search, shop categories and full-width Shop now and Order food buttons over the harbour photograph',
+            sr: 'The Harbour Price storefront on desktop and mobile.',
+            cap: ['Search, groceries and hot food within reach', 'Desktop and mobile · live captures'],
+        },
+        notes: {
+            label: 'Behind the counter',
+            title: ['An online order.', 'A whole team behind it.'],
+            aside: ['Built into the platform', 'from till to delivery'],
+            items: [
+                {
+                    t: 'A till for the shop floor.',
+                    b: 'Cashier PINs, shifts, split payments, receipts and returns support in-store sales. An already-open POS can queue eligible sales through a connection outage and sync them afterwards.',
+                },
+                {
+                    t: 'A kitchen that knows its stock.',
+                    b: 'The back office connects orders, kitchen tickets, packing and inventory. Recipes, cook batches, purchasing, counts and waste give the hot-meals team a view of what goes into each plate.',
+                },
+                {
+                    t: 'A handover all the way home.',
+                    b: 'Riders get assigned runs, bag checks and handover codes. Customers can follow an order, while the team manages dispatch and collections from the back office.',
+                },
+            ],
+            chipsLabel: 'Built with',
+            chips: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Prisma + Turso', 'Hubtel', 'Cloudflare Workers'],
+        },
+        gallery: {
+            label: 'The brand',
+            title: ['A shop with a story,', 'on every screen.'],
+            aside: ['Navy, royal blue and ice', 'from the live site'],
+            items: [
+                {
+                    src: '/assets/case/harbour-price-s4.jpg',
+                    w: 1440,
+                    h: 900,
+                    alt: 'Harbour Price about page: “Up before the boats. Here until dinner.” above a photograph of the team in blue uniforms',
+                    cap: 'A day at Harbour Price',
+                    note: '/about',
+                    span: 6,
+                    bar: 'harbourprice.com/about',
+                },
+                {
+                    src: '/assets/case/harbour-price-s5.jpg',
+                    w: 1440,
+                    h: 900,
+                    alt: 'The kiosk welcome screen in navy, with the Harbour Price wordmark, “Hungry? Order here.” and a large Tap to start button',
+                    cap: 'An invitation to order',
+                    note: 'Kiosk welcome',
+                    span: 6,
+                    bar: 'kiosk.harbourprice.com',
+                },
+            ],
+        },
+        theme: {
+            tone: 'light',
+            accent: '#1E5BD8',
+            onAccent: '#FFFFFF',
+            accentText: '#9CC7EE',
+            heroAccent: '#1E5BD8',
+            tint: '#E4F0FB',
+            tint2: '#CFDFEE',
+            tintInk: '#0E3A5F',
+            tintMuted: '#3B5068',
+            glow: 'rgba(58,155,224,.24)',
+        },
+    },
     'reevit': {
         rich: true,
         description: 'Reevit: payments that don’t miss. Every charge goes through the merchant’s own Paystack, Hubtel or Flutterwave, and fails over inside the same tap. Designed and engineered by Felix Yeboah.',
@@ -1828,5 +1988,5 @@ export const DETAILS: Record<string, ProjectDetail> = {
 
 export const getDetail = (slug: string) => DETAILS[slug];
 
-/** The project after this one (order is 1-based, wraps 15 -> 1). */
+/** The project after this one (order is 1-based, wraps the last project -> first). */
 export const nextProject = (p: Project) => PROJECTS[p.order % PROJECTS.length];

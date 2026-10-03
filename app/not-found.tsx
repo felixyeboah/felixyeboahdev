@@ -1,4 +1,5 @@
 import { PageStyle } from '@/core/site/chrome';
+import { PROJECTS } from '@/lib/site/projects';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
@@ -68,7 +69,7 @@ export default function NotFound() {
                         <Link className="nf__row" href="/work">
                             <span className="mono">02</span>
                             <span className="nf__t">Work</span>
-                            <span className="mono nf__s">15 projects, latest first</span>
+                            <span className="mono nf__s">{PROJECTS.length} projects, latest first</span>
                             <span className="nf__a">
                                 <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
                                     <path

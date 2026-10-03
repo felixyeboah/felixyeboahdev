@@ -1,4 +1,4 @@
-/* Portfolio projects, latest first (source: design-options/site/data/projects.json).
+/* Portfolio projects, latest first. This list is the source for every project index.
    `featured` = the six landing tiles. `group` = work-index filter (?cat=products|commerce|drones|brands).
    Per-project case-study content lives in project-details.ts. */
 
@@ -27,6 +27,18 @@ export const GROUPS: Array<[ProjectGroup, string]> = [
 export const PROJECTS: Project[] = [
     {
         order: 1,
+        slug: "harbour-price",
+        name: "Harbour Price",
+        category: "Commerce platform",
+        group: "commerce",
+        url: "https://harbourprice.com/",
+        domain: "harbourprice.com",
+        cover: "/assets/covers/harbour-price.jpg",
+        featured: true,
+        desc: "Four counters, one basket. A complete commerce platform for groceries, hot meals, in-store sales and delivery in Accra.",
+    },
+    {
+        order: 2,
         slug: "reevit",
         name: "Reevit",
         category: "Payments",
@@ -38,7 +50,7 @@ export const PROJECTS: Project[] = [
         desc: "Payments that don't miss. When one provider goes down, the next one picks up and your customers never notice.",
     },
     {
-        order: 2,
+        order: 3,
         slug: "miss-cookie-spices",
         name: "Miss Cookie Spices",
         category: "E-commerce",
@@ -50,7 +62,7 @@ export const PROJECTS: Project[] = [
         desc: "Premium Ghanaian spices and cooking ingredients, with a storefront built for mobile money.",
     },
     {
-        order: 3,
+        order: 4,
         slug: "waytu",
         name: "Waytu",
         category: "Ride-sharing",
@@ -62,7 +74,7 @@ export const PROJECTS: Project[] = [
         desc: "Community-driven ride-sharing that pairs nearby commuters for a cheaper, greener trip.",
     },
     {
-        order: 4,
+        order: 5,
         slug: "drobotix",
         name: "Drobotix",
         category: "Ag-Tech Drones",
@@ -74,7 +86,7 @@ export const PROJECTS: Project[] = [
         desc: "Drone technology, training and support that help farmers spray and survey at scale.",
     },
     {
-        order: 5,
+        order: 6,
         slug: "studio-theon",
         name: "Studio Theon",
         category: "Agency",
@@ -86,7 +98,7 @@ export const PROJECTS: Project[] = [
         desc: "A creative digital agency site with a storefront for seasonal souvenirs and gifts.",
     },
     {
-        order: 6,
+        order: 7,
         slug: "dasheen-atelier",
         name: "Dasheen Atelier",
         category: "Fashion",
@@ -94,11 +106,11 @@ export const PROJECTS: Project[] = [
         url: "https://dasheenatelier.com/",
         domain: "dasheenatelier.com",
         cover: "/assets/covers/dasheen-atelier.jpg",
-        featured: true,
+        featured: false,
         desc: "Made-to-measure bridal and traditional wear, finished by hand in Accra.",
     },
     {
-        order: 7,
+        order: 8,
         slug: "dronehub",
         name: "Dronehub",
         category: "Drone sales & services",
@@ -110,7 +122,7 @@ export const PROJECTS: Project[] = [
         desc: "Selling and servicing drones for consumer, enterprise and agriculture in Ghana.",
     },
     {
-        order: 8,
+        order: 9,
         slug: "uavops",
         name: "UAVOps",
         category: "Aerial data intelligence",
@@ -122,7 +134,7 @@ export const PROJECTS: Project[] = [
         desc: "High-precision aerial intelligence that helps organisations make faster, safer and better-informed decisions.",
     },
     {
-        order: 9,
+        order: 10,
         slug: "blavior",
         name: "Blavior",
         category: "Real estate",
@@ -134,7 +146,7 @@ export const PROJECTS: Project[] = [
         desc: "A real estate connection platform, opening with a waitlist for agents, developers and property owners.",
     },
     {
-        order: 10,
+        order: 11,
         slug: "the-rumson",
         name: "The Rumson",
         category: "Restaurant",
@@ -146,7 +158,7 @@ export const PROJECTS: Project[] = [
         desc: "Elevated Ghanaian comfort food in the heart of Labone, with online ordering for dine-in, takeaway and delivery.",
     },
     {
-        order: 11,
+        order: 12,
         slug: "7even-sports-group",
         name: "7even Sports Group",
         category: "Sports club",
@@ -158,7 +170,7 @@ export const PROJECTS: Project[] = [
         desc: "Empowering Ghana's grassroots athletes through leagues, development programmes and global exposure.",
     },
     {
-        order: 12,
+        order: 13,
         slug: "css",
         name: "CSS",
         category: "Connectivity solutions",
@@ -170,7 +182,7 @@ export const PROJECTS: Project[] = [
         desc: "Communication and connectivity solutions for businesses.",
     },
     {
-        order: 13,
+        order: 14,
         slug: "the-arck-interior",
         name: "The Arck Interior LTD",
         category: "Interior design",
@@ -182,7 +194,7 @@ export const PROJECTS: Project[] = [
         desc: "Thoughtfully designed kitchens and living spaces that reflect your personality and style.",
     },
     {
-        order: 14,
+        order: 15,
         slug: "desmond-weds-akyeamaa",
         name: "Desmond Weds Akyeamaa",
         category: "Wedding",
@@ -194,7 +206,7 @@ export const PROJECTS: Project[] = [
         desc: "A wedding site for Desmond and Akyeamaa to share their love story with invited guests.",
     },
     {
-        order: 15,
+        order: 16,
         slug: "undisciplined",
         name: "Undisciplined",
         category: "Education",

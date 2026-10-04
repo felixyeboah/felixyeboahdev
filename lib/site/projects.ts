@@ -1,5 +1,6 @@
 /* Portfolio projects, latest first. This list is the source for every project index.
-   `featured` = the six landing tiles. `group` = work-index filter (?cat=products|commerce|drones|brands).
+   `draft` excludes a project from public indexes and case-study routes.
+   `featured` = landing tiles. `group` = work-index filter (?cat=products|commerce|drones|brands).
    Per-project case-study content lives in project-details.ts. */
 
 export type ProjectGroup = 'products' | 'commerce' | 'drones' | 'brands';
@@ -14,6 +15,7 @@ export type Project = {
     domain: string;
     cover: string;
     featured: boolean;
+    draft?: boolean;
     desc: string;
 };
 
@@ -24,10 +26,11 @@ export const GROUPS: Array<[ProjectGroup, string]> = [
     ['brands', 'Brands & events'],
 ];
 
-export const PROJECTS: Project[] = [
+const ALL_PROJECTS: Project[] = [
     {
         order: 1,
         slug: "harbour-price",
+        draft: true,
         name: "Harbour Price",
         category: "Commerce platform",
         group: "commerce",
@@ -218,6 +221,9 @@ export const PROJECTS: Project[] = [
         desc: "Education that's about understanding and applying knowledge to solve real-world problems.",
     },
 ];
+
+// Public numbering stays consecutive so next-project navigation follows this list.
+export const PROJECTS: Project[] = ALL_PROJECTS.filter((p) => !p.draft).map((p, index) => ({ ...p, order: index + 1 }));
 
 export const getProject = (slug: string) => PROJECTS.find((p) => p.slug === slug);
 export const pad2 = (n: number) => String(n).padStart(2, '0');

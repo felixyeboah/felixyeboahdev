@@ -1,0 +1,221 @@
+---
+title: "From Paper Trails to Apps: Building Miss Cookie's Systems"
+date: '2026-10-15T10:00:00.000Z'
+updated: '2026-10-15T10:00:00.000Z'
+subtitle: How a spice business went from handwritten orders to a till, a back office, records and a rider app, one paper habit at a time.
+categories: ['engineering', 'case-study']
+keywords: ['miss cookie', 'pos', 'ecommerce', 'ghana', 'mobile money', 'remix']
+slug: from-paper-trails-to-apps-building-miss-cookies-systems
+cover: /assets/writing/miss-cookie/cover.jpg
+bannerAlt: The Miss Cookie Spices online shop, showing the Pounded Palm Nut pouch on the home page
+bannerCredit: Screenshot of Miss Cookie Spices
+type: 'blogPost'
+featured: false
+---
+
+## Where it started: years of paper
+
+For years, Miss Cookie Spices ran on paper. Customers bought in three ways: they walked into a shop, they called the shop, or they sent a message on WhatsApp. Every one of those orders was written down by hand. At the end of the day, the sellers handed their sales to the shop supervisor. The supervisor made up an account of the day for the owner, or took the money to the bank and then wrote up the day's sales.
+
+It worked, in the sense that the business grew on it. But it leaked money, and nobody could say exactly where.
+
+### Where the money leaked
+
+Pay on delivery was the weakest point. A customer would call in an order, a rider would take it out, and the customer would pay at the door, either in cash or by sending mobile money to the shop or office number. Then someone was supposed to confirm that the MoMo had arrived.
+
+In practice, that confirmation often didn't happen. A rider with a bag full of deliveries had no time to check. He would call the shop and say, "The customer sent the money to the MoMo number." The shop was often too busy to check either, and nothing was written down that anyone could check later. Sometimes the customer had not actually sent the money, and it was simply lost.
+
+Other losses came from the same gap. An order could be delivered twice and paid for once, because nothing tied the delivery to the payment. None of these were big frauds. They were small gaps in a paper trail that nobody could close, repeated day after day.
+
+### The goal
+
+The goal was never just "put it on a computer". It was to replace every piece of that paper trail with something that keeps the same record but can answer questions: who sold this, who took the money, where did it go, and has anyone actually checked it? Accounting, reports and records would all come from one system, instead of being rebuilt from paper every evening.
+
+The hardest part was not the code. It was learning how the business actually worked. Before I could replace a habit, I had to understand why it existed: who wrote what down, who handed money to whom, and what the supervisor checked at night. A lot of what follows came from watching that, and from Miss Cookie and her staff telling me where my first version didn't fit their day.
+
+The rest of this post goes through each piece I built, in the order it happened, and the decisions behind it.
+
+Under the hood it's one codebase, and every app below is a different door into the same data. That mattered more than any technology choice: a sale at the till, a WhatsApp order and a rider's cash all end up in one place.
+
+## The website: the first door (2023)
+
+I was first hired to build Miss Cookie's online shop, and I finished it in 2023. Customers could come to the site, choose what they wanted, and pay online with mobile money or card, or choose to pay on delivery.
+
+### The shop nobody used
+
+Then, honestly, it was forgotten. I kept an eye on the project after I handed it over, and I could see it wasn't being used. I wasn't happy about that, so I reached out to Miss Cookie. She told me she wasn't happy with it either. It was hard for her to use, and she didn't know how to get it going.
+
+So I made her a promise. I would keep the platform running and make sure things worked smoothly. All I needed from her was to advertise the online shop, so her customers would start buying there. I would watch how it went and keep her updated.
+
+I worked on it for free for about a year. I kept it running, reworked the screens, and smoothed out the customer experience. The more customers used it, the more problems we found, and I took the time to fix each one. Looking back, that year is where everything else in this post started. Real customers using the shop showed me how the business actually worked, and showed Miss Cookie what software could do for her.
+
+The website didn't remove the paper trail. The shops kept writing everything down for a long time after it went live. What it did was set up the data everything else would later share: products, sizes, prices, customers and orders. A few early choices still shape the whole system:
+
+- **Stock lives on the size, not the product.** A 250 ml jar and a 650 ml jar of the same blend are different things on a shelf, so they are different rows in the database. Every later stock feature depends on this.
+- **Payments built for Ghana.** Local mobile money and card payments, with pay on delivery beside them.
+- **Delivery addresses carry a map pin.** That started as a help for riders. Later it let the website work out which shop a delivery would actually come from.
+
+The site has kept improving since: self pick at checkout, old unpaid checkouts tidied away automatically, and a lighter, faster home page.
+
+## The back office: one place for every order
+
+Once the website took orders, the next question was obvious: what about all the orders that don't come through the website? The back office began as an "Add offline order" form, so staff could type in a phone order and have it sit in the same list as web orders, with the customer saved as a contact for next time.
+
+That form was the first real step away from paper. It meant one list of orders, whatever door they came through, instead of web orders in one place and everything else in a book.
+
+### Who sees what
+
+As more staff used the back office, permissions became a design problem, not a settings page. Miss Cookie asked for supervisors to rank above operations managers: supervisors handle Records, delivery and orders, while managers run stock and fulfilment without seeing the money. I made a few rules for myself here:
+
+- **Enforce it on the server, not the screen.** Hiding a number on screen is not the same as not sending it, so every rule about who sees what is checked on the server.
+- **Cashiers see their own sales only**, also enforced on the server, while managers and the owner keep the full view.
+- **The owner keeps the irreversible actions.** Actions that can't easily be undone stay with the owner, even as supervisors gained more.
+
+### Designing before building
+
+Most back office screens went through the same process. I wrote a short spec for each page from the real code and data, then built two or three clickable HTML mockups in different directions, and Miss Cookie picked one. Each spec had one strict rule: mockups must be "pixel-honest". If a screen showed something the backend couldn't do yet, it carried a visible "needs API" marker instead of quietly pretending. That rule saved us from approving designs that would have quietly lied once built.
+
+The back office is also used on 14-inch Windows laptops and phones, so a lot of recent work was simply making tables, headers and side panels fit those screens. It's unglamorous work, but a screen that hides a button on a phone pushes someone back to pen and paper.
+
+## The till, the POS admin and the WhatsApp desk
+
+The shops were where most of the paper lived, so the till (our POS) was the biggest single step. It serves walk-in customers, who pay in cash or by mobile money. Every staff member signs in with their own PIN, so for the first time we could see how many sales each person made, who was using the till, and when. Everything that happens in the shop can now be audited.
+
+The design brief came down to one number: **taps from "next customer" to "confirmed paid".** A till is used standing up, with a queue, often by someone who started that week. Every extra tap is a second the customer spends watching.
+
+The decisions that mattered most:
+
+- **Payment drives everything.** The order, the stock deduction, the SMS receipt and the audit trail all follow from a confirmed payment, not from someone pressing a button. A paper sales book records what someone wrote; I wanted the till to record what actually happened.
+- **Nothing is deleted.** Orders are never removed. Every change is a new event on top of the old ones, so the history of a sale is always there to read.
+- **The screen never overstates.** I wrote down the exact words each payment screen may use. While waiting, it says it is waiting for the payment provider to confirm, never "payment sent". A cash sale says "Marked paid by" the cashier, not "payment received". It sounds pedantic, but these words are what people trust at the end of the day.
+- **Each shop has its own stock.** Miss Cookie decided early on that a shop's shelf is never mixed with the website's stock. A new shop starts at zero, with a one-tap opening count for shops that want to sell before a full count.
+- **Nobody sees a PIN.** Staff set their own PIN. Not even the owner can see it.
+
+### Selling with no internet
+
+In the first version, losing the connection meant you could build a sale but not take payment. That wasn't good enough for a shop, so I quickly followed it with an offline till. It keeps what it needs on the tablet, and each sale made offline waits safely on the device.
+
+When the connection comes back, the till sends those sales in order, and a sale sent twice is only saved once. The price charged at the counter is kept, and if stock ran short while offline, the sale goes to review instead of pushing stock below zero. Some of the hardest bugs were here: sales the server failed on were parked instead of retried, so I made the till retry, keep the server's reason on the sale, and show it in Orders with a "Send now" button.
+
+### Built from what the shop asked for
+
+Once the till was in daily use, Miss Cookie's requests shaped it week by week. A customer pays and then wants the bigger size, so a paid sale can now change items and settle only the difference, with a manager's PIN. She asked whether each size could start every morning with its own number, for example ginger 250 ml and 650 ml each with their own count, so I built Daily starting stock. Receipts now print from the till.
+
+The POS admin, the owner's view of every shop, was designed phone-first, because the owner opens it standing in a shop or late at night to check whether a drawer was closed.
+
+### The WhatsApp desk
+
+WhatsApp orders used to be copied from a chat onto paper. The WhatsApp desk is a small PIN-protected screen in the till's style for those orders. Staff can paste the customer's message or pick items from the shelf, and search understands shop words, so "suya" finds Khebab Pepper (Suya). The customer can send mobile money straight away or pay on delivery. A desk order uses online stock and riders like a website order, and the customer gets an SMS saying the order was created for them. Most importantly, it now sits in the same order list as everything else, instead of in a notebook.
+
+## Records: following the money
+
+If the till replaced the sales book, Records replaced the end-of-day count. This was the part of the paper trail people relied on most, and the part where an honest mistake was hardest to find.
+
+Before writing code, I wrote down the business rules and had them approved. Two of them became the backbone of Records: **order status is not a money ledger**, and **cancellation alone is not a refund**. An order marked Delivered says nothing about whether anyone was paid, so money gets its own records: each payment, each collection by a rider, each handover of cash from one person to another, each drawer opened and closed.
+
+### Taking MoMo now, checking it later
+
+Mobile money was where the old trail leaked most, so this is where I spent the most care. Every MoMo payment needs its transaction ID traced. But the shops are busy all day, and a seller can't stop to type in an ID for every payment. My first version asked them to, and Miss Cookie told me it was slowing the queue for nothing, because the seller can't check the ID anyway.
+
+So the job moved to the right person. The till and WhatsApp desk now take just the customer's name, number and amount. A supervisor sees each payment in the back office, checks it against the shop's MoMo records, and attaches the transaction ID. Until then, the payment counts as unpaid. The "someone will confirm it" step from the paper days now has a name, a list and a record of who checked.
+
+That one change led to several more, each from a real situation in the shops:
+
+- Supervisors get a pop-up and a sound when MoMo comes in, so checks happen during the day, not at night.
+- Shops take MoMo on more than one network, so a shop can hold several numbers, and Records shows which one a payment went to, so the person checking knows which statement to open.
+- Walk-in customers can also pay by card on the POS machine. The seller enters the approval code from the machine's slip, the same code can't be used twice, and at the end of the day the supervisor checks each code against the sale it belongs to.
+- The verify list became a quick, keyboard-first list, because checking is repetitive work and should feel like it.
+
+### Who sold it, and who holds the money
+
+Pay on delivery was the hardest money problem. In the first version, whoever delivered an order got the sale: when a rider recorded a payment, the whole order moved to the rider, and the shop assistant who made the sale lost it. I wrote a plan before building anything, and the fix was to split two questions apart. **The seller keeps the sale. The rider is responsible for the cash they collected until it is handed in.** A rider hands cash to a cashier, and it goes into that cashier's drawer on record. A supervisor can approve a part payment with a reason, and cancelling an order that already took money creates a "refund to make" reminder for the owner.
+
+### A money trail for every order
+
+This is the part that closes the old gap. Every order now carries its own money trail. For a pay-on-delivery order it reads like a short story: the order was paid on delivery, this rider collected the money, he handed it to this person after his deliveries, and this person checked it in. At the end of the day, the supervisor's report page adds those trails up and shows how much each person should hand over. A MoMo payment nobody actually received, or cash that never reached a drawer, no longer disappears into a total. It shows up as a trail with a missing step, against a name.
+
+### The printed day report
+
+Paper didn't disappear completely, and I don't think it should. The person doing the final count wanted something to sign, so Records prints a day report: every order from every channel, one line each, grouped by cashier and rider with subtotals, and a table of what cash to collect from each person. Each kind of mobile money payment has its own list so each can be matched to its own statement, and there are signature lines at the bottom. The difference from the old paper is that this printout is generated from the trail, so it can't disagree with it.
+
+I also wrote one rule for every money screen: plain sentences, no accounting words. A screen says who handed how much to whom, and when, or that a drawer is "short by" an amount. It never says "reconciliation variance".
+
+## Stock: from a number to a history
+
+When I reviewed the whole codebase, I found the weakest point: each product size had a single stock number that anything could overwrite. There was no record of why it changed, who changed it, or what it was before. That's a paper stock sheet with an eraser.
+
+So I replaced the number with a **ledger**. Every change is now a line with who, when, why and the balance after, and the stock figure is just the sum of those lines. The approved rules made it precise:
+
+- Placing an order **reserves** stock; it doesn't take it off the shelf yet. An unpaid online order's reservation lapses after a while.
+- Dispatch uses up the reservation exactly once, and cancelling releases it exactly once.
+- Damage, samples and count corrections need a reason, and big corrections need a second person to approve them.
+
+### Matching the shelf
+
+The goal I kept coming back to was simple: if the system says one jar of shrimp powder, there should be one jar on the shelf. Each shop has its own stock with its own history, separate from online stock.
+
+Miss Cookie then asked for something very practical: every size should start each morning with a set number, whatever sold the day before. I built Daily starting stock, which resets each shop overnight. Edits apply from the next morning, so changing a number mid-day never wipes a count. When she later asked whether we track what sold each day and what's left before the refill, the answer was yes, because the ledger already held it. It just needed a screen, so I added a Daily stock page that shows start, sold, received and close for each size.
+
+### Adding the storeroom
+
+The last missing piece was the storeroom. Production was landing straight in online stock, so that number really meant "storeroom plus the online shelf". I wrote a plan first, and we added a warehouse location: production goes in, and stock is sent out to a shop or to online stock in one step, so the numbers always add up. If anything is short, nothing moves.
+
+With a storeroom in place, the midnight reset stands down. Each shop gets a morning top-up list instead, and nothing moves until a person confirms what they actually put on the shelf. I chose that on purpose: the system suggests, but the person holding the jars has the final word.
+
+One more real case shaped this. A WhatsApp order delivered in Kumasi really comes off the Kumasi shelf, not online stock. So a delivery zone can now say which shop it ships from, and the website and desk check that shop's shelf before accepting the order.
+
+## Deliveries: the rider app and the dispatch board
+
+Miss Cookie delivers with her own riders, not a courier service, so there's no tracking number to look up. The back office is the tracking system. I added delivery zones, riders, a rider queue and live rider locations. Before that, a rider's day lived in his pocket and on the phone: cash collected at the door, and calls back to the shop to say a customer had sent MoMo.
+
+When I redesigned the rider app, I wrote the brief around the person using it: one hand, outdoors, on a motorbike, in the Accra sun, on a patchy network, possibly wearing a helmet, six hours into a shift. Every screen had to serve one of six jobs: know what's next, get there, hand over and take the money, close it out, handle trouble, and settle up at the end of the shift.
+
+A few decisions came straight out of that:
+
+- **Offline first.** The rider app installs on the phone and keeps the last known run, so it still opens with no signal.
+- **One stop at a time.** The rider sees the next stop clearly, not a list to interpret.
+- **Money at the door is recorded at the door.** When a rider ends a pay-on-delivery stop, the app gives two choices: collect cash, or mobile money. A busy rider still has no time to verify MoMo, so instead of calling the shop he takes a photo of the customer's payment message and uploads it. OCR reads the text from the photo, pulls out the transaction ID and the other details that matter, and sends them to the back office for the supervisor to check. The rider can't close the order until the money is in, unless a supervisor approves a part payment.
+- **The customer hears about it.** An SMS goes out when the rider starts the trip.
+
+On the dispatcher's side, the old delivery page only showed one zone at a time, so nobody could see the whole city. The redesign made the board cross-zone by default and put assigning, ordering stops and tracking on one screen. While I was there, I removed a rider activity chart that was drawn from made-up numbers. If a figure isn't real, it doesn't belong on the screen.
+
+## Receipts, messages and reports
+
+A paper receipt is proof for the customer, and a paper summary is proof for the owner. I wanted both to come from the same trail as everything else.
+
+- **SMS receipts.** Every till and desk sale sends the customer an SMS. At Miss Cookie's request, the payment SMS now lists each item with its amount, then the total, so it reads like a real receipt. A slow SMS never holds up a sale, and the till shows whether a receipt was sent, skipped or failed instead of a toast that disappears.
+- **Owner alerts.** At the end of the day the owner gets a sales summary, plus an alert if a till shift was left open.
+- **Emails.** I redesigned every email the system sends, from order confirmation and "out for delivery" to cart reminders and restock alerts, as one consistent set.
+- **Broadcasts with consent.** Marketing SMS and email are kept separate from transactional messages, consent is recorded per channel, and unsubscribing takes effect immediately.
+
+For dashboards I followed one rule: three useful numbers beat six decorative ones. Every number on a screen should answer a question someone actually asks, and link to the orders behind it.
+
+## What replaced the paper, and what I learned
+
+The paper trail didn't disappear; it moved. Each habit now has a digital version that keeps the same record, plus the reason behind it.
+
+| The paper habit | What keeps that trail now |
+| --- | --- |
+| Sales book at each shop | The till: every sale tied to a cashier, a shift and a confirmed payment |
+| Phone and WhatsApp orders noted down | The WhatsApp desk and back office, in the same order list as the website |
+| Checking MoMo against the phone | The verify list: taken at the counter, checked against the statement, ID attached |
+| Rider cash in a pocket and a notebook | Rider collections and coded handovers into a cashier's drawer |
+| End-of-day count | Records, and a printed day report generated from it, with signatures |
+| Stock sheet | The stock ledger: shop, storeroom and online stock, with every movement explained |
+
+The clearest sign that it works is that the trail now catches things paper couldn't. When the owner asked why some orders showed as owed, the records could answer: seven website pay-on-delivery orders had been marked Delivered from the back office with no payment entered. On paper, those would simply have vanished into a total that didn't add up.
+
+What I'd tell anyone doing this for a small business:
+
+1. **Move one habit at a time.** I never asked the shops to switch everything at once. The website came first, then phone orders, then the till, then money, then stock.
+2. **Write the rules before the code.** The approved policies on refunds, reservations and counts saved me from encoding guesses about money.
+3. **Never let the screen say more than it knows.** "Waiting for confirmation" is not "paid". Staff trust a system that's careful with its words.
+4. **Enforce on the server.** Hiding a number on screen is not a permission.
+5. **Let people confirm.** The system suggests a top-up or a total; the person holding the jars or the cash confirms it.
+6. **Build in the shop, not just at the desk.** Most of the recent changes came from Miss Cookie and her staff using the apps every day and telling me what didn't fit. The till, Records and stock screens are better for it.
+
+It hasn't all been smooth. One update briefly stopped the back office from loading until I finished rolling it out. Some of the till's hardest bugs only showed up with real tablets and real outages. Each one became a fix and a lesson.
+
+A word on how I built it. For a lot of this work I've built alongside AI coding agents, mostly Claude. They didn't replace understanding the business; that part was mine to do. What they changed was the speed between a request from the shop and a fix in the shop. When Miss Cookie or a supervisor reported a problem, it became its own thread: the agent read the code, wrote a plan or drew screenshots for me to approve, and opened a change once the checks and tests passed. In one busy stretch, dozens of changes went in over a couple of days, each one from something the staff hit that day. My job moved from typing every line to deciding what the system should do, checking the plan against how the shop really works, and approving what shipped.
+
+Today, every cedi that comes into the business and every jar that goes out has a trail behind it: who sold it, how it was paid, who carried the money, who checked it, and where it ended up. The paper did its job for years. Now the trail keeps itself, and when something doesn't add up, it can tell us why. None of this was a one-person job. Miss Cookie's staff taught me how the business really runs: who writes what down, who hands money to whom, and what the supervisor checks at night. The early versions had bugs, and they were patient with them. They reported each one as they hit it, and each one was fixed straight away, so the apps got easier to work with week by week. Thank you to everyone who helped make this happen.

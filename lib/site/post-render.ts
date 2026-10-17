@@ -557,6 +557,25 @@ function blockStart(line: string, inPara: boolean) {
     if (lm) return !inPara || !/^\d/.test(lm[2]) || /^1[.)]$/.test(lm[2]);
     return false;
 }
+/* GFM table helpers: a header row followed by a |---|---| delimiter row */
+const RE_TABLE_SEP = /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?\s*$/;
+function tableCells(line: string) {
+    return line
+        .trim()
+        .replace(/^\|/, '')
+        .replace(/\|$/, '')
+        .split(/(?<!\\)\|/)
+        .map((c) => c.trim().replace(/\\\|/g, '|'));
+}
+function isTableStart(L: string[], i: number) {
+    return (
+        L[i].includes('|') &&
+        i + 1 < L.length &&
+        L[i + 1].includes('-') &&
+        RE_TABLE_SEP.test(L[i + 1]) &&
+        tableCells(L[i]).length === tableCells(L[i + 1]).length
+    );
+}
 function parseAttrs(s: string) {
     const a: Record<string, string> = {};
     let m: RegExpExecArray | null;
@@ -755,6 +774,41 @@ function renderBlocks(src: string, ctx: Ctx, depth: number): Block[] {
                 }
             }
             out.push(component(tag, attrs, inner, ctx, depth));
+            continue;
+        }
+        /* table */
+        if (isTableStart(L, i)) {
+            flush();
+            const head = tableCells(L[i]);
+            const aligns = tableCells(L[i + 1]).map((c) =>
+                c.startsWith(':')
+                    ? c.endsWith(':')
+                        ? 'center'
+                        : 'left'
+                    : c.endsWith(':')
+                      ? 'right'
+                      : '',
+            );
+            i += 2;
+            const rows: string[][] = [];
+            while (i < L.length && L[i].trim() && L[i].includes('|')) {
+                rows.push(tableCells(L[i]));
+                i++;
+            }
+            const cell = (tag: 'th' | 'td', c: string, k: number) =>
+                `<${tag}${aligns[k] ? ` style="text-align:${aligns[k]}"` : ''}>${inline(c, ctx)}</${tag}>`;
+            const thead = `<thead><tr>${head.map((c, k) => cell('th', c, k)).join('')}</tr></thead>`;
+            const tbody = `<tbody>${rows
+                .map(
+                    (r) =>
+                        `<tr>${head.map((_, k) => cell('td', r[k] ?? '', k)).join('')}</tr>`,
+                )
+                .join('')}</tbody>`;
+            out.push({
+                t: 'table',
+                html: `<div class="table-wrap"><table>${thead}${tbody}</table></div>`,
+                raw: [head, ...rows].map((r) => r.join(' ')).join(' '),
+            });
             continue;
         }
         /* blockquote */

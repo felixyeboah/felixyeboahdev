@@ -11,7 +11,7 @@ import { PrintButton } from './print-button';
 export const metadata: Metadata = {
     title: { absolute: 'Resume — Felix Yeboah' },
     description:
-        'Resume of Felix Yeboah: senior frontend engineer and team lead at Complete Farmer, formerly at Primer. React, Remix, Go and Postgres. Accra, Ghana.',
+        'Resume of Felix Yeboah: senior frontend engineer at Complete Farmer, formerly at Primer. React, Remix, Go and Postgres. Accra, Ghana.',
 };
 
 const featured = PROJECTS.filter((p) => p.featured);
@@ -88,21 +88,25 @@ export default function ResumePage() {
                                         <a href="https://completefarmer.com" target="_blank" rel="noopener">
                                             Complete Farmer
                                         </a>{' '}
-                                        &middot; Team Lead, Grower Agent Platform
+                                        &middot; Grower Agent Platform and Buyer Dashboard
                                     </span>
                                     <p>
-                                        Frontend engineer role focused on developing high-quality, performant, and scalable products used by
-                                        clients and in-house. Reviewing code by other engineers and managing junior developers.
+                                        Frontend engineer building performant, scalable products used by clients and in-house. I review
+                                        code from other engineers and manage junior developers.
                                     </p>
                                     <p>
-                                        Currently Team Lead for the Grower Agent Platform, overseeing the development of the frontend and
-                                        backend of the platform. The team built a platform that has onboarded over 60,000 farmers and
-                                        increased farmer productivity by 30%.
+                                        The Grower Agent Platform has onboarded over 60,000 farmers and increased farmer productivity by
+                                        30%.
+                                    </p>
+                                    <p>
+                                        I also run the Buyer Dashboard, the platform where buyers come to source crops from Complete
+                                        Farmer's farmers. I manage it day to day, check that every flow works, iterate on it as buyers
+                                        use it, and keep it stable.
                                     </p>
                                     <div className="xp__tags">
-                                        <span>Team lead</span>
                                         <span>Frontend</span>
-                                        <span>Backend</span>
+                                        <span>Buyer Dashboard</span>
+                                        <span>Grower Agent Platform</span>
                                         <span>Code review</span>
                                     </div>
                                 </div>
@@ -304,7 +308,7 @@ export default function ResumePage() {
                                     Mentoring developers <i>1:1</i>
                                 </li>
                                 <li>
-                                    Team lead <i>Complete Farmer</i>
+                                    Buyer Dashboard <i>Complete Farmer</i>
                                 </li>
                                 <li>
                                     Writing <i>Blog</i>

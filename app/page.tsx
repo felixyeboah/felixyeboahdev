@@ -635,7 +635,7 @@ export default function Home() {
                                             Mentoring developers <i>1:1</i>
                                         </li>
                                         <li>
-                                            Team lead <i>Complete Farmer</i>
+                                            Buyer Dashboard <i>Complete Farmer</i>
                                         </li>
                                         <li>
                                             Writing <i>Blog</i>
@@ -697,8 +697,11 @@ export default function Home() {
                                     2019 — Present
                                 </span>
                                 <div className="tl__role">
-                                    <h3>Senior Frontend Engineer / Team Lead</h3>
-                                    <p>Grower Agent Platform. Led the team that onboarded 60,000+ farmers and lifted productivity by 30%.</p>
+                                    <h3>Senior Frontend Engineer</h3>
+                                    <p>
+                                        Frontend on the Grower Agent Platform, which has onboarded 60,000+ farmers and lifted productivity by 30%, and owner of the Buyer
+                                        Dashboard, where buyers source crops from Complete Farmer's farmers.
+                                    </p>
                                 </div>
                                 <span className="tl__co">Complete Farmer</span>
                             </li>

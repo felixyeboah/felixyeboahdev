@@ -581,8 +581,8 @@ export const DETAILS: Record<string, ProjectDetail> = {
         credits: [
             { k: 'Role', v: 'Developer' },
             { k: 'Services', v: 'Custom e-commerce build' },
-            { k: 'Stack', v: 'Remix, Prisma, Tailwind CSS', note: 'Hubtel payments + SMS, Fly.io' },
-            { k: 'Year', v: '2023', note: 'built over four months' },
+            { k: 'Stack', v: 'Next.js, React, Hono, Drizzle', note: 'Turso, Better Auth, Tailwind CSS, Hubtel, Paystack, Cloudflare Workers' },
+            { k: 'Year', v: '2023', note: 'built in four months, rebuilt in 2025' },
         ],
         stage: {
             src: '/assets/case/miss-cookie-s0.jpg',
@@ -618,9 +618,9 @@ export const DETAILS: Record<string, ProjectDetail> = {
                     h: 'The approach',
                     body: ['A custom store, not a template.'],
                     list: [
-                        { b: 'One platform.', t: 'Built on Remix and Prisma.' },
+                        { b: 'One platform.', t: 'Started on Remix and Prisma in 2023, now one Next.js and Hono codebase on Turso.' },
                         { b: 'Easy to run.', t: 'The team manages products, orders and customers themselves.' },
-                        { b: 'Payments and SMS.', t: 'Hubtel handles both.' },
+                        { b: 'Payments and SMS.', t: 'Hubtel and Paystack take payments. Hubtel and Arkesel send SMS.' },
                     ],
                 },
             ],
@@ -706,11 +706,12 @@ export const DETAILS: Record<string, ProjectDetail> = {
             status: {
                 pill: 'Live · an early Reevit merchant',
                 big: 'A custom store the team runs themselves,',
-                muted: 'with Hubtel for payments and SMS.',
+                muted: 'with Hubtel and Paystack for payments.',
                 listTitle: 'Since 2017',
                 list: [
                     { t: 'First day of production: 25 jars', tag: '2017' },
-                    { t: 'Custom online store, built over four months', tag: '2023' },
+                    { t: 'Custom online store on Remix, built over four months', tag: '2023' },
+                    { t: 'Rebuilt on Next.js with a till, back office and rider app', tag: '2025' },
                     {
                         t: [
                             'The payment webhook turns unreliable. The fix becomes ',

@@ -10,6 +10,7 @@ export const NAV = [
     ['work', 'Work', '/work'],
     ['about', 'About', '/about'],
     ['writing', 'Writing', '/writing'],
+    ['photos', 'Photos', '/photos'],
     ['resume', 'Resume', '/resume'],
     ['contact', 'Contact', '/contact'],
 ] as const;

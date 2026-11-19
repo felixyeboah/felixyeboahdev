@@ -1,0 +1,38 @@
+{
+  "title": "Everyday",
+  "order": 3,
+  "photos": {
+    "040": {
+      "date": "2026-11-08",
+      "camera": "Apple iPhone 17 Pro Max",
+      "lens": "iPhone 17 Pro Max back triple camera 16.891mm f/2.8",
+      "focal": "17mm",
+      "aperture": "f/2.8",
+      "shutter": "1/777s",
+      "iso": 20
+    },
+    "041": {
+      "date": "2026-11-08",
+      "title": "“The Trident”",
+      "location": "Akosombo"
+    },
+    "034": {
+      "date": "2026-10-16",
+      "camera": "Apple iPhone 17 Pro Max",
+      "lens": "iPhone 17 Pro Max back triple camera 16.891mm f/2.8",
+      "focal": "17mm",
+      "aperture": "f/2.8",
+      "shutter": "1/777s",
+      "iso": 20
+    },
+    "035": {
+      "date": "2026-11-01",
+      "camera": "Apple iPhone 17 Pro Max",
+      "lens": "iPhone 17 Pro Max back triple camera 16.891mm f/2.8",
+      "focal": "17mm",
+      "aperture": "f/2.8",
+      "shutter": "1/777s",
+      "iso": 20
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "title": "Streets",
+  "order": 2,
+  "photos": {
+    "050": {
+      "date": "2026-11-11",
+      "camera": "Apple iPhone 17 Pro Max",
+      "lens": "iPhone 17 Pro Max back triple camera 16.891mm f/2.8",
+      "focal": "17mm",
+      "aperture": "f/2.8",
+      "shutter": "1/777s",
+      "iso": 20
+    },
+    "061": {
+      "date": "2026-11-15",
+      "camera": "Apple iPhone 17 Pro Max",
+      "lens": "iPhone 17 Pro Max back triple camera 16.891mm f/2.8",
+      "focal": "17mm",
+      "aperture": "f/2.8",
+      "shutter": "1/777s",
+      "iso": 20
+    },
+    "068": {
+      "date": "2026-11-15",
+      "camera": "Apple iPhone 17 Pro Max",
+      "lens": "iPhone 17 Pro Max back triple camera 16.891mm f/2.8",
+      "focal": "17mm",
+      "aperture": "f/2.8",
+      "shutter": "1/777s",
+      "iso": 20
+    },
+    "069": {
+      "date": "2026-11-15",
+      "camera": "Apple iPhone 17 Pro Max",
+      "lens": "iPhone 17 Pro Max back triple camera 16.891mm f/2.8",
+      "focal": "17mm",
+      "aperture": "f/2.8",
+      "shutter": "1/777s",
+      "iso": 20
+    },
+    "070": {
+      "date": "2026-11-19",
+      "camera": "Apple iPhone 17 Pro Max",
+      "lens": "iPhone 17 Pro Max back triple camera 16.891mm f/2.8",
+      "focal": "17mm",
+      "aperture": "f/2.8",
+      "shutter": "1/777s",
+      "iso": 20
+    }
+  }
+}

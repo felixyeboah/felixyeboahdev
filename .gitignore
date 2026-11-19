@@ -47,3 +47,8 @@ next-env.d.ts
 
 # local Claude Code config
 .claude/
+
+# photo originals (processed by scripts/photos.mjs into public/photos)
+/photos/**
+!/photos/**/
+!/photos/**/set.json

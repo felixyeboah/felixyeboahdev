@@ -1,0 +1,170 @@
+{
+  "title": "Places",
+  "order": 5,
+  "photos": {
+    "larabanga-mosque": {
+      "title": "Larabanga Mosque",
+      "location": "Northern Region, Ghana"
+    },
+    "victoria-island": {
+      "title": "Victoria Island",
+      "location": "Lagos, Nigeria"
+    },
+    "abseiling": {
+      "title": "Abseiling from the mountain"
+    },
+    "mole-elephant": {
+      "title": "An elephant in Mole National Park",
+      "location": "Mole National Park, Ghana"
+    },
+    "sant-jaume": {
+      "title": "Saint Jaume’s Church",
+      "location": "Spain"
+    },
+    "volta-mountains": {
+      "title": "Mountain view",
+      "location": "Volta Region, Ghana"
+    },
+    "london-meetup": {
+      "title": "Team meetup in Primer’s London office",
+      "location": "London, UK"
+    },
+    "zanzibar-boat": {
+      "title": "Boat ride",
+      "location": "Zanzibar, Tanzania"
+    },
+    "kente-weaving": {
+      "title": "Kente weaving",
+      "location": "Ho, Volta Region, Ghana"
+    },
+    "071": {
+      "date": "2022-03-26",
+      "title": "Over the Serra de Tramuntana",
+      "location": "Mallorca, Spain"
+    },
+    "072": {
+      "date": "2022-03-26",
+      "title": "Porta del Moll, the old town gate",
+      "location": "Alcúdia, Mallorca, Spain"
+    },
+    "073": {
+      "date": "2022-03-26",
+      "title": "Church of Sant Jaume",
+      "location": "Alcúdia, Mallorca, Spain"
+    },
+    "074": {
+      "date": "2022-03-26",
+      "title": "Steps in the old town",
+      "location": "Alcúdia, Mallorca, Spain"
+    },
+    "075": {
+      "date": "2022-03-26",
+      "title": "Old town street",
+      "location": "Alcúdia, Mallorca, Spain"
+    },
+    "076": {
+      "date": "2022-03-26",
+      "title": "Cap de Formentor",
+      "location": "Mallorca, Spain"
+    },
+    "077": {
+      "date": "2022-03-26",
+      "title": "Cliffs at Cap de Formentor",
+      "location": "Mallorca, Spain"
+    },
+    "078": {
+      "date": "2022-03-26",
+      "title": "Mountain road",
+      "location": "Serra de Tramuntana, Mallorca, Spain"
+    },
+    "079": {
+      "date": "2022-03-26",
+      "title": "Reservoir in the mountains",
+      "location": "Serra de Tramuntana, Mallorca, Spain"
+    },
+    "080": {
+      "date": "2022-03-28",
+      "title": "Alpine choughs at the lookout",
+      "location": "Nordkette, Innsbruck, Austria"
+    },
+    "081": {
+      "date": "2022-03-28",
+      "title": "Maria-Theresien-Straße and St Anne’s Column",
+      "location": "Innsbruck, Austria"
+    },
+    "082": {
+      "date": "2022-03-28",
+      "title": "Innsbruck from above",
+      "location": "Nordkette, Innsbruck, Austria"
+    },
+    "083": {
+      "date": "2022-03-28",
+      "title": "Mountain station",
+      "location": "Nordkette, Innsbruck, Austria"
+    },
+    "084": {
+      "date": "2022-03-28",
+      "title": "Choughs over the Inn valley",
+      "location": "Nordkette, Innsbruck, Austria"
+    },
+    "085": {
+      "date": "2022-03-28",
+      "title": "Snow on the ridge",
+      "location": "Nordkette, Innsbruck, Austria"
+    },
+    "086": {
+      "date": "2022-03-28",
+      "title": "The Inn valley",
+      "location": "Nordkette, Innsbruck, Austria"
+    },
+    "087": {
+      "date": "2022-03-28",
+      "title": "The Golden Roof",
+      "location": "Innsbruck, Austria"
+    },
+    "089": {
+      "date": "2022-04-06",
+      "title": "Notion mural",
+      "location": "Shoreditch, London, UK"
+    },
+    "090": {
+      "date": "2022-04-07",
+      "title": "Golden Jubilee Bridge",
+      "location": "London, UK"
+    },
+    "092": {
+      "date": "2022-04-09",
+      "title": "Working from the hotel",
+      "location": "London, UK"
+    },
+    "093": {
+      "date": "2022-04-09",
+      "title": "I Goat",
+      "location": "Spitalfields, London, UK"
+    },
+    "094": {
+      "date": "2022-04-11",
+      "title": "Heads down",
+      "location": "London, UK"
+    },
+    "095": {
+      "date": "2022-04-11",
+      "title": "Playing 9 to 5",
+      "location": "London, UK"
+    },
+    "096": {
+      "date": "2024-07-23"
+    },
+    "097": {
+      "date": "2025-01-08"
+    },
+    "091": {
+      "title": "Red buses in the City",
+      "location": "London, UK"
+    },
+    "088": {
+      "title": "Wall of faces",
+      "location": "London, UK"
+    }
+  }
+}

@@ -171,7 +171,12 @@ export default function AboutPage() {
                                     <p>
                                         In my spare time, you&rsquo;ll find me either learning something new, playing COD or FC24. I like
                                         listening to music, watching movies and traveling which helps me understand life and approach
-                                        problems in different ways while shooting stunning photos.
+                                        problems in different ways. Photography is the other one: I shoot wherever I go, and the
+                                        pictures live on the{' '}
+                                        <Link className="fun__link" href="/photos">
+                                            Photos
+                                        </Link>{' '}
+                                        page.
                                     </p>
                                 </div>
                             </div>
@@ -269,142 +274,6 @@ export default function AboutPage() {
                             </p>
                         </li>
                     </ol>
-                </div>
-            </section>
-            <section className="section pad0" aria-labelledby="places-title">
-                <div className="wrap">
-                    <div className="shead">
-                        <p className="shead__label mono" data-reveal="">
-                            <i>(04)</i> Photographs
-                        </p>
-                        <h2 className="shead__title" id="places-title" data-reveal="" style={{ '--d': '80ms' } as CSSProperties}>
-                            Places I&rsquo;ve been.
-                        </h2>
-                        <p className="shead__aside mono" data-reveal="" style={{ '--d': '160ms' } as CSSProperties}>
-                            Ghana, Nigeria,
-                            <br />
-                            Spain, UK, Tanzania
-                        </p>
-                    </div>
-                    <div className="places">
-                        <figure className="place" data-reveal="">
-                            <img
-                                src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_900/photos/Squoosh_0447e197685e856892e90a2a5c3713d6a1aa3efc_3900x2600_a6g7wd"
-                                width={900}
-                                height={600}
-                                alt="Larabanga Mosque in the Northern Region"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                            <figcaption className="mono">
-                                <span>01</span>Larabanga Mosque in the Northern Region
-                            </figcaption>
-                        </figure>
-                        <figure className="place" data-reveal="">
-                            <img
-                                src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_900/photos/IMG_1197_gmyqxv"
-                                width={900}
-                                height={1200}
-                                alt="Victoria Island, Lagos, Nigeria"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                            <figcaption className="mono">
-                                <span>02</span>Victoria Island, Lagos, Nigeria
-                            </figcaption>
-                        </figure>
-                        <figure className="place" data-reveal="">
-                            <img
-                                src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_900/photos/IMG_4401_vmytlz"
-                                width={900}
-                                height={1600}
-                                alt="Abseiling from the mountain"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                            <figcaption className="mono">
-                                <span>03</span>Abseiling from the mountain
-                            </figcaption>
-                        </figure>
-                        <figure className="place" data-reveal="">
-                            <img
-                                src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_900/photos/Squoosh_Image_3900x2600_mo311y"
-                                width={900}
-                                height={600}
-                                alt="An Elephant in the Mole National Park"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                            <figcaption className="mono">
-                                <span>04</span>An Elephant in the Mole National Park
-                            </figcaption>
-                        </figure>
-                        <figure className="place" data-reveal="">
-                            <img
-                                src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_900/photos/IMG_1890_v0biqn"
-                                width={900}
-                                height={1200}
-                                alt="Saint Juame’s Church, Spain"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                            <figcaption className="mono">
-                                <span>05</span>Saint Juame&rsquo;s Church, Spain
-                            </figcaption>
-                        </figure>
-                        <figure className="place" data-reveal="">
-                            <img
-                                src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_900/photos/Squoosh_3900x2600_dcwnr7"
-                                width={900}
-                                height={600}
-                                alt="Mountain view in the Volta Region of Ghana"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                            <figcaption className="mono">
-                                <span>06</span>Mountain view in the Volta Region of Ghana
-                            </figcaption>
-                        </figure>
-                        <figure className="place" data-reveal="">
-                            <img
-                                src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_900/photos/IMG_2176_lbavci"
-                                width={900}
-                                height={675}
-                                alt="Team Meetup in Primer’s London office"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                            <figcaption className="mono">
-                                <span>07</span>Team Meetup in Primer&rsquo;s London office
-                            </figcaption>
-                        </figure>
-                        <figure className="place" data-reveal="">
-                            <img
-                                src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_900/photos/IMG_4450_vkzm8d"
-                                width={900}
-                                height={1600}
-                                alt="Boat ride in Zanzibar, Tanzania"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                            <figcaption className="mono">
-                                <span>08</span>Boat ride in Zanzibar, Tanzania
-                            </figcaption>
-                        </figure>
-                        <figure className="place" data-reveal="">
-                            <img
-                                src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_900/photos/Squoosh_792219a3a9b23587991f13a9a8ce6911039c1340_3900x2600_rkcygj"
-                                width={900}
-                                height={600}
-                                alt="Kente weaving in Ho, Volta Region of Ghana"
-                                loading="lazy"
-                                decoding="async"
-                            />
-                            <figcaption className="mono">
-                                <span>09</span>Kente weaving in Ho, Volta Region of Ghana
-                            </figcaption>
-                        </figure>
-                    </div>
                 </div>
             </section>
             <section className="section pad0" aria-labelledby="cta-title" style={{ paddingBottom: '0' }}>

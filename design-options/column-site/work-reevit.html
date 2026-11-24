@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Reevit — Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/column.css">
+<style>
+  /* hero: bleeds to 1000px once there is room, column width below */
+  .case-intro { margin-top: var(--s-7); }
+  .case-hero .frame { aspect-ratio: 16 / 10; }
+  .case-hero .frame img { height: 100%; object-fit: cover; object-position: top center; }
+  @media (min-width: 1100px) {
+    .case-hero { margin-inline: -140px; }
+    .case-hero figcaption { margin-inline: 140px; }
+  }
+  .case-credits { margin-top: var(--s-6); }
+  .case-credits a { padding-block: var(--s-3); }
+
+  .case-statement { font-size: var(--t-lg); line-height: 1.5; letter-spacing: -0.008em; max-width: 36em; text-wrap: pretty; }
+  .case-brief .prose, .case-chapters .prose { margin-top: var(--s-2); }
+  .case-chapters .prose > h2:first-child { margin-top: 0; }
+  .prose > .figure { margin-top: var(--s-6); }
+
+  /* chapter screenshots: the data's crop [x, y, w, h] of a 2160x1350 capture */
+  .case-crop { position: relative; overflow: hidden; }
+  .case-crop--failover { --x: 0.055; --y: 0.235; --w: 0.45; --h: 0.56; aspect-ratio: 972 / 756; }
+  .case-crop--recurring { --x: 0.355; --y: 0.1; --w: 0.285; --h: 0.33; aspect-ratio: 616 / 446; }
+  .case-crop--checkout { --x: 0.36; --y: 0.07; --w: 0.58; --h: 0.65; aspect-ratio: 1253 / 878; }
+  .case-crop--dashboard { --x: 0.075; --y: 0.079; --w: 0.57; --h: 0.43; aspect-ratio: 1231 / 580; }
+  .figure .case-crop img { position: absolute; max-width: none; width: calc(100% / var(--w)); height: auto; left: calc(-100% * var(--x) / var(--w)); top: calc(-100% * var(--y) / var(--h)); }
+
+  .case-note { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); column-gap: var(--s-3); align-items: baseline; padding: var(--s-4) 0; }
+  .case-note .num { color: var(--muted); }
+  .case-note .t { display: block; font-weight: 600; }
+  .case-note .b, .case-fact .b { display: block; margin-top: var(--s-1); color: var(--muted); text-wrap: pretty; }
+  .case-fact .l { display: block; font-weight: 600; }
+
+  .case-quote { margin: 0; }
+  .case-quote blockquote { margin: 0; }
+  .case-quote figcaption { margin-top: var(--s-4); padding-left: var(--s-5); font-size: var(--t-sm); color: var(--muted); }
+  .case-quote figcaption a { padding-block: var(--s-3); }
+
+  .case-all { margin-top: var(--s-5); font-size: var(--t-sm); }
+  .case-all a { display: inline-flex; align-items: center; min-height: 44px; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="column">
+  <header class="site-header">
+    <a class="identity" href="index.html" aria-label="Felix Yeboah, home">
+      <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="">
+      <span>Felix Yeboah</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html" aria-current="page">Work</a></li>
+        <li><a href="writing.html">Writing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="photos.html">Photos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+    <main id="main">
+    <section class="page-head">
+      <a class="crumb" href="work.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M8.5 3.5L5 7l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Work</a>
+      <h1>Reevit</h1>
+      <p class="lede">Payments that don’t miss. One provider goes down, the customer never knows.</p>
+    </section>
+
+    <section class="case-intro" aria-label="Overview">
+      <figure class="figure case-hero">
+        <span class="frame"><img src="../../public/assets/case/reevit-s0.jpg" width="2160" height="1350" alt="Reevit homepage: the headline “One provider goes down. Your customers never know.” above the merchant dashboard snapshot" loading="eager" fetchpriority="high"></span>
+        <figcaption>The reevit.io homepage and merchant dashboard. Figures in the product UI are demo data.</figcaption>
+      </figure>
+
+      <ul class="ruled case-credits">
+        <li class="kv"><span class="k">Category</span><span class="v">Payments</span></li>
+        <li class="kv"><span class="k">Role</span><span class="v">Founder &amp; engineer</span></li>
+        <li class="kv"><span class="k">Services</span><span class="v">Product design, frontend, backend, infrastructure</span></li>
+        <li class="kv"><span class="k">Providers</span><span class="v">Paystack, Hubtel, Flutterwave, Stripe, PawaPay, Moolre, Monnify, M-Pesa</span></li>
+        <li class="kv"><span class="k">Year</span><span class="v">2025</span></li>
+        <li class="kv"><span class="k">Live</span><span class="v"><a class="link mono" href="https://reevit.io">reevit.io</a></span></li>
+      </ul>
+    </section>
+
+    <section class="case-brief" aria-label="The brief">
+      <p class="case-statement">Payments that keep working when the provider behind them doesn’t.</p>
+      <div class="prose">
+        <h2>The problem</h2>
+        <p>Felix was building the store for <a href="work-reevit.html">Miss Cookie Spices</a> when payments started failing. The provider’s webhook had gone unreliable: sometimes it fired, sometimes total silence.</p>
+        <p>Switching providers meant rewriting almost the whole integration.</p>
+
+        <h2>The question</h2>
+        <p>If one client hit this, how many developers were quietly accepting broken payment flows?</p>
+        <p>Enterprise teams have orchestration layers like Primer. Builders starting from scratch had nothing that simple.</p>
+
+        <h2>The approach</h2>
+        <p>A universal remote for payments.</p>
+        <ul>
+          <li><strong>Integrate once.</strong> One snippet, any provider behind it.</li>
+          <li><strong>One shape.</strong> Same request and response, so switching never touches business logic.</li>
+          <li><strong>No downtime.</strong> Whichever provider is answering takes the charge.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="case-chapters" aria-label="The product">
+      <div class="prose">
+        <h2>A declined charge isn’t a lost sale.</h2>
+        <p>When a provider declines or stops answering, the same charge moves to the next one in the merchant’s chain, inside the same tap. Nobody has to ask the customer to try again.</p>
+        <figure class="figure">
+          <span class="frame case-crop case-crop--failover"><img src="../../public/assets/case/reevit-s2.jpg" width="2160" height="1350" alt="Routing recovery card: payments recovered after failover, first-try and after-failover approval rates" loading="lazy" decoding="async"></span>
+          <figcaption>Routing recovery · product UI, demo data</figcaption>
+        </figure>
+
+        <h2>Retries that change lanes.</h2>
+        <p>Subscriptions and instalments retry on a schedule, and on a different provider when one keeps declining. The invoice gets paid without anyone chasing it.</p>
+        <figure class="figure">
+          <span class="frame case-crop case-crop--recurring"><img src="../../public/assets/case/reevit-s3.jpg" width="2160" height="1350" alt="Invoice card: card declined Monday, declined again Wednesday, paid Friday by charging MTN MoMo" loading="lazy" decoding="async"></span>
+          <figcaption>Invoice retry timeline · product UI, demo data</figcaption>
+        </figure>
+
+        <h2>No website needed.</h2>
+        <p>A payment link on WhatsApp, a QR on the counter, or the drop-in checkout. Mobile money and cards work on day one.</p>
+        <figure class="figure">
+          <span class="frame case-crop case-crop--checkout"><img src="../../public/assets/case/reevit-s6.jpg" width="2160" height="1350" alt="Hosted checkout asking for a mobile money number, above the steps: share the link anywhere, get paid" loading="lazy" decoding="async"></span>
+          <figcaption>Hosted checkout and payment links · product UI, demo data</figcaption>
+        </figure>
+
+        <h2>Every provider, one screen.</h2>
+        <p>Payments, routing decisions, webhooks and provider health in one place, in test and live mode. Workflows can run the moment a payment lands.</p>
+        <figure class="figure">
+          <span class="frame case-crop case-crop--dashboard"><img src="../../public/assets/case/reevit-s7.jpg" width="2160" height="1350" alt="Merchant dashboard snapshot: volume, success rate and recovered totals above a live activity feed of payments across Paystack and Hubtel" loading="lazy" decoding="async"></span>
+          <figcaption>Merchant dashboard · product UI, demo data</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section aria-labelledby="hood-title">
+      <h2 id="hood-title">Under the hood</h2>
+      <ul class="ruled">
+        <li class="case-note"><span class="num mono">01</span><span><span class="t">Health-checked routing</span><span class="b">Real-time provider health checks decide the fallback order, so a charge skips a provider that is already struggling.</span></span></li>
+        <li class="case-note"><span class="num mono">02</span><span><span class="t">Fraud rules first</span><span class="b">Merchant-level rules for country, amount limits and BIN blocklists run before a charge leaves.</span></span></li>
+        <li class="case-note"><span class="num mono">03</span><span><span class="t">Envelope encryption</span><span class="b">Merchant keys are sealed with a data key wrapped by a KMS-managed key, decrypted in memory at call time and never logged.</span></span></li>
+        <li class="case-note"><span class="num mono">04</span><span><span class="t">Normalised webhooks</span><span class="b">Every provider’s events arrive in one shape, so switching providers never rewrites business logic.</span></span></li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="stands-title">
+      <h2 id="stands-title">Where it stands</h2>
+      <ul class="ruled">
+        <li class="kv case-fact"><span class="mono">1</span><span><span class="l">Integration</span><span class="b">One snippet. Every provider in the chain sits behind it.</span></span></li>
+        <li class="kv case-fact"><span class="mono">8</span><span><span class="l">Providers supported</span><span class="b">Across Ghana, Nigeria and Kenya, from Paystack to M-Pesa.</span></span></li>
+        <li class="kv case-fact"><span class="mono">GHS 0</span><span><span class="l">Held by Reevit</span><span class="b">Money settles in the merchant’s own provider accounts. Always.</span></span></li>
+        <li class="kv case-fact"><span class="mono">2 min</span><span><span class="l">To connect Paystack</span><span class="b">Paste the keys, add a fallback, take a live payment.</span></span></li>
+      </ul>
+    </section>
+
+    <section aria-label="Why it exists">
+      <figure class="case-quote prose">
+        <blockquote><p>Not glamorous. Just useful. And sometimes, that’s all innovation really needs to be.</p></blockquote>
+        <figcaption><a href="post-why-i-built-reevit.html">From the launch post</a></figcaption>
+      </figure>
+    </section>
+
+    <nav class="pager" aria-label="Projects">
+      <a href="work-reevit.html" rel="prev"><span class="dir">Previous</span><span class="name"><span class="u">Undisciplined</span></span></a>
+      <a href="work-reevit.html" rel="next"><span class="dir">Next</span><span class="name"><span class="u">Miss Cookie Spices</span></span></a>
+    </nav>
+    <p class="case-all"><a class="link" href="work.html">All work</a></p>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+    <div class="footer-links">
+      <a href="https://github.com/felixyeboah">GitHub</a>
+      <a href="https://x.com/sudocode_">X</a>
+      <a href="resume.html">Résumé</a>
+      <a href="photos.html">Photos</a>
+      <span class="copy">© 2026</span>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

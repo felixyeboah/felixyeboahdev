@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Redesigning My Portfolio: The Dark Studio Design Language — Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/column.css">
+<style>
+  .post-head h1 { text-wrap: balance; }
+
+  /* 32em ~ 69 characters per line (Schibsted Grotesk averages ~7.4px per character at 16px) */
+  .post-body { margin-top: var(--s-7); }
+  .post-body > :first-child { margin-top: 0; }
+  .post-body hr + h2 { margin-top: var(--s-7); }
+  .post-body .post-note { font-size: var(--t-sm); color: var(--muted); }
+  .post-body .post-note + h2 { margin-top: var(--s-7); }
+  .post-body .post-label + ul { margin-top: var(--s-3); }
+  .post-body h2, .post-body h3 { scroll-margin-top: var(--s-5); text-wrap: balance; }
+
+  /* tables, when a post has them: hairline rows, scroll on narrow screens */
+  .post-table { overflow-x: auto; }
+  .post-table table { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
+  .post-table th, .post-table td { padding: var(--s-2) var(--s-4) var(--s-2) 0; border-bottom: 1px solid var(--hair); text-align: left; vertical-align: top; }
+  .post-table th { font-weight: 600; }
+
+  .post-author {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1) var(--s-3);
+    margin-top: var(--s-8);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--hair);
+    font-size: var(--t-sm);
+  }
+  .post-author .name { font-weight: 600; margin-right: var(--s-1); }
+  .post-author .link { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
+
+  .post-pager { margin-top: var(--s-7); }
+  .post-all { margin-top: var(--s-5); }
+  .post-all .link { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--t-sm); }
+
+  @media (max-width: 640px) {
+    .post-body { margin-top: var(--s-6); }
+    .post-body > h2 { margin-top: var(--s-7); }
+    .post-body hr + h2 { margin-top: var(--s-6); }
+    .post-body hr { margin-top: var(--s-6); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="column">
+  <header class="site-header">
+    <a class="identity" href="index.html" aria-label="Felix Yeboah, home">
+      <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="">
+      <span>Felix Yeboah</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html">Work</a></li>
+        <li><a href="writing.html" aria-current="page">Writing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="photos.html">Photos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article aria-labelledby="post-title">
+      <header class="page-head post-head">
+        <a class="crumb" href="writing.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M8.5 3.5L5 7l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Writing</a>
+        <h1 id="post-title">Redesigning My Portfolio: The Dark Studio Design Language</h1>
+        <ul class="meta-line">
+          <li><time class="mono" datetime="2026-09-27">27 Sep 2026</time></li>
+          <li>8 min read</li>
+        </ul>
+      </header>
+
+      <div class="prose post-body">
+<p>The old version of this site made you wait two seconds before it showed you anything. A preloader ran on every visit. After that, the case studies scrolled sideways with GSAP, which broke on phones, and the "Expertise" section was four long paragraphs of claims with nothing to back them up. There was one testimonial, the blog felt bolted on, and there was no obvious way to hire me.</p>
+<p>I’d been meaning to fix it for a while. This post is about how I did it, and mostly about the decisions, because the decisions are what make the new site hang together.</p>
+<h2 id="rules-before-pixels">Rules before pixels</h2>
+<p>Before any design, I wrote down what the new site was not allowed to do.</p>
+<ol><li><strong>No preloader.</strong> Content shows up immediately. Motion is an extra, and with reduced motion turned on, it’s gone.</li><li><strong>No invented proof.</strong> No fake client logos, no made-up numbers. If I don’t have a real figure, the page doesn’t show one.</li><li><strong>No generic AI look.</strong> No purple gradients, no Inter on everything, no emoji as icons.</li><li><strong>Every page works at 375 pixels wide.</strong> Not "works on mobile" in general. Checked at that width, every time.</li></ol>
+<p>The second rule turned out to be the one that shaped the most work. I’ll come back to it.</p>
+<h2 id="three-directions">Three directions</h2>
+<p>I tried three directions for the landing page, each as a single HTML file with the same real content, so I was comparing designs and not copy.</p>
+<figure class="figure"><div class="figure__frame"><img src="../../public/assets/writing/redesign/option-a.jpg" width="1600" height="1000" alt="The Editorial direction: a cream page with FELIX in a heavy grotesque and Yeboah in a large serif" loading="lazy" decoding="async"></div><figcaption>Editorial. Archivo and Instrument Serif on cream, with a rust accent.</figcaption></figure>
+<p>Editorial looked like a magazine cover. Archivo for the heavy type, Instrument Serif for contrast, and a rust accent on cream. It had the most personality of the three.</p>
+<figure class="figure"><div class="figure__frame"><img src="../../public/assets/writing/redesign/option-c.jpg" width="1600" height="1000" alt="The Engineer Index direction: a light grey page with a spec-sheet card and a row of figures" loading="lazy" decoding="async"></div><figcaption>Engineer Index. Archivo and JetBrains Mono on off-white, with a green accent.</figcaption></figure>
+<p>Engineer Index went the other way. A spec sheet, numbered sections, JetBrains Mono everywhere, and a green accent on off-white. It read like documentation, which is honest about half of what I do and silent about the other half.</p>
+<figure class="figure"><div class="figure__frame"><img src="../../public/assets/writing/redesign/option-b.jpg" width="1600" height="1000" alt="The Dark Studio direction: a near-black page with a portrait on the left and the headline on the right" loading="lazy" decoding="async"></div><figcaption>Dark Studio. Geist and Geist Mono on near-black, with a lime accent.</figcaption></figure>
+<p>Dark Studio is the one I picked. Near-black background, Geist for everything you read, Geist Mono for everything you scan, and one lime accent.</p>
+<p>What decided it was the work. Most of what I show is screenshots of client sites, and those sites have their own colours, many of them light. On cream or white they blur into the page. On near-black, each screenshot sits in its browser frame like something on a wall. The headline also covers both halves of what I do in one sentence, the interfaces and the systems behind them.</p>
+<h2 id="the-design-language">The design language</h2>
+<p>Dark Studio is small on purpose. The whole palette fits in a dozen lines:</p>
+<figure class="code code--ln" data-lang="css" data-lines="13"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1.75V5.25h3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="code__name">site.css</span></span><span class="code__lang mono">CSS</span><button class="code__copy mono" type="button" aria-label="Copy code: site.css"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="site.css"><code><span class="l">:root {</span><span class="l">  --bg: #0B0B0C;</span><span class="l">  --bg-2: #111113;</span><span class="l">  --bg-3: #18181B;</span><span class="l">  --ink: #F2EFE9;</span><span class="l">  --ink-2: #BDB9B1;</span><span class="l">  --muted: #8A8780;</span><span class="l">  --dim: #5C5A55;</span><span class="l">  --line: rgba(242, 239, 233, .08);</span><span class="l">  --line-2: rgba(242, 239, 233, .15);</span><span class="l">  --accent: #D4FF3A;</span><span class="l">  --on-accent: #0B0B0C;</span><span class="l">}</span></code></pre></div></figure>
+<p>The background isn’t pure black and the text isn’t pure white. <code>#F2EFE9</code> is a warm off-white, and the greys under it step down in the same warm hue, so nothing looks like a default.</p>
+<p>Lines do the work that boxes usually do. Sections are split by hairlines at 8% or 15% opacity instead of cards with shadows. Where something does need a container, like the portrait or a screenshot, it gets a 28 pixel radius, the same everywhere.</p>
+<p>Lime is rationed. It goes on the main button, the dot under the current page in the nav, the focus ring, text selection and the small "live" dots. If lime appears anywhere else, it’s a mistake. That’s what makes the "Let’s talk" button the first thing you see on every page.</p>
+<p>Mono is for metadata. Dates, categories, reading times, project numbers and labels are Geist Mono, uppercase, 12 pixels, slightly spaced out. Headlines and body text are Geist. The labels at the top of this post are mono and the article isn’t, so you can tell what to scan and what to read without thinking about it.</p>
+<p>A few details are there because they’re true, not because they’re decoration. The nav shows the time in Accra, updated every ten seconds, so anyone writing to me can see what time it is here. Every screenshot of a client site sits in the same browser frame with the site’s real domain in the address bar.</p>
+<p>Motion follows one easing curve, <code>cubic-bezier(.16, 1, .3, 1)</code>, a fast start with a long soft finish. Things fade and rise into place as you scroll, once. With JavaScript off, or with reduced motion turned on, everything is simply there.</p>
+<h2 id="one-template-for-fifteen-projects">One template for fifteen projects</h2>
+<p>The question I spent the longest on was whether every project should get its own page design. Fifteen bespoke pages would be fun to make and miserable to keep up. One plain template would make Reevit, a payments platform, look the same as a wedding site.</p>
+<p>I tried three case study layouts and ended with one template, filled from data. Each project gets a record with its name, category, credits, screenshots and whichever story blocks it has material for. Every block is optional. A project with a brief, features, a gallery and a quote gets all of them. A project with less gets fewer sections, and the numbering adjusts.</p>
+<figure class="figure"><div class="figure__frame"><img src="../../public/assets/writing/redesign/case-reevit.jpg" width="1600" height="1000" alt="The Reevit project page: a dark green hero band with the title, credits and a teal accent" loading="lazy" decoding="async"></div><figcaption>Reevit. Each project's hero band is tinted from its own brand colour.</figcaption></figure>
+<p>What makes each page feel like its own is colour. Each project has one brand colour, taken from its site, and the page builds its hero tint, accent text and muted text from it. Reevit is teal on dark green, Drobotix is gold and Miss Cookie Spices gets a light cream theme.</p>
+<figure class="figure"><div class="figure__frame"><img src="../../public/assets/writing/redesign/case-miss-cookie.jpg" width="1600" height="1000" alt="The Miss Cookie Spices project page on a warm cream band with dark green type" loading="lazy" decoding="async"></div><figcaption>Miss Cookie Spices, the one light theme.</figcaption></figure>
+<p>Generated colours are an easy way to ship unreadable text, so the build checks them. Every pair of colours that carries text, on every project page, has to pass WCAG AA contrast, 4.5 to 1. If one doesn’t, the build fails and says which pair. The nav, footer and focus rings stay lime on every page, so the site still feels like one site.</p>
+<p>Project names vary from "CSS" to "Desmond Weds Akyeamaa", so the title size is set from an estimate of each name’s longest word, and long names never break mid-word.</p>
+<h2 id="where-the-second-rule-got-expensive">Where the second rule got expensive</h2>
+<p>"No invented proof" is easy to write down. Keeping it meant going back to every project.</p>
+<p>Seven projects had real write-ups from my old site. The other eight had a name, a category, a link and one screenshot. So I went back to each live site, went through its pages and took fresh screenshots, and wrote their case studies from what the sites actually say and do.</p>
+<p>Some things only turned up because I looked. One project’s description mentioned a mortgage calculator, but the live site only has a waitlist, so the description changed. One site still has a placeholder phone number on its reservations page, so that screenshot stayed out. The link I had for Dronehub pointed at an old staging build that now returns an error, and the real site had moved to dronehubafrica.com with a lot more on it.</p>
+<p>Where a page lists what a site is built with, the credit says "detected on the live site". That list comes from response headers and the site’s own code, not from memory. When the old write-up had numbers I can’t verify any more, like percentage gains from years ago, they’re gone.</p>
+<h2 id="writing-gets-one-extra-typeface">Writing gets one extra typeface</h2>
+<p>Posts had the most to get right, because they range from a short personal essay to a tutorial with thirteen code blocks. I tried three layouts. Reader was a narrow column with everything in the margin. Notebook was a documentation-style layout with three columns. Editorial won.</p>
+<figure class="figure"><div class="figure__frame"><img src="../../public/assets/writing/redesign/blog-2.jpg" width="1600" height="1000" alt="The Editorial post layout: a large title, a meta column and a wide cover" loading="lazy" decoding="async"></div><figcaption>The Editorial post layout I chose, shown with the Mockery post.</figcaption></figure>
+<p>It’s the only place on the site with a second typeface. Body text is set in Newsreader, a serif built for reading on screens, at a measure of 62 to 72 characters. Geist is great for headlines and labels. For fifteen minutes of reading, a serif is easier on the eyes.</p>
+<p>Code blocks use a small highlighter written for this site, with three or four token colours and lime used sparingly. Each block has its file name, its language and a copy button, and long blocks collapse with a "Show all lines" button.</p>
+<p>Some older posts had a subtitle copied from a different post, so the text under the title didn’t match the article. Those now use a one-line summary written from the post’s own first paragraph. Primeflow became Reevit, so that post has a new address and title, and a note at the top saying the body keeps its original wording.</p>
+<h2 id="building-it-twice-on-purpose">Building it twice, on purpose</h2>
+<p>I built the whole site twice. First as plain HTML, with every page generated from the same project and post data and every link working over <code>file://</code>. That version was the reference: fast to change, and with no framework in the way.</p>
+<p>Then I moved it into Next.js. Each page keeps its CSS exactly as it was in the prototype, loaded with that page and removed when you leave it. All 46 pages are generated ahead of time. The rule for being done was strict. Every page had to match the prototype at 1440 and 375 pixels wide, with the same page height and the same text. Old links still work too, <code>/blog/...</code> now redirects to <code>/writing/...</code>.</p>
+<h2 id="what-id-tell-myself-at-the-start">What I’d tell myself at the start</h2>
+<p>Write the rules before the design. "No invented proof" cost more time than any layout, and it’s the reason every page on this site holds up when someone clicks through to the real project.</p>
+<p>Design one system, not fifteen pages. The template, the data and the colour check did more for the project pages than any single layout could.</p>
+<p>And keep the accent for the one thing you want people to do. On this site, that’s the lime button. If you’ve read this far, it says "Let’s talk".</p>
+      </div>
+
+      <footer class="post-author">
+        <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="" loading="lazy">
+        <span class="name">Felix Yeboah</span>
+        <a class="link" href="https://x.com/sudocode_">@sudocode_ on X</a>
+      </footer>
+    </article>
+
+    <nav class="pager post-pager" aria-label="More writing">
+      <a href="post-why-i-built-reevit.html" rel="prev">
+        <span class="dir">Previous</span>
+        <span class="name"><span class="u">Why I Built Reevit: A Developer’s Reaction to a Real Problem</span></span>
+      </a>
+      <a href="post-from-paper-trails-to-apps-building-miss-cookies-systems.html" rel="next">
+        <span class="dir">Next</span>
+        <span class="name"><span class="u">From Paper Trails to Apps: Building Miss Cookie's Systems</span></span>
+      </a>
+    </nav>
+
+    <p class="post-all"><a class="link" href="writing.html">All writing</a></p>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+    <div class="footer-links">
+      <a href="https://github.com/felixyeboah">GitHub</a>
+      <a href="https://x.com/sudocode_">X</a>
+      <a href="resume.html">Résumé</a>
+      <a href="photos.html">Photos</a>
+      <span class="copy">© 2026</span>
+    </div>
+  </footer>
+</div>
+<script>
+document.querySelectorAll('.code').forEach(function (fig) {
+  var b = fig.querySelector('.code__copy'), pre = fig.querySelector('pre');
+  if (!b || !pre || !navigator.clipboard) { if (b) b.hidden = true; return; }
+  b.addEventListener('click', function () {
+    var text = [].map.call(pre.querySelectorAll('.l'), function (l) { return l.textContent; }).join('\n') || pre.textContent;
+    navigator.clipboard.writeText(text).then(function () {
+      b.classList.add('is-done'); b.querySelector('span').textContent = 'Copied';
+      setTimeout(function () { b.classList.remove('is-done'); b.querySelector('span').textContent = 'Copy'; }, 1600);
+    });
+  });
+});
+</script>
+</body>
+</html>

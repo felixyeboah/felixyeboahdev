@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>02 · Galerie Blanche — Felix Yeboah Exhibition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wall:#F5F2EB;
+  --wall-tint:transparent;
+  --paper:#FCFBF8;
+  --ink:#141311;
+  --ink-2:#4B4842;
+  --muted:#807B72;
+  --line:rgba(20,19,17,.10);
+  --line-2:rgba(20,19,17,.20);
+  --vermilion:#C84B31;
+  --serif:"Cormorant Garamond", Georgia, serif;
+  --sans:"Plus Jakarta Sans", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --pad:clamp(18px, 3.6vw, 52px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;background:var(--wall);color:var(--ink);font-family:var(--sans);font-size:15px;-webkit-font-smoothing:antialiased}
+body{transition:background-color .9s var(--ease);overflow-x:clip}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+::selection{background:var(--vermilion);color:#fff}
+:focus-visible{outline:2px solid var(--vermilion);outline-offset:3px;border-radius:4px}
+
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+
+/* Subtle Ambient Chromatic Wall Wash */
+.wall-wash{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  opacity:.12;transition:background .9s var(--ease);
+}
+
+/* Museum Header */
+.m-head{
+  position:sticky;top:0;z-index:50;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;
+  padding:16px var(--pad);border-bottom:1px solid var(--line);
+  background:rgba(245,242,235,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.m-brand{display:flex;align-items:baseline;gap:12px}
+.m-brand strong{font-family:var(--serif);font-size:24px;font-weight:500;letter-spacing:-.01em}
+.m-brand span{color:var(--muted)}
+.m-modes{
+  display:inline-flex;padding:3px;border-radius:999px;
+  border:1px solid var(--line-2);background:rgba(255,255,255,.55);
+}
+.m-mode{
+  height:32px;padding:0 15px;border-radius:999px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);transition:background .25s,color .25s;
+}
+.m-mode.is-on{background:var(--ink);color:var(--wall)}
+.m-right{display:flex;justify-content:flex-end;align-items:center;gap:8px;flex-wrap:wrap}
+.m-pill{
+  height:34px;padding:0 13px;border-radius:999px;border:1px solid var(--line-2);
+  background:rgba(255,255,255,.5);color:var(--ink);
+  display:inline-flex;align-items:center;gap:7px;transition:border-color .2s,background .2s,color .2s;
+}
+.m-pill:hover{border-color:var(--ink)}
+.m-pill.is-on{background:var(--vermilion);color:#fff;border-color:var(--vermilion)}
+
+/* Curatorial Sub-Bar */
+.subbar{
+  position:relative;z-index:10;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;
+  padding:14px var(--pad);border-bottom:1px solid var(--line);
+}
+.set-tabs{display:flex;gap:18px;flex-wrap:wrap}
+.set-tab{
+  position:relative;padding:6px 0;color:var(--muted);font-size:13.5px;font-weight:500;
+  transition:color .2s;
+}
+.set-tab:hover{color:var(--ink)}
+.set-tab.is-on{color:var(--ink)}
+.set-tab.is-on::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;background:var(--vermilion);
+}
+.frame-styles{display:flex;align-items:center;gap:6px}
+
+/* MODE 1: Horizontal Exhibition Walk */
+.walk-shell{position:relative;z-index:2;display:flex;flex-direction:column;min-height:calc(100svh - 124px)}
+.walk-track{
+  flex:1;display:flex;align-items:center;gap:clamp(44px, 7vw, 110px);
+  padding:clamp(36px, 6vh, 72px) clamp(40px, 8vw, 140px) clamp(56px, 8vh, 96px);
+  overflow-x:auto;overflow-y:hidden;cursor:grab;scrollbar-width:none;
+  scroll-behavior:auto;
+}
+.walk-track:active{cursor:grabbing}
+.walk-track::-webkit-scrollbar{display:none}
+
+.walk-intro{
+  flex:none;width:clamp(290px, 30vw, 430px);padding-right:24px;border-right:1px solid var(--line);
+  align-self:stretch;display:flex;flex-direction:column;justify-content:space-between;
+}
+.walk-intro h1{
+  margin:14px 0 0;font-family:var(--serif);font-weight:400;
+  font-size:clamp(3rem, 5.2vw, 5.2rem);line-height:.92;letter-spacing:-.02em;
+}
+.walk-intro h1 em{font-style:italic;color:var(--vermilion)}
+.walk-intro p{color:var(--ink-2);line-height:1.65;max-width:34ch;margin:18px 0 0}
+
+.exhibit-piece{
+  flex:none;display:flex;flex-direction:column;gap:18px;position:relative;
+  transition:transform .65s var(--ease);
+}
+.exhibit-piece:nth-child(odd){margin-top:-26px}
+.exhibit-piece:nth-child(even){margin-top:26px}
+.exhibit-piece:hover{transform:translateY(-6px)}
+
+/* Overhead soft spotlight */
+.exhibit-piece::before{
+  content:"";position:absolute;top:-54px;left:15%;right:15%;height:50px;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 0%, rgba(255,250,235,.85), transparent 72%);
+  opacity:.75;
+}
+
+.print-frame{
+  position:relative;cursor:pointer;background:var(--paper);
+  transition:padding .45s var(--ease),box-shadow .45s var(--ease),border-color .45s var(--ease);
+}
+.print-frame img{
+  height:clamp(280px, 48vh, 490px);width:auto;max-width:68vw;object-fit:cover;
+  transition:transform .8s var(--ease);
+}
+
+/* Framing Style Variations */
+body[data-framing="mat"] .print-frame{
+  padding:clamp(16px, 2.2vw, 30px);
+  border:1.5px solid #2A2825;
+  box-shadow:0 32px 64px -20px rgba(20,19,17,.24), 0 4px 12px rgba(20,19,17,.08), inset 0 0 0 1px rgba(20,19,17,.08);
+}
+body[data-framing="bleed"] .print-frame{
+  padding:0;border:0;box-shadow:0 26px 56px -18px rgba(20,19,17,.22);
+}
+body[data-framing="scale"] .print-frame{
+  padding:20px;border:2px solid #1C1B19;
+  box-shadow:0 36px 70px -22px rgba(20,19,17,.28);
+}
+
+.plaque{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  padding-top:10px;border-top:1px solid var(--line);
+}
+.plaque__title{font-family:var(--serif);font-size:22px;line-height:1.1;font-weight:500}
+.plaque__sub{margin-top:3px;color:var(--muted)}
+.plaque__swatches{display:flex;gap:3px;margin-top:4px}
+.plaque__swatches span{width:9px;height:9px;border-radius:50%;border:1px solid rgba(0,0,0,.12)}
+
+/* Gallery Bench Silhouette for "Scale" mode */
+.gallery-bench{
+  display:none;position:fixed;bottom:56px;left:50%;transform:translateX(-50%);
+  width:min(520px, 68vw);height:48px;pointer-events:none;z-index:5;opacity:.16;
+}
+body[data-framing="scale"] .gallery-bench{display:block}
+
+/* Walk Progress Rail */
+.walk-rail{
+  position:sticky;bottom:0;z-index:20;
+  display:flex;align-items:center;gap:18px;padding:14px var(--pad);
+  border-top:1px solid var(--line);background:rgba(245,242,235,.88);backdrop-filter:blur(14px);
+}
+.rail-bar{flex:1;height:2px;background:var(--line-2);position:relative;border-radius:99px;overflow:hidden}
+.rail-fill{position:absolute;left:0;top:0;bottom:0;width:12%;background:var(--vermilion);transition:width .15s linear}
+
+/* MODE 2: Museum Catalog Grid */
+.catalog-grid{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+  gap:clamp(28px, 3.6vw, 54px) clamp(18px, 2.4vw, 34px);
+  padding:clamp(32px, 4vw, 60px) var(--pad) 120px;max-width:1540px;margin:0 auto;
+}
+.cat-card{display:flex;flex-direction:column;gap:12px;cursor:pointer}
+.cat-card__frame{
+  aspect-ratio:4/5;display:grid;place-items:center;padding:24px;
+  background:var(--paper);border:1px solid var(--line);
+  transition:border-color .35s,transform .5s var(--ease),box-shadow .5s var(--ease);
+}
+.cat-card:hover .cat-card__frame{
+  border-color:var(--ink);transform:translateY(-5px);box-shadow:0 24px 48px -18px rgba(20,19,17,.16);
+}
+.cat-card__frame img{max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+
+/* MODE 3: Interactive Split-Screen Diptych Comparator */
+.diptych-wrap{
+  position:relative;z-index:2;padding:clamp(24px, 3vw, 44px) var(--pad) 110px;
+  max-width:1460px;margin:0 auto;display:flex;flex-direction:column;gap:22px;
+}
+.diptych-controls{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px}
+.diptych-stage{
+  position:relative;display:grid;grid-template-columns:var(--split, 50%) 1fr;gap:0;
+  min-height:66vh;border:1px solid var(--line-2);background:var(--paper);overflow:hidden;
+  box-shadow:0 30px 70px -24px rgba(20,19,17,.18);
+}
+.dip-pane{
+  position:relative;display:flex;flex-direction:column;justify-content:space-between;
+  padding:clamp(20px, 3vw, 42px);overflow:hidden;min-width:0;
+}
+.dip-pane__img{
+  width:100%;height:50vh;object-fit:contain;margin:auto;
+  transition:opacity .35s var(--ease);
+}
+.dip-divider{
+  position:absolute;top:0;bottom:0;left:var(--split, 50%);width:2px;background:var(--vermilion);
+  z-index:10;cursor:ew-resize;transform:translateX(-50%);
+}
+.dip-handle{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:38px;height:38px;border-radius:50%;background:var(--vermilion);color:#fff;
+  display:grid;place-items:center;font-family:var(--mono);font-size:12px;
+  box-shadow:0 8px 20px rgba(200,75,49,.35);
+}
+.dip-select{
+  padding:6px 10px;border:1px solid var(--line-2);border-radius:999px;background:var(--wall);
+  font-family:var(--mono);font-size:11px;color:var(--ink);max-width:240px;
+}
+
+/* Native <dialog> Archival Plate Sheet */
+dialog.plate-dlg{
+  width:min(1180px, 94vw);max-height:90dvh;padding:0;border:1px solid var(--line-2);
+  border-radius:6px;background:var(--paper);color:var(--ink);overflow:hidden;
+  box-shadow:0 40px 100px rgba(20,19,17,.35);
+  opacity:0;transform:scale(.97);
+  transition:opacity .3s var(--ease),transform .35s var(--ease),display .3s allow-discrete,overlay .3s allow-discrete;
+}
+dialog.plate-dlg[open]{opacity:1;transform:scale(1);display:grid;grid-template-columns:1.45fr 1fr}
+@starting-style{dialog.plate-dlg[open]{opacity:0;transform:scale(.97)}}
+dialog.plate-dlg:modal{overscroll-behavior:contain}
+dialog.plate-dlg::backdrop{background:rgba(20,19,17,.6);backdrop-filter:blur(8px);overflow:hidden;overscroll-behavior:contain}
+.pd__art{
+  background:var(--wall);padding:clamp(24px, 4vw, 52px);display:grid;place-items:center;
+  min-height:460px;position:relative;
+}
+.pd__art img{max-height:74dvh;max-width:100%;object-fit:contain;box-shadow:0 24px 50px rgba(20,19,17,.22);border:12px solid #fff}
+.pd__info{padding:clamp(24px, 3vw, 40px);display:flex;flex-direction:column;gap:18px;overflow:auto}
+.pd__title{margin:0;font-family:var(--serif);font-size:clamp(2rem, 3vw, 2.8rem);font-weight:400;line-height:1}
+.pd__specs{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pd__specs dt{color:var(--muted);margin-bottom:3px}
+.pd__specs dd{margin:0;font-size:14px;font-weight:500}
+
+@media (max-width:900px){
+  .m-head{grid-template-columns:1fr auto}
+  .m-right{display:none}
+  dialog.plate-dlg[open]{grid-template-columns:1fr;max-height:92dvh}
+  .pd__art{min-height:280px}
+  .diptych-stage{grid-template-columns:1fr!important}
+  .dip-divider{display:none}
+}
+@media (prefers-reduced-motion: reduce){
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
+}
+</style>
+</head>
+<body data-framing="mat">
+<div class="wall-wash" id="wallWash" aria-hidden="true"></div>
+
+<header class="m-head">
+  <div class="m-brand">
+    <strong>Galerie Blanche</strong>
+    <span class="mono">Felix Yeboah · Vol. I</span>
+  </div>
+  <div class="m-modes" role="tablist" aria-label="Exhibition mode">
+    <button class="m-mode is-on" data-mode="walk" role="tab" aria-selected="true">Exhibition Walk</button>
+    <button class="m-mode" data-mode="catalog" role="tab" aria-selected="false">Catalog</button>
+    <button class="m-mode" data-mode="diptych" role="tab" aria-selected="false">Diptych Lab</button>
+  </div>
+  <div class="m-right">
+    <button class="m-pill mono" id="ambientBtn" type="button">Wall Tint: On</button>
+    <span class="mono" style="color:var(--muted)" id="frameCounter">035 Plates</span>
+  </div>
+</header>
+
+<div class="subbar">
+  <div class="set-tabs" id="setTabs"></div>
+  <div class="frame-styles" id="framingControls">
+    <span class="mono" style="color:var(--muted);margin-right:4px">Presentation</span>
+    <button class="m-pill mono is-on" data-frame="mat" type="button">Archival Mat</button>
+    <button class="m-pill mono" data-frame="bleed" type="button">Bleed</button>
+    <button class="m-pill mono" data-frame="scale" type="button">Wall Scale</button>
+  </div>
+</div>
+
+<main id="appRoot"></main>
+
+<svg class="gallery-bench" viewBox="0 0 520 48" fill="none" aria-hidden="true">
+  <rect x="20" y="6" width="480" height="10" rx="2" fill="#141311"/>
+  <rect x="64" y="16" width="12" height="32" fill="#141311"/>
+  <rect x="444" y="16" width="12" height="32" fill="#141311"/>
+</svg>
+
+<dialog class="plate-dlg" id="plateDialog" aria-label="Archival print details">
+  <div class="pd__art"><img id="pdImg" alt=""></div>
+  <div class="pd__info">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="mono" id="pdPlate" style="color:var(--vermilion)">Plate I</span>
+      <button class="m-pill mono" id="pdClose" type="button">Close · Esc</button>
+    </div>
+    <h2 class="pd__title" id="pdTitle" tabindex="-1">Untitled</h2>
+    <p id="pdDesc" style="margin:0;color:var(--ink-2);line-height:1.6"></p>
+    <dl class="pd__specs" id="pdSpecs"></dl>
+    <div>
+      <div class="mono" style="color:var(--muted);margin-bottom:8px">Pigment Swatches · Click to copy</div>
+      <div id="pdSwatches" style="display:flex;gap:8px"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:auto;padding-top:12px">
+      <button class="m-pill mono" id="pdPrev" type="button">← Previous</button>
+      <button class="m-pill mono" id="pdNext" type="button">Next →</button>
+      <button class="m-pill mono" id="pdFav" type="button" style="margin-left:auto">Collect</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="catalog.js"></script>
+<script>
+(function () {
+  const FY = window.FY_PHOTOS;
+  FY.mountSwitcher("02", "light");
+
+  const state = {
+    mode: "walk",
+    set: "all",
+    ambient: true,
+    filtered: FY.photos.slice(),
+    dipLeft: 0,
+    dipRight: 3,
+    dlgIdx: 0
+  };
+
+  const appRoot = document.getElementById("appRoot");
+  const wallWash = document.getElementById("wallWash");
+  const framingControls = document.getElementById("framingControls");
+
+  function tintWall(color) {
+    if (!state.ambient) { wallWash.style.background = "transparent"; return; }
+    wallWash.style.background = "radial-gradient(ellipse 80% 70% at 50% 35%, " + color + ", transparent 75%)";
+  }
+
+  // Mode switcher
+  document.querySelectorAll("[data-mode]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll("[data-mode]").forEach(function (b) {
+        b.classList.toggle("is-on", b === btn);
+        b.setAttribute("aria-selected", b === btn ? "true" : "false");
+      });
+      state.mode = btn.dataset.mode;
+      framingControls.style.visibility = state.mode === "walk" ? "visible" : "hidden";
+      FY.withViewTransition(render);
+    });
+  });
+
+  // Framing switcher
+  document.querySelectorAll("[data-frame]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll("[data-frame]").forEach(function (b) { b.classList.toggle("is-on", b === btn); });
+      document.body.dataset.framing = btn.dataset.frame;
+    });
+  });
+
+  // Ambient toggle
+  document.getElementById("ambientBtn").addEventListener("click", function (e) {
+    state.ambient = !state.ambient;
+    e.currentTarget.textContent = "Wall Tint: " + (state.ambient ? "On" : "Off");
+    if (!state.ambient) wallWash.style.background = "transparent";
+  });
+
+  // Set tabs
+  const setTabs = document.getElementById("setTabs");
+  function renderSets() {
+    const all = [{ id: "all", title: "Complete Exhibition", count: FY.photos.length }].concat(FY.sets);
+    setTabs.innerHTML = all.map(function (s) {
+      return '<button class="set-tab ' + (state.set === s.id ? "is-on" : "") + '" data-set="' + s.id + '">' +
+        s.title + ' <span class="mono" style="opacity:.55">' + s.count + '</span></button>';
+    }).join("");
+  }
+  renderSets();
+  setTabs.addEventListener("click", function (e) {
+    const b = e.target.closest("[data-set]");
+    if (!b) return;
+    state.set = b.dataset.set;
+    state.filtered = state.set === "all" ? FY.photos.slice() : FY.photos.filter(function (p) { return p.set === state.set; });
+    document.getElementById("frameCounter").textContent = String(state.filtered.length).padStart(3, "0") + " Plates";
+    FY.withViewTransition(function () { renderSets(); render(); });
+  });
+
+  function render() {
+    if (state.mode === "walk") renderWalk();
+    else if (state.mode === "catalog") renderCatalog();
+    else renderDiptych();
+  }
+
+  function renderWalk() {
+    appRoot.innerHTML =
+      '<div class="walk-shell">' +
+        '<div class="walk-track" id="walkTrack">' +
+          '<section class="walk-intro">' +
+            '<div>' +
+              '<span class="mono" style="color:var(--vermilion)">Room I · Permanent Collection</span>' +
+              '<h1>Quiet <em>Rooms</em> &amp; Salt Air.</h1>' +
+              '<p>Scroll vertically or drag horizontally to walk the gallery wall. Hover any print to shift ambient room light toward its pigments.</p>' +
+            '</div>' +
+            '<div class="mono" style="color:var(--muted)">Scroll / Drag → · Click plate to inspect</div>' +
+          '</section>' +
+          state.filtered.map(function (p, idx) {
+            return '<figure class="exhibit-piece" data-color="' + p.palette[2] + '" data-open="' + idx + '" style="margin:0">' +
+              '<div class="print-frame">' +
+                '<img src="' + FY.src(p, 960) + '" srcset="' + FY.srcset(p) + '" sizes="(max-width:900px) 75vw, 45vw" loading="lazy" alt="' + p.title + '">' +
+              '</div>' +
+              '<figcaption class="plaque">' +
+                '<div>' +
+                  '<div class="mono" style="color:var(--vermilion)">Plate ' + FY.roman(idx + 1) + '</div>' +
+                  '<div class="plaque__title">' + p.title + '</div>' +
+                  '<div class="plaque__sub mono">' + p.location + ' · ' + p.exif.focal + ' · ' + p.exif.aperture + '</div>' +
+                '</div>' +
+                '<div class="plaque__swatches">' + p.palette.slice(0, 4).map(function (c) { return '<span style="background:' + c + '"></span>'; }).join("") + '</div>' +
+              '</figcaption>' +
+            '</figure>';
+          }).join("") +
+        '</div>' +
+        '<div class="walk-rail">' +
+          '<span class="mono" id="walkLabel" style="min-width:160px">Plate I · ' + (state.filtered[0] ? state.filtered[0].title : "") + '</span>' +
+          '<div class="rail-bar"><div class="rail-fill" id="railFill"></div></div>' +
+          '<button class="m-pill mono" id="walkPrev" type="button">←</button>' +
+          '<button class="m-pill mono" id="walkNext" type="button">→</button>' +
+        '</div>' +
+      '</div>';
+
+    const track = document.getElementById("walkTrack");
+    const railFill = document.getElementById("railFill");
+    const walkLabel = document.getElementById("walkLabel");
+
+    // Vertical wheel translates cleanly to smooth horizontal walk
+    track.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        track.scrollLeft += e.deltaY * 1.15;
+      }
+    }, { passive: false });
+
+    // Drag to walk
+    let isDown = false, startX = 0, scrollStart = 0, dragged = false;
+    track.addEventListener("pointerdown", function (e) {
+      isDown = true; dragged = false; startX = e.clientX; scrollStart = track.scrollLeft;
+    });
+    window.addEventListener("pointermove", function (e) {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 6) dragged = true;
+      track.scrollLeft = scrollStart - dx * 1.3;
+    });
+    window.addEventListener("pointerup", function () { isDown = false; });
+
+    track.addEventListener("scroll", function () {
+      const max = Math.max(1, track.scrollWidth - track.clientWidth);
+      const pct = track.scrollLeft / max;
+      railFill.style.width = Math.max(4, pct * 100) + "%";
+      const approx = Math.min(state.filtered.length - 1, Math.floor(pct * state.filtered.length));
+      const p = state.filtered[approx];
+      if (p) {
+        walkLabel.textContent = "Plate " + FY.roman(approx + 1) + " · " + p.title;
+        tintWall(p.palette[2]);
+      }
+    }, { passive: true });
+
+    track.addEventListener("pointerover", function (e) {
+      const piece = e.target.closest(".exhibit-piece");
+      if (piece) tintWall(piece.dataset.color);
+    });
+    track.addEventListener("click", function (e) {
+      if (dragged) return;
+      const piece = e.target.closest("[data-open]");
+      if (piece) openPlate(parseInt(piece.dataset.open, 10));
+    });
+
+    document.getElementById("walkPrev").addEventListener("click", function () {
+      track.scrollBy({ left: -560, behavior: "smooth" });
+    });
+    document.getElementById("walkNext").addEventListener("click", function () {
+      track.scrollBy({ left: 560, behavior: "smooth" });
+    });
+    if (state.filtered[0]) tintWall(state.filtered[0].palette[2]);
+  }
+
+  function renderCatalog() {
+    appRoot.innerHTML = '<div class="catalog-grid">' + state.filtered.map(function (p, idx) {
+      return '<article class="cat-card" data-open="' + idx + '" data-color="' + p.palette[2] + '" tabindex="0">' +
+        '<div class="cat-card__frame"><img src="' + FY.src(p, 960) + '" loading="lazy" alt="' + p.title + '"></div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">' +
+          '<span style="font-family:var(--serif);font-size:21px">' + p.title + '</span>' +
+          '<span class="mono" style="color:var(--muted)">Pl. ' + FY.roman(idx + 1) + '</span>' +
+        '</div>' +
+        '<div class="mono" style="color:var(--muted)">' + p.location + ' · ' + p.exif.camera + '</div>' +
+      '</article>';
+    }).join("") + '</div>';
+
+    appRoot.querySelector(".catalog-grid").addEventListener("pointerover", function (e) {
+      const c = e.target.closest("[data-color]");
+      if (c) tintWall(c.dataset.color);
+    });
+    appRoot.querySelector(".catalog-grid").addEventListener("click", function (e) {
+      const c = e.target.closest("[data-open]");
+      if (c) openPlate(parseInt(c.dataset.open, 10));
+    });
+  }
+
+  function renderDiptych() {
+    const list = state.filtered;
+    const L = list[state.dipLeft % list.length];
+    const R = list[state.dipRight % list.length];
+    const opts = function (sel) {
+      return list.map(function (p, i) {
+        return '<option value="' + i + '" ' + (i === (sel % list.length) ? "selected" : "") + '>' + p.frame + ' · ' + p.title + '</option>';
+      }).join("");
+    };
+    appRoot.innerHTML =
+      '<div class="diptych-wrap">' +
+        '<div class="diptych-controls">' +
+          '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">' +
+            '<span class="mono" style="color:var(--vermilion)">Left Plate</span>' +
+            '<select class="dip-select" id="selLeft">' + opts(state.dipLeft) + '</select>' +
+            '<span class="mono" style="color:var(--muted)">×</span>' +
+            '<span class="mono" style="color:var(--vermilion)">Right Plate</span>' +
+            '<select class="dip-select" id="selRight">' + opts(state.dipRight) + '</select>' +
+          '</div>' +
+          '<div style="display:flex;gap:8px">' +
+            '<button class="m-pill mono" id="shuffleDip" type="button">Curate Random Pairing</button>' +
+            '<button class="m-pill mono" id="resetSplit" type="button">Center 50/50</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="diptych-stage" id="dipStage" style="--split:50%">' +
+          '<div class="dip-pane" style="background:linear-gradient(160deg, var(--paper), ' + L.palette[4] + '22)">' +
+            '<div class="mono" style="color:var(--muted)">Plate ' + FY.roman((state.dipLeft % list.length) + 1) + ' · ' + L.location + '</div>' +
+            '<img class="dip-pane__img" src="' + FY.src(L, 1600) + '" alt="' + L.title + '">' +
+            '<div style="display:flex;justify-content:space-between;align-items:baseline">' +
+              '<strong style="font-family:var(--serif);font-size:24px;font-weight:500">' + L.title + '</strong>' +
+              '<span class="mono" style="color:var(--muted)">' + L.exif.camera + ' · ' + L.exif.focal + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="dip-pane" style="background:linear-gradient(200deg, var(--paper), ' + R.palette[4] + '22)">' +
+            '<div class="mono" style="color:var(--muted)">Plate ' + FY.roman((state.dipRight % list.length) + 1) + ' · ' + R.location + '</div>' +
+            '<img class="dip-pane__img" src="' + FY.src(R, 1600) + '" alt="' + R.title + '">' +
+            '<div style="display:flex;justify-content:space-between;align-items:baseline">' +
+              '<strong style="font-family:var(--serif);font-size:24px;font-weight:500">' + R.title + '</strong>' +
+              '<span class="mono" style="color:var(--muted)">' + R.exif.camera + ' · ' + R.exif.focal + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="dip-divider" id="dipDivider" role="slider" aria-label="Resize diptych split"><div class="dip-handle">⇄</div></div>' +
+        '</div>' +
+      '</div>';
+
+    document.getElementById("selLeft").addEventListener("change", function (e) { state.dipLeft = parseInt(e.target.value, 10); renderDiptych(); });
+    document.getElementById("selRight").addEventListener("change", function (e) { state.dipRight = parseInt(e.target.value, 10); renderDiptych(); });
+    document.getElementById("shuffleDip").addEventListener("click", function () {
+      state.dipLeft = Math.floor(Math.random() * list.length);
+      state.dipRight = (state.dipLeft + 1 + Math.floor(Math.random() * (list.length - 1))) % list.length;
+      renderDiptych();
+    });
+    const stage = document.getElementById("dipStage");
+    document.getElementById("resetSplit").addEventListener("click", function () { stage.style.setProperty("--split", "50%"); });
+
+    let dragging = false;
+    document.getElementById("dipDivider").addEventListener("pointerdown", function (e) { dragging = true; e.preventDefault(); });
+    window.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      const r = stage.getBoundingClientRect();
+      const pct = Math.max(22, Math.min(78, ((e.clientX - r.left) / r.width) * 100));
+      stage.style.setProperty("--split", pct.toFixed(1) + "%");
+    });
+    window.addEventListener("pointerup", function () { dragging = false; });
+    tintWall(L.palette[2]);
+  }
+
+  // Native <dialog> Archival Plate Viewer
+  const dlg = document.getElementById("plateDialog");
+  function openPlate(idx) {
+    state.dlgIdx = (idx + state.filtered.length) % state.filtered.length;
+    const p = state.filtered[state.dlgIdx];
+    document.getElementById("pdPlate").textContent = "Plate " + FY.roman(state.dlgIdx + 1) + " of " + state.filtered.length;
+    document.getElementById("pdTitle").textContent = p.title;
+    document.getElementById("pdDesc").textContent = "Archival pigment print study captured in " + p.location + " for the " + FY.setName(p.set) + " series. Edition of 15 on Hahnemühle Photo Rag 308gsm.";
+    document.getElementById("pdImg").src = FY.full(p);
+    document.getElementById("pdImg").alt = p.title;
+    document.getElementById("pdSpecs").innerHTML =
+      '<div><dt class="mono">Camera</dt><dd>' + p.exif.camera + '</dd></div>' +
+      '<div><dt class="mono">Lens</dt><dd>' + p.exif.lens + '</dd></div>' +
+      '<div><dt class="mono">Exposure</dt><dd>' + p.exif.aperture + ' · ' + p.exif.shutter + 's</dd></div>' +
+      '<div><dt class="mono">Date / ISO</dt><dd>' + FY.formatDate(p.date) + ' · ISO ' + p.exif.iso + '</dd></div>';
+    document.getElementById("pdSwatches").innerHTML = p.palette.map(function (c) {
+      return '<button data-hex="' + c + '" style="flex:1;height:32px;border-radius:4px;background:' + c + ';border:1px solid rgba(0,0,0,.14)" title="Copy ' + c + '"></button>';
+    }).join("");
+    const fav = FY.getShortlist().has(p.id);
+    const favBtn = document.getElementById("pdFav");
+    favBtn.classList.toggle("is-on", fav);
+    favBtn.textContent = fav ? "★ Collected" : "☆ Collect";
+    if (!dlg.open) dlg.showModal();
+    document.getElementById("pdTitle").focus();
+  }
+  document.getElementById("pdClose").addEventListener("click", function () { dlg.close(); });
+  document.getElementById("pdPrev").addEventListener("click", function () { openPlate(state.dlgIdx - 1); });
+  document.getElementById("pdNext").addEventListener("click", function () { openPlate(state.dlgIdx + 1); });
+  document.getElementById("pdFav").addEventListener("click", function () {
+    const p = state.filtered[state.dlgIdx];
+    const on = FY.toggleShortlist(p.id);
+    FY.toast(on ? "Added to collection" : "Removed from collection");
+    openPlate(state.dlgIdx);
+  });
+  document.getElementById("pdSwatches").addEventListener("click", function (e) {
+    const b = e.target.closest("[data-hex]");
+    if (!b) return;
+    navigator.clipboard && navigator.clipboard.writeText(b.dataset.hex);
+    FY.toast("Copied " + b.dataset.hex);
+  });
+  window.addEventListener("keydown", function (e) {
+    if (!dlg.open) return;
+    if (e.key === "ArrowRight") openPlate(state.dlgIdx + 1);
+    else if (e.key === "ArrowLeft") openPlate(state.dlgIdx - 1);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

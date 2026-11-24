@@ -1,0 +1,90 @@
+---
+/* Photos is the one page with its own document: the photobook ("Monograph") from the previous site, with its
+   viewer, re-themed to the light palette. Its styles and scripts live in src/photobook and load as plain files,
+   in order: the manifest, the shared kit (PX), then the page script. The header and footer are the shared
+   components; their styles (src/styles/chrome.css) carry their own tokens, so they look the same here. */
+import siteCss from '../photobook/site.css?url';
+import sharedCss from '../photobook/shared.css?url';
+import pageCss from '../photobook/page.css?url';
+import sharedJs from '../photobook/shared.js?url';
+import pageJs from '../photobook/page.js?url';
+import chromeCss from '../styles/chrome.css?url';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Meta from '../components/Meta.astro';
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Photos — Felix Yeboah</title>
+        <meta name="description" content="Photographs by Felix Yeboah." />
+        <link rel="canonical" href="https://felixyeboah.dev/photos" />
+        <Meta title="Photos — Felix Yeboah" description="Photographs by Felix Yeboah." url="https://felixyeboah.dev/photos" />
+        <link rel="alternate" type="application/rss+xml" href="https://felixyeboah.dev/writing/feed.xml" />
+        <!-- ?v= forces browsers to drop a cached icon; raise it whenever the logo changes -->
+        <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico?v=3" sizes="256x256" type="image/x-icon" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" />
+        <link rel="stylesheet" href={siteCss} />
+        <link rel="stylesheet" href={sharedCss} />
+        <link rel="stylesheet" href={pageCss} />
+        <link rel="stylesheet" href={chromeCss} />
+        <script is:inline src="/photos/data.js"></script>
+        <script is:inline src={sharedJs}></script>
+    </head>
+    <body id="top">
+        <a class="skip" href="#main">Skip to content</a>
+        <div class="column">
+            <Header section="photos" />
+        </div>
+
+        <main id="main">
+          <header class="cv wrap">
+            <button class="cv__plate" type="button" id="cvPlate" data-cur="View"></button>
+            <h1 class="cv__title" aria-label="Photographs" id="cvTitle"></h1>
+            <p class="cv__by">Felix Yeboah</p>
+            <dl class="cv__ed mono" id="cvEd"></dl>
+          </header>
+
+          <div class="mg" id="book">
+            <div class="mbar">
+              <div class="wrap mbar__in">
+                <div class="seg" role="group" aria-label="View" id="views">
+                  <button type="button" data-v="plates">Plates</button>
+                  <button type="button" data-v="contents">Contents</button>
+                  <button type="button" data-v="columns">Columns</button>
+                </div>
+              </div>
+            </div>
+
+            <section class="mview pl" id="plates" tabindex="-1" aria-roledescription="carousel" aria-label="Plates">
+              <div class="pl__sheet" id="sheet"></div>
+              <div class="pl__hud">
+                <div class="scrub" id="scrub" role="slider" tabindex="0" aria-label="Plate" aria-valuemin="1">
+                  <div class="scrub__track" id="track"><b class="scrub__fill" id="fill"></b><span class="scrub__knob" id="knob"></span></div>
+                  <div class="scrub__tip" id="tip" hidden><img alt=""><span class="mono"></span></div>
+                </div>
+                <p class="pl__count mono" id="count"></p>
+                <button class="hb" type="button" id="prev" aria-label="Previous plate"></button>
+                <button class="hb" type="button" id="next" aria-label="Next plate"></button>
+                <button class="hb" type="button" id="auto" aria-pressed="false" aria-label="Autoplay"></button>
+              </div>
+              <p class="sr-only" aria-live="polite" id="live"></p>
+            </section>
+
+            <section class="mview toc wrap" id="contents" aria-label="Contents" hidden></section>
+            <section class="mview" id="columns" aria-label="Columns" hidden></section>
+          </div>
+        </main>
+
+        <div class="column">
+            <Footer />
+        </div>
+        <script is:inline src={pageJs}></script>
+    </body>
+</html>

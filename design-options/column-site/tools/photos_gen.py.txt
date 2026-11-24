@@ -1,0 +1,509 @@
+import json, html, sys, datetime
+
+ROOT = sys.argv[1]
+OUT = sys.argv[2]
+SHELL = open('/tmp/column-shell.html').read()
+
+d = json.load(open(f'{ROOT}/lib/site/cache/photos.json'))
+ps = [p for p in d['photos'] if not p.get('sample')]
+ps.sort(key=lambda p: p['id'])
+ps.sort(key=lambda p: p['date'] or '', reverse=True)
+top = ps
+
+set_titles = {s['id']: s['title'] for s in d['sets']}
+present = [s for s in d['sets'] if any(p['set'] == s['id'] for p in top)]
+
+def esc(s):
+    return html.escape(s, quote=True)
+
+def fmt_date(s):
+    if not s:
+        return None
+    dt = datetime.date.fromisoformat(s)
+    return f"{dt.day} {dt.strftime('%b %Y')}"
+
+def src(p, w):
+    return f"../../public/photos/{p['id']}-{w}.webp"
+
+SIZES = "(min-width: 1180px) 359px, (min-width: 768px) 354px, (min-width: 480px) calc(50vw - 30px), calc(100vw - 32px)"
+
+items = []
+for i, p in enumerate(top):
+    widths = sorted(p['widths'])
+    srcset = ', '.join(f"{src(p, w)} {w}w" for w in widths)
+    small = next((w for w in widths if w >= 960), widths[-1])
+    largest = src(p, widths[-1])
+    set_title = set_titles.get(p['set'], p['set'])
+    title = (p.get('title') or '').strip()
+    loc = (p.get('location') or '').strip()
+    caption_txt = ', '.join(x for x in (title, loc) if x)
+    alt = caption_txt if caption_txt else f"Photograph, {set_title}"
+    date = fmt_date(p.get('date'))
+    ex = p.get('exif') or {}
+    meta = [set_title]
+    if date:
+        meta.append(date)
+    for k in ('camera', 'focal', 'aperture', 'shutter'):
+        if ex.get(k):
+            meta.append(str(ex[k]))
+    if ex.get('iso'):
+        meta.append(f"ISO {ex['iso']}")
+    lazy = '' if i < 6 else ' loading="lazy"'
+    cap = ''
+    if caption_txt:
+        dpart = f' <time class="mono" datetime="{p["date"]}">{date}</time>' if date else ''
+        cap = f'\n        <figcaption class="photo-cap">{esc(caption_txt)}{dpart}</figcaption>'
+    items.append(f'''      <figure class="photo-item" data-set="{p['set']}">
+      <a class="photo-link" href="{largest}" data-srcset="{esc(srcset)}" data-meta="{esc(' · '.join(meta))}" style="background-color:{p['color']}"><img src="{src(p, small)}" srcset="{esc(srcset)}" sizes="{SIZES}" width="{p['w']}" height="{p['h']}" alt="{esc(alt)}" decoding="async"{lazy}></a>{cap}
+      </figure>''')
+
+chips = ['          <button class="chip" type="button" aria-pressed="true" data-filter="all">All</button>']
+for s in present:
+    chips.append(f'          <button class="chip" type="button" aria-pressed="false" data-filter="{s["id"]}">{esc(s["title"])}</button>')
+
+STYLE = '''<style>
+  .photo-chips { margin-top: var(--s-6); }
+  .photo-chips[hidden] { display: none; }
+  .photo-grid { margin-top: var(--s-6); column-count: 2; column-gap: var(--s-3); }
+  @media (min-width: 1180px) {
+    .photo-grid { column-count: 3; margin-inline: calc((720px - 1100px) / 2); }
+  }
+  @media (max-width: 479px) { .photo-grid { column-count: 1; } }
+  .photo-item { margin: 0 0 var(--s-3); break-inside: avoid; }
+  .photo-item[hidden] { display: none; }
+  .photo-link { position: relative; display: block; border-radius: 4px; overflow: hidden; isolation: isolate; }
+  .photo-link::after { content: ""; position: absolute; inset: 0; border: 1px solid var(--hair); border-radius: inherit; pointer-events: none; }
+  .photo-link img { width: 100%; height: auto; }
+  .photo-link:focus-visible { outline-offset: 2px; }
+  .photo-cap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--s-2); margin-top: var(--s-2); font-size: var(--t-xs); color: var(--muted); }
+
+  /* viewer: all motion is driven from script (one curve, one duration); see the script below */
+  .photo-lb { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--ink); overflow: hidden; }
+  .photo-lb::backdrop { background: transparent; }
+  .photo-lb:focus { outline: none; }
+  .photo-lb[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+  html:has(.photo-lb[open]) { overflow: hidden; scrollbar-gutter: stable; }
+  .photo-lb-bg { position: absolute; inset: 0; background: var(--page); }
+  .photo-lb-ui { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); padding: var(--s-3) var(--s-5); }
+  .photo-lb-top { justify-content: flex-end; }
+  .photo-lb-stage { position: relative; z-index: 1; min-height: 0; margin: 0 var(--s-5); touch-action: none; }
+  .photo-lb-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transform-origin: 0 0; will-change: transform; user-select: none; -webkit-user-select: none; -webkit-user-drag: none; }
+  .photo-lb-stage { cursor: zoom-in; }
+  .photo-lb-stage.is-zoomed { cursor: grab; }
+  .photo-lb:has(.is-zoomed) .photo-lb-meta { visibility: hidden; }
+  .photo-lb-meta { color: var(--muted); min-width: 0; }
+  .photo-lb-nav { display: flex; gap: var(--s-2); flex: none; }
+  .photo-lb .btn { width: 44px; padding: 0; background: var(--page); }
+  .photo-lb .btn svg { width: 16px; height: 16px; }
+  @media (max-width: 640px) {
+    .photo-lb-ui { padding: var(--s-2) var(--s-4); }
+    .photo-lb-stage { margin: 0 var(--s-4); }
+    .photo-lb-exif { display: none; }
+  }
+</style>'''
+
+ICON = {
+    'close': '<path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
+    'prev': '<path d="M10 3.5L5.5 8 10 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
+    'next': '<path d="M6 3.5L10.5 8 6 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
+}
+def btn(kind, label):
+    return f'<button class="btn btn--ghost" type="button" data-lb="{kind}" aria-label="{label}"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true">{ICON[kind]}</svg></button>'
+
+SCRIPT = '''<script>
+(() => {
+  const chips = document.querySelector('.photo-chips');
+  const items = [...document.querySelectorAll('.photo-item')];
+  chips.hidden = false;
+  chips.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-filter]');
+    if (!b) return;
+    const f = b.dataset.filter;
+    chips.querySelectorAll('[data-filter]').forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
+    items.forEach((it) => { it.hidden = f !== 'all' && it.dataset.set !== f; });
+  });
+
+  /* ---------- viewer ----------
+     Open: the photo grows out of its thumbnail while the page fades to the viewer.
+     Step: the current photo slides out and the next slides in (keys, buttons, swipe).
+     Close: the photo shrinks back into its thumbnail (button, Escape, or drag it down).
+     Zoom: pinch, double-tap / double-click, or trackpad pinch; drag to pan while zoomed.
+     One curve for everything. Reduced motion: every change is instant. */
+  const lb = document.querySelector('.photo-lb');
+  if (!lb || typeof lb.showModal !== 'function' || !lb.animate) return;
+  const stage = lb.querySelector('.photo-lb-stage');
+  const slides = [...lb.querySelectorAll('.photo-lb-img')];
+  const fades = [...lb.querySelectorAll('.photo-lb-bg, .photo-lb-ui')];
+  const meta = lb.querySelector('.photo-lb-meta');
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const EASE = 'cubic-bezier(0.2, 0, 0, 1)';
+  const MS = 320, QUICK = 240, GAP = 32, MAXZ = 5, TAPZ = 2.5;
+  const STEP_MS = 300, STEP_FADE_IN = 250, STEP_SHIFT = 0.15, STEP_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
+  let list = [], i = 0, cur = 0, hidden = null, running = [], queue = Promise.resolve(), closing = false, waiting = 0;
+  let z = { k: 1, x: 0, y: 0 };
+
+  /* set and date always; camera details only where there is room (hidden on phones in CSS) */
+  const caption = (a) => {
+    const parts = a.dataset.meta.split(' · ');
+    const lead = document.createElement('span'), rest = document.createElement('span');
+    lead.textContent = parts.slice(0, 2).join(' · ');
+    rest.className = 'photo-lb-exif';
+    rest.textContent = parts.length > 2 ? ' · ' + parts.slice(2).join(' · ') : '';
+    meta.replaceChildren(lead, rest);
+  };
+
+  /* run one animation, then leave its end state as plain inline style */
+  const run = (el, from, to, ms, easing) => {
+    const d = still.matches ? 0 : (ms ?? MS);
+    if (!d) { Object.assign(el.style, to); return Promise.resolve(); }
+    const a = el.animate([from, to], { duration: d, easing: easing || EASE, fill: 'forwards' });
+    running.push(a);
+    return a.finished.catch(() => {}).then(() => {
+      Object.assign(el.style, to);
+      a.cancel();
+      running = running.filter((x) => x !== a);
+    });
+  };
+  const hurry = () => running.forEach((a) => { try { a.finish(); } catch (_) {} });
+  const busy = () => closing || running.length > 0;
+
+  /* show the thumbnail's already-loaded file at once, then swap to the large file when it has decoded */
+  const load = (img, a) => {
+    if (img.dataset.for === a.href) return;
+    const t = a.querySelector('img');
+    img.dataset.for = a.href;
+    img.removeAttribute('srcset');
+    img.removeAttribute('sizes');
+    img.src = t.currentSrc || t.src;
+    img.alt = t.alt;
+    const big = new Image();
+    big.sizes = '100vw';
+    big.srcset = a.dataset.srcset;
+    big.src = a.href;
+    (big.decode ? big.decode() : Promise.resolve()).then(() => {
+      if (img.dataset.for !== a.href) return;
+      img.sizes = '100vw';
+      img.srcset = a.dataset.srcset;
+      img.src = a.href;
+    }).catch(() => {});
+  };
+
+  /* geometry: the photo as fitted inside the stage at scale 1, in stage coordinates */
+  const box = (a) => {
+    const t = a.querySelector('img');
+    const ratio = (t.naturalWidth && t.naturalHeight) ? t.naturalWidth / t.naturalHeight : t.width / t.height;
+    const s = stage.getBoundingClientRect();
+    let w = s.width, h = w / ratio;
+    if (h > s.height) { h = s.height; w = h * ratio; }
+    return { s, w, h, left: (s.width - w) / 2, top: (s.height - h) / 2 };
+  };
+  /* transform that places the full-size photo exactly over its thumbnail */
+  const overThumb = (a) => {
+    const b = box(a), r = a.getBoundingClientRect(), k = r.width / b.w;
+    return `translate(${r.left - b.s.left - b.left * k}px, ${r.top - b.s.top - b.top * k}px) scale(${k})`;
+  };
+  const tf = (v) => (v.k === 1 && !v.x && !v.y) ? 'none' : `translate(${v.x}px, ${v.y}px) scale(${v.k})`;
+  const onScreen = (a) => { const r = a.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; };
+  const hold = (a) => { if (hidden) hidden.style.visibility = ''; hidden = a; if (a && !still.matches) a.style.visibility = 'hidden'; };
+  const local = (e) => { const s = stage.getBoundingClientRect(); return { x: e.clientX - s.left, y: e.clientY - s.top }; };
+
+  /* zoom: keep the point under the fingers fixed, and never show empty space past the photo's edge */
+  const zoomAt = (k, px, py, from) => ({ k, x: px - (px - from.x) * (k / from.k), y: py - (py - from.y) * (k / from.k) });
+  const clamp = (v) => {
+    const b = box(list[i]);
+    const fit = (pos, start, size, span) => size * v.k <= span
+      ? (span - size * v.k) / 2 - start * v.k
+      : Math.min(-start * v.k, Math.max(span - (start + size) * v.k, pos));
+    return { k: v.k, x: fit(v.x, b.left, b.w, b.s.width), y: fit(v.y, b.top, b.h, b.s.height) };
+  };
+  const setZoom = (v, animate) => {
+    const img = slides[cur], prev = tf(z);
+    z = v;
+    stage.classList.toggle('is-zoomed', z.k > 1);
+    /* zoomed in: ask for a file sharp enough for the magnified size */
+    if (img.hasAttribute('srcset')) img.sizes = Math.ceil(Math.max(1, z.k) * 100) + 'vw';
+    if (animate) return run(img, { transform: prev }, { transform: tf(z) }, QUICK);
+    img.style.transform = tf(z);
+    return Promise.resolve();
+  };
+  const unzoom = () => { z = { k: 1, x: 0, y: 0 }; stage.classList.remove('is-zoomed'); slides[cur].style.transform = 'none'; };
+  const toggleZoom = (x, y) => setZoom(z.k > 1 ? { k: 1, x: 0, y: 0 } : clamp(zoomAt(TAPZ, x, y, z)), true);
+
+  const open = (a) => {
+    list = items.filter((it) => !it.hidden).map((it) => it.querySelector('.photo-link'));
+    i = list.indexOf(a);
+    closing = false;
+    lb.showModal();
+    lb.focus({ preventScroll: true });
+    const img = slides[cur], other = slides[1 - cur];
+    unzoom();
+    other.style.visibility = 'hidden';
+    img.style.visibility = '';
+    delete img.dataset.for;
+    load(img, a);
+    caption(a);
+    const from = overThumb(a);
+    hold(a);
+    run(img, { transform: from }, { transform: 'none' });
+    fades.forEach((el) => run(el, { opacity: 0 }, { opacity: 1 }));
+  };
+
+  /* Presses are queued so each one lands on the right photo. A new press finishes the slide in
+     progress, and when several are waiting every one but the last is applied without animating. */
+  const step = (dir, dx) => {
+    if (closing || list.length < 2) return;
+    hurry();
+    waiting++;
+    queue = queue.then(async () => {
+      waiting--;
+      if (closing) return;
+      unzoom();
+      const ms = waiting > 0 ? 0 : MS;
+      const w = stage.getBoundingClientRect().width + GAP;
+      const out = slides[cur], inn = slides[1 - cur];
+      const was = list[i];
+      i = (i + dir + list.length) % list.length;
+      const a = list[i];
+      load(inn, a);
+      inn.style.visibility = '';
+      caption(a);
+      hold(a);
+      if (ms && dx === undefined && !still.matches) {
+        /* Keys and buttons: the Google Photos step, measured on its web viewer at 1440 wide.
+           Both photos stay in place on top of each other and cross-fade while drifting 15% of the
+           window width in the direction of travel: the old one from 0 to -15%, the new one from
+           +15% to 0. 300ms on the Material standard curve; the new photo's fade finishes in 250ms.
+           Because nothing travels across the screen, portrait and landscape behave identically. */
+        const shift = innerWidth * STEP_SHIFT;
+        await Promise.all([
+          run(out, { transform: 'translateX(0px)', opacity: 1 }, { transform: `translateX(${-dir * shift}px)`, opacity: 0 }, STEP_MS, STEP_EASE),
+          run(inn, { transform: `translateX(${dir * shift}px)` }, { transform: 'none' }, STEP_MS, STEP_EASE),
+          run(inn, { opacity: 0 }, { opacity: 1 }, STEP_FADE_IN, STEP_EASE),
+        ]);
+      } else {
+        /* finger swipes (the photos are already under the finger) and instant steps: plain page slide */
+        await Promise.all([
+          run(out, { transform: `translateX(${dx || 0}px)` }, { transform: `translateX(${-dir * w}px)` }, ms),
+          run(inn, { transform: `translateX(${dir * w + (dx || 0)}px)` }, { transform: 'none' }, ms),
+        ]);
+      }
+      out.style.opacity = '';
+      inn.style.opacity = '';
+      out.style.visibility = 'hidden';
+      out.style.transform = 'none';
+      cur = 1 - cur;
+    });
+  };
+
+  /* start: where a drag left the photo ({ transform, fade }); otherwise from wherever it sits now */
+  const close = (start) => {
+    if (closing) return;
+    closing = true;
+    hurry();
+    queue = queue.then(async () => {
+      const a = list[i], img = slides[cur];
+      if (!still.matches) {
+        /* jump, don't glide: the page scrolls smoothly by default and the photo needs the thumbnail's final position now */
+        if (!onScreen(a)) a.scrollIntoView({ block: 'center', behavior: 'instant' });
+        const fade = start ? start.fade : 1;
+        await Promise.all([
+          run(img, { transform: start ? start.transform : tf(z) }, { transform: overThumb(a) }),
+          ...fades.map((el) => run(el, { opacity: fade }, { opacity: 0 })),
+        ]);
+      }
+      lb.close();
+      hold(null);
+      z = { k: 1, x: 0, y: 0 };
+      stage.classList.remove('is-zoomed');
+      slides.forEach((s) => { s.style.transform = 'none'; });
+      fades.forEach((el) => { el.style.opacity = ''; });
+      a.focus({ preventScroll: true });
+      closing = false;
+    });
+  };
+
+  document.querySelector('.photo-grid').addEventListener('click', (e) => {
+    const a = e.target.closest('.photo-link');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    open(a);
+  });
+  lb.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-lb]');
+    if (!b) return;
+    if (b.dataset.lb === 'close') close();
+    else step(b.dataset.lb === 'next' ? 1 : -1);
+  });
+  lb.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+  });
+  lb.addEventListener('cancel', (e) => { e.preventDefault(); close(); });
+
+  /* ---------- gestures ----------
+     one finger, not zoomed: sideways = step, down = drag to close, two quick taps = zoom
+     one finger (or mouse), zoomed: pan
+     two fingers: pinch */
+  const pts = new Map();
+  let g = null, lastTap = null;
+  const pair = () => { const [a, b] = [...pts.values()]; return { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; };
+  const restore = () => {
+    const out = slides[cur], inn = slides[1 - cur];
+    out.style.transform = tf(z);
+    inn.style.visibility = 'hidden';
+    inn.style.transform = 'none';
+    fades.forEach((el) => { el.style.opacity = ''; });
+  };
+
+  stage.addEventListener('pointerdown', (e) => {
+    if (busy()) return;
+    if (e.pointerType === 'mouse' && (e.button !== 0 || z.k === 1)) return;
+    if (pts.size >= 2) return;
+    pts.set(e.pointerId, local(e));
+    try { stage.setPointerCapture(e.pointerId); } catch (_) {}
+    if (pts.size === 2) {
+      if (g && (g.mode === 'swipe' || g.mode === 'dismiss')) restore();
+      const p = pair();
+      g = { mode: 'pinch', d: p.d, mx: p.x, my: p.y, from: { ...z } };
+      return;
+    }
+    const p = local(e);
+    g = { mode: z.k > 1 ? 'pan' : 'idle', id: e.pointerId, type: e.pointerType, sx: p.x, sy: p.y, dx: 0, dy: 0, dir: 0, from: { ...z }, t: performance.now(), moved: false };
+  });
+
+  stage.addEventListener('pointermove', (e) => {
+    if (!g || !pts.has(e.pointerId)) return;
+    pts.set(e.pointerId, local(e));
+    const img = slides[cur];
+    if (g.mode === 'pinch') {
+      if (pts.size < 2) return;
+      const p = pair();
+      const k = Math.min(MAXZ, Math.max(0.6, g.from.k * p.d / g.d));
+      const v = zoomAt(k, g.mx, g.my, g.from);
+      v.x += p.x - g.mx;
+      v.y += p.y - g.my;
+      z = k >= 1 ? clamp(v) : v;
+      stage.classList.toggle('is-zoomed', z.k > 1);
+      img.style.transform = tf(z);
+      return;
+    }
+    if (e.pointerId !== g.id) return;
+    const p = local(e), dx = p.x - g.sx, dy = p.y - g.sy;
+    if (g.mode === 'pan') {
+      if (Math.hypot(dx, dy) > 6) g.moved = true;
+      z = clamp({ k: g.from.k, x: g.from.x + dx, y: g.from.y + dy });
+      img.style.transform = tf(z);
+      return;
+    }
+    if (g.mode === 'idle') {
+      if (Math.hypot(dx, dy) < 8) return;
+      g.moved = true;
+      g.mode = Math.abs(dx) > Math.abs(dy) ? 'swipe' : (dy > 0 ? 'dismiss' : 'none');
+    }
+    g.dx = dx;
+    g.dy = dy;
+    const s = stage.getBoundingClientRect();
+    if (g.mode === 'swipe') {
+      const dir = dx < 0 ? 1 : -1, w = s.width + GAP, inn = slides[1 - cur];
+      if (dir !== g.dir && list.length > 1) {
+        g.dir = dir;
+        load(inn, list[(i + dir + list.length) % list.length]);
+        inn.style.visibility = '';
+      }
+      img.style.transform = `translateX(${dx}px)`;
+      inn.style.transform = `translateX(${dir * w + dx}px)`;
+    } else if (g.mode === 'dismiss') {
+      /* the photo follows the finger and shrinks a little; the viewer fades with the distance */
+      const down = Math.max(0, dy), t = Math.min(1, down / (s.height * 0.6)), k = 1 - 0.25 * t;
+      g.tf = `translate(${dx + (s.width / 2) * (1 - k)}px, ${down + (s.height / 2) * (1 - k)}px) scale(${k})`;
+      g.fade = 1 - 0.85 * t;
+      img.style.transform = g.tf;
+      fades.forEach((el) => { el.style.opacity = g.fade; });
+    }
+  });
+
+  const lift = (e) => {
+    if (!pts.has(e.pointerId)) return;
+    pts.delete(e.pointerId);
+    if (!g) return;
+    const d = g, img = slides[cur];
+    if (d.mode === 'pinch') {
+      if (pts.size >= 2) return;
+      g = { mode: 'none' };
+      setZoom(z.k <= 1 ? { k: 1, x: 0, y: 0 } : clamp(z), true);
+      return;
+    }
+    if (e.pointerId !== d.id) return;
+    g = null;
+    if (d.mode === 'swipe') {
+      const w = stage.getBoundingClientRect().width + GAP, inn = slides[1 - cur];
+      if (Math.abs(d.dx) > Math.min(120, w * 0.2) && list.length > 1) { step(d.dir, d.dx); return; }
+      Promise.all([
+        run(img, { transform: `translateX(${d.dx}px)` }, { transform: 'none' }, QUICK),
+        run(inn, { transform: `translateX(${d.dir * w + d.dx}px)` }, { transform: `translateX(${d.dir * w}px)` }, QUICK),
+      ]).then(() => { inn.style.visibility = 'hidden'; inn.style.transform = 'none'; });
+    } else if (d.mode === 'dismiss') {
+      const flick = d.dy / Math.max(1, performance.now() - d.t) > 0.6;
+      if (d.tf && (d.dy > 110 || (flick && d.dy > 40))) { close({ transform: d.tf, fade: d.fade }); return; }
+      run(img, { transform: d.tf || 'none' }, { transform: 'none' }, QUICK);
+      fades.forEach((el) => run(el, { opacity: d.fade ?? 1 }, { opacity: 1 }, QUICK).then(() => { el.style.opacity = ''; }));
+    } else if (!d.moved && e.type === 'pointerup' && d.type !== 'mouse') {
+      const now = performance.now();
+      if (lastTap && now - lastTap.t < 300 && Math.hypot(d.sx - lastTap.x, d.sy - lastTap.y) < 30) { lastTap = null; toggleZoom(d.sx, d.sy); }
+      else lastTap = { t: now, x: d.sx, y: d.sy };
+    }
+  };
+  stage.addEventListener('pointerup', lift);
+  stage.addEventListener('pointercancel', lift);
+
+  stage.addEventListener('dblclick', (e) => {
+    if (busy()) return;
+    const p = local(e);
+    toggleZoom(p.x, p.y);
+  });
+  /* trackpad pinch arrives as ctrl + wheel; a plain wheel pans a zoomed photo */
+  stage.addEventListener('wheel', (e) => {
+    if (busy()) return;
+    if (!e.ctrlKey && z.k === 1) return;
+    e.preventDefault();
+    if (e.ctrlKey) {
+      const p = local(e), k = Math.min(MAXZ, Math.max(1, z.k * Math.exp(-e.deltaY * 0.01)));
+      setZoom(k === 1 ? { k: 1, x: 0, y: 0 } : clamp(zoomAt(k, p.x, p.y, z)), false);
+    } else {
+      setZoom(clamp({ k: z.k, x: z.x - e.deltaX, y: z.y - e.deltaY }), false);
+    }
+  }, { passive: false });
+})();
+</script>'''
+
+main = f'''    <section class="page-head" aria-labelledby="photos-title">
+      <h1 id="photos-title">Photos</h1>
+      <div class="chips photo-chips" role="group" aria-label="Filter by set" hidden>
+{chr(10).join(chips)}
+      </div>
+    </section>
+
+    <div class="photo-grid">
+{chr(10).join(items)}
+    </div>
+
+    <dialog class="photo-lb" aria-label="Photo viewer" tabindex="-1">
+      <div class="photo-lb-bg"></div>
+      <div class="photo-lb-ui photo-lb-top">{btn('close', 'Close')}</div>
+      <div class="photo-lb-stage"><img class="photo-lb-img" alt="" draggable="false"><img class="photo-lb-img" alt="" draggable="false"></div>
+      <div class="photo-lb-ui">
+        <p class="photo-lb-meta mono" aria-live="polite"></p>
+        <div class="photo-lb-nav">{btn('prev', 'Previous photo')}{btn('next', 'Next photo')}</div>
+      </div>
+    </dialog>
+'''
+
+page = SHELL
+page = page.replace('<title>Felix Yeboah — Software engineer &amp; UI/UX designer</title>', '<title>Photos — Felix Yeboah</title>')
+page = page.replace('<link rel="stylesheet" href="assets/column.css">', '<link rel="stylesheet" href="assets/column.css">\n' + STYLE)
+page = page.replace('<li><a href="photos.html">Photos</a></li>', '<li><a href="photos.html" aria-current="page">Photos</a></li>')
+page = page.replace('    <main id="main">\n    <!-- page content -->\n  </main>', '  <main id="main">\n' + main + '  </main>')
+page = page.replace('</body>', SCRIPT + '\n</body>')
+assert 'page content' not in page
+open(OUT, 'w').write(page)
+print('ok', len(top), [s['title'] for s in present])

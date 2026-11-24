@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Dealing with burnout as a developer — Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/column.css">
+<style>
+  .post-head h1 { text-wrap: balance; }
+
+  /* 32em ~ 69 characters per line (Schibsted Grotesk averages ~7.4px per character at 16px) */
+  .post-body { margin-top: var(--s-7); }
+  .post-body > :first-child { margin-top: 0; }
+  .post-body hr + h2 { margin-top: var(--s-7); }
+  .post-body .post-note { font-size: var(--t-sm); color: var(--muted); }
+  .post-body .post-note + h2 { margin-top: var(--s-7); }
+  .post-body .post-label + ul { margin-top: var(--s-3); }
+  .post-body h2, .post-body h3 { scroll-margin-top: var(--s-5); text-wrap: balance; }
+
+  /* tables, when a post has them: hairline rows, scroll on narrow screens */
+  .post-table { overflow-x: auto; }
+  .post-table table { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
+  .post-table th, .post-table td { padding: var(--s-2) var(--s-4) var(--s-2) 0; border-bottom: 1px solid var(--hair); text-align: left; vertical-align: top; }
+  .post-table th { font-weight: 600; }
+
+  .post-author {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1) var(--s-3);
+    margin-top: var(--s-8);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--hair);
+    font-size: var(--t-sm);
+  }
+  .post-author .name { font-weight: 600; margin-right: var(--s-1); }
+  .post-author .link { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
+
+  .post-pager { margin-top: var(--s-7); }
+  .post-all { margin-top: var(--s-5); }
+  .post-all .link { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--t-sm); }
+
+  @media (max-width: 640px) {
+    .post-body { margin-top: var(--s-6); }
+    .post-body > h2 { margin-top: var(--s-7); }
+    .post-body hr + h2 { margin-top: var(--s-6); }
+    .post-body hr { margin-top: var(--s-6); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="column">
+  <header class="site-header">
+    <a class="identity" href="index.html" aria-label="Felix Yeboah, home">
+      <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="">
+      <span>Felix Yeboah</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html">Work</a></li>
+        <li><a href="writing.html" aria-current="page">Writing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="photos.html">Photos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article aria-labelledby="post-title">
+      <header class="page-head post-head">
+        <a class="crumb" href="writing.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M8.5 3.5L5 7l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Writing</a>
+        <h1 id="post-title">Dealing with burnout as a developer</h1>
+        <ul class="meta-line">
+          <li><time class="mono" datetime="2022-05-26">26 May 2022</time></li>
+          <li>2 min read</li>
+        </ul>
+      </header>
+
+      <div class="prose post-body">
+<p>Working as a developer can be incredibly demanding, often leading to a stressful environment where rest is hard to come by. Even with the shift towards remote work, which should ideally provide more opportunities for rest, developers often find it challenging to disconnect. Unlike leaving the office, working from home blurs the boundaries between work and personal life, making it difficult to establish a clear closing time. As a result, developers struggle to get sufficient rest and frequently experience burnout.</p>
+<p>In my own experience, I gradually realized I was burnt out. It crept up on me in stages, affecting my behavior both at work and with others. Despite constantly complaining to my partner about feeling tired, I continued working without taking proper breaks. My attitude towards everything and everyone underwent a noticeable shift, and I started neglecting basic self-care, such as hygiene and proper nutrition.</p>
+<p>Recognizing my burnout was not an easy process. It took time for me to acknowledge the extent of the problem and take action. I made the decision to take a step back from work, distancing myself from friends, family, and even my computer and social media. I prioritized getting the rest I desperately needed.</p>
+<p>During my period of rest, I happened upon a tweet on my Twitter timeline discussing burnout. It immediately caught my attention, and I delved into the thread, realizing that every point raised resonated deeply with my own experience. It was through this thread that I learned about the different stages of burnout.</p>
+<figure class="tweet"><div class="tweet__head"><span class="tweet__av" aria-hidden="true">G</span><span class="tweet__who"><b>Growthclinicc</b><span>@growthclinicc</span></span><svg class="tweet__x" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.8 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.2-8.3L1.8 3h6.4l4.4 5.8zm-1.1 16.2h1.7L7.4 4.7H5.6z"/></svg></div><blockquote cite="https://x.com/growthclinicc/status/1523284871543623680"><p>You might not be lazy, but burnt out. Here's how:</p></blockquote><figcaption class="tweet__foot"><time datetime="2022-05-08">8 May 2022</time><a class="link-arrow link-arrow--ne" href="https://x.com/growthclinicc/status/1523284871543623680" target="_blank" rel="noopener">View on X <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4.5 11.5l7-7m0 0H5.5m6 0v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a></figcaption></figure>
+<p>The thread I found provided valuable insights into how to address burnout:</p>
+<ul><li>Recognize the signs of burnout.</li><li>Listen to your body and pay attention to its needs.</li><li>Take a break from the stressors causing burnout.</li><li>Engage in regular exercise to alleviate stress.</li><li>Ensure you get adequate sleep to rejuvenate your mind and body.</li><li>Stay hydrated by drinking plenty of water.</li><li>Reflect on whether your current goals and aspirations are aligned with your overall well-being.</li></ul>
+<p>Moving forward, I am committed to prioritizing rest and avoiding the stage of burnout where even those closest to me may seem like enemies. By taking the necessary steps to prevent burnout, I aim to maintain a healthy work-life balance and preserve my relationships with loved ones.</p>
+      </div>
+
+      <footer class="post-author">
+        <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="" loading="lazy">
+        <span class="name">Felix Yeboah</span>
+        <a class="link" href="https://x.com/sudocode_">@sudocode_ on X</a>
+      </footer>
+    </article>
+
+    <nav class="pager post-pager" aria-label="More writing">
+      <a href="post-my-2021-in-review.html" rel="prev">
+        <span class="dir">Previous</span>
+        <span class="name"><span class="u">My 2021 in review</span></span>
+      </a>
+      <a href="post-framework-wars-2022.html" rel="next">
+        <span class="dir">Next</span>
+        <span class="name"><span class="u">Framework Wars 2022</span></span>
+      </a>
+    </nav>
+
+    <p class="post-all"><a class="link" href="writing.html">All writing</a></p>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+    <div class="footer-links">
+      <a href="https://github.com/felixyeboah">GitHub</a>
+      <a href="https://x.com/sudocode_">X</a>
+      <a href="resume.html">Résumé</a>
+      <a href="photos.html">Photos</a>
+      <span class="copy">© 2026</span>
+    </div>
+  </footer>
+</div>
+<script>
+document.querySelectorAll('.code').forEach(function (fig) {
+  var b = fig.querySelector('.code__copy'), pre = fig.querySelector('pre');
+  if (!b || !pre || !navigator.clipboard) { if (b) b.hidden = true; return; }
+  b.addEventListener('click', function () {
+    var text = [].map.call(pre.querySelectorAll('.l'), function (l) { return l.textContent; }).join('\n') || pre.textContent;
+    navigator.clipboard.writeText(text).then(function () {
+      b.classList.add('is-done'); b.querySelector('span').textContent = 'Copied';
+      setTimeout(function () { b.classList.remove('is-done'); b.querySelector('span').textContent = 'Copy'; }, 1600);
+    });
+  });
+});
+</script>
+</body>
+</html>

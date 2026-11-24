@@ -39,8 +39,13 @@ const run = promisify(execFile);
 const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
 const text = value => typeof value === 'string' && value.trim() ? value.trim() : null;
 const variantPath = (id, width) => path.join(OUTPUT, `${id}-${width}.webp`);
-const variantWidths = width => WIDTHS.filter(value => value <= width).length
-    ? WIDTHS.filter(value => value <= width) : [width];
+/* The standard widths that fit, plus the original's own width when it sits well above the largest of them:
+   a 1448px original used to stop at 960, which threw away a third of its detail and looked soft when zoomed. */
+const variantWidths = width => {
+    const fit = WIDTHS.filter(value => value <= width);
+    if (!fit.length) return [width];
+    return width >= fit[fit.length - 1] * 1.08 && width < WIDTHS[WIDTHS.length - 1] ? [...fit, width] : fit;
+};
 const slug = name => name.normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
     .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 const titleCase = name => name.replace(/-/g, ' ').replace(/\b\w/g, value => value.toUpperCase());

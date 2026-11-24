@@ -1,0 +1,29 @@
+---
+/* Link-preview tags (Open Graph and X): what a shared link shows. The image defaults to the site card
+   (src/assets/og.png, made by scripts/og.mjs); project pages pass their cover. */
+interface Props {
+    title: string;
+    description: string;
+    /** absolute path on this site, e.g. /assets/covers/reevit.jpg */
+    image?: string;
+    imageAlt?: string;
+    /** canonical address of the page */
+    url: string;
+    type?: 'website' | 'article';
+}
+const { title, description, image = '/og.png', imageAlt = 'Felix Yeboah, software engineer and UI/UX designer', url, type = 'website' } = Astro.props;
+const img = new URL(image, Astro.site).href;
+---
+
+<meta property="og:site_name" content="Felix Yeboah" />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={url} />
+<meta property="og:image" content={img} />
+<meta property="og:image:alt" content={imageAlt} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@sudocode_" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={img} />

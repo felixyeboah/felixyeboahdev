@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Transitioning to Backend Engineering — Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/column.css">
+<style>
+  .post-head h1 { text-wrap: balance; }
+
+  /* 32em ~ 69 characters per line (Schibsted Grotesk averages ~7.4px per character at 16px) */
+  .post-body { margin-top: var(--s-7); }
+  .post-body > :first-child { margin-top: 0; }
+  .post-body hr + h2 { margin-top: var(--s-7); }
+  .post-body .post-note { font-size: var(--t-sm); color: var(--muted); }
+  .post-body .post-note + h2 { margin-top: var(--s-7); }
+  .post-body .post-label + ul { margin-top: var(--s-3); }
+  .post-body h2, .post-body h3 { scroll-margin-top: var(--s-5); text-wrap: balance; }
+
+  /* tables, when a post has them: hairline rows, scroll on narrow screens */
+  .post-table { overflow-x: auto; }
+  .post-table table { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
+  .post-table th, .post-table td { padding: var(--s-2) var(--s-4) var(--s-2) 0; border-bottom: 1px solid var(--hair); text-align: left; vertical-align: top; }
+  .post-table th { font-weight: 600; }
+
+  .post-author {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1) var(--s-3);
+    margin-top: var(--s-8);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--hair);
+    font-size: var(--t-sm);
+  }
+  .post-author .name { font-weight: 600; margin-right: var(--s-1); }
+  .post-author .link { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
+
+  .post-pager { margin-top: var(--s-7); }
+  .post-all { margin-top: var(--s-5); }
+  .post-all .link { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--t-sm); }
+
+  @media (max-width: 640px) {
+    .post-body { margin-top: var(--s-6); }
+    .post-body > h2 { margin-top: var(--s-7); }
+    .post-body hr + h2 { margin-top: var(--s-6); }
+    .post-body hr { margin-top: var(--s-6); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="column">
+  <header class="site-header">
+    <a class="identity" href="index.html" aria-label="Felix Yeboah, home">
+      <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="">
+      <span>Felix Yeboah</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html">Work</a></li>
+        <li><a href="writing.html" aria-current="page">Writing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="photos.html">Photos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article aria-labelledby="post-title">
+      <header class="page-head post-head">
+        <a class="crumb" href="writing.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M8.5 3.5L5 7l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Writing</a>
+        <h1 id="post-title">Transitioning to Backend Engineering</h1>
+        <ul class="meta-line">
+          <li><time class="mono" datetime="2024-08-19">19 Aug 2024</time></li>
+          <li>4 min read</li>
+        </ul>
+      </header>
+
+      <div class="prose post-body">
+<p>I’ve been a frontend engineer for years, and I’ve always wanted to switch to backend engineering. I’m thinking of becoming a full-time backend engineer or a “Full Stack Engineer.” I’ve built a few full-stack projects on my own using Remix, Prisma, PostgreSQL, and others, but I never thought of myself as a Full Stack Engineer.</p>
+<p>I’ve always been confused about where to start and which language to learn. Python and Go (Golang) have always seemed like good choices for me because of their strong features. I picked Go because of its speed and performance. As an engineer who’s used JavaScript and TypeScript, I found that Go is a statically typed language, where types are known at compile time rather than runtime. This is better than Python, which is dynamically typed, where types are determined at runtime.</p>
+<figure class="code" data-lang="go" data-lines="2"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1.75V5.25h3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="code__name">main.go</span></span><span class="code__lang mono">Go</span><button class="code__copy mono" type="button" aria-label="Copy code: main.go"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="main.go"><code><span class="l"><span class="k">var</span> x <span class="t">int</span> = <span class="n">10</span>  <span class="c">// Explicitly typed</span></span><span class="l">y := <span class="n">20</span>         <span class="c">// Type inferred as int</span></span></code></pre></div></figure>
+<p>But before I keep going, I need to talk about how I answered my two main questions.</p>
+<h2 id="how-i-began-my-journey-into-go">How I Began My Journey into Go</h2>
+<p>I know I’m not the only one who’s totally confused about this question. It’s like, one of those deep philosophical questions that everyone thinks about at some point in their life. Where do I even start? It might seem like a simple question, but trust me, the answer isn’t easy to find.</p>
+<p>So, there are like, a million programming languages out there, and it’s super hard to decide which one to learn. They all do similar things, but some are better at certain things than others.</p>
+<p>I was thinking about learning Go, but it wasn’t easy. I liked the way it looked, and I thought it would be a good idea to start with a new language like that. That way, I could learn it slowly and build up my skills over time. Plus, the Go community are really nice, so I felt like I could ask them for help if I needed it.</p>
+<p>I’ve been exploring the world of Go, and I’ve found a Go subreddit that’s been super helpful. The community there has been really supportive of my learning journey. I’ve started reading some recommended Go books, like ‘100 Go Mistakes’ by Teiva Harsanyi, ‘Everyday Go’ by Alex Ellis, and ‘Let’s Go and Let’s Go Further’ by Alex Edwards. I know I’m still a total newbie, having only used Go for a few months, but I feel like I’ve made the right choice. I’m super excited to keep learning and exploring the possibilities of Go!</p>
+<h2 id="why-i-chose-go">Why I chose Go</h2>
+<p>As I mentioned earlier, I chose Go because of its speed and performance, but that’s just the beginning. Go has some really cool features that are easy to learn and use with a clean syntax.</p>
+<figure class="pull" aria-hidden="true" data-reveal><svg class="pull__mark" viewBox="0 0 44 44" fill="none"><path d="M8 30c0-8 4-14 11-17l1.5 2.6C16 18 14 21.4 14 25h6v11H8v-6Zm18 0c0-8 4-14 11-17l1.5 2.6C34 18 32 21.4 32 25h6v11H26v-6Z" fill="currentColor"/></svg><blockquote><p>I know I’m still a total newbie,<span class="pull__rest"> having only used Go for a few months, but I feel like I’ve made the right choice.</span></p></blockquote></figure>
+<h3 id="here-are-some-reasons-why-i-chose-go">Here are some reasons why I chose Go:</h3>
+<ul><li><strong>Clean syntax</strong>: - Go’s syntax is super simple and easy to understand. This makes the code more maintainable and readable.</li><li><strong>Static typing</strong>: - Go is a statically typed, compiled language, which means it’s much faster than Python, especially when you need to do things like handle a lot of data at once or work in parallel.</li><li><strong>Standard library</strong>: - Go has a really powerful standard library that makes it easy to build all kinds of programs without having to rely on third-party libraries. This is great for beginners like me who are just starting out and don’t want to get delayed in the details of how to use different libraries.</li><li><strong>Community</strong>: - The Go community is super friendly and helpful. There are lots of resources available online, like tutorials and forums, where you can ask questions and get help if you need it.</li><li><strong>Performance</strong>: - Go is super fast and efficient, which makes it a great choice for building high-performance applications. This is especially important for me, as I want to build web servers and other programs that need to be able to handle lots of requests at once.</li><li><strong>System design</strong>: - Go’s system design is similar to system programming, which means I get to learn concepts like memory management, pointers (although they’re not as advanced as in other languages), and concurrency control.</li></ul>
+<p>Here are a few reasons why I picked Go, but as I keep learning Go, I hope to discover more about it and its inner workings. I’m excited to see how much I can improve my skills in Go!</p>
+<h2 id="the-journey-so-far">The Journey So Far</h2>
+<p>Through my learning in Go, I’ve been able to build a few projects. Currently, I’m building an <a href="https://github.com/felixyeboah/go-huma-auth" target="_blank" rel="noopener">auth service</a> using the <a href="https://huma.rocks/" target="_blank" rel="noopener">Huma Rest API Framework</a> with <a href="https://go-chi.io/#/" target="_blank" rel="noopener">Chi</a> as a router and plan to open-source it. The primary focus of this project is on learning, structuring, and building a secure auth service using Golang. While it aims to achieve the level of security expected in the field, the main objective is to learn and catch up on my knowledge. The project is open-sourced and can be forked and reused. However, it would also be helpful if you see this project and would like to contribute to the service.</p>
+<p>I’m also planning to build a few more projects in Go, like an Ecommerce API, a web server, and a CLI tool. I’m excited to see how much I can learn and improve my skills in Go!</p>
+      </div>
+
+      <footer class="post-author">
+        <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="" loading="lazy">
+        <span class="name">Felix Yeboah</span>
+        <a class="link" href="https://x.com/sudocode_">@sudocode_ on X</a>
+      </footer>
+    </article>
+
+    <nav class="pager post-pager" aria-label="More writing">
+      <a href="post-2023-mid-year-review.html" rel="prev">
+        <span class="dir">Previous</span>
+        <span class="name"><span class="u">2023 Mid-Year Review</span></span>
+      </a>
+      <a href="post-mock-testing-with-go-mockery.html" rel="next">
+        <span class="dir">Next</span>
+        <span class="name"><span class="u">Mock Testing with Go Mockery</span></span>
+      </a>
+    </nav>
+
+    <p class="post-all"><a class="link" href="writing.html">All writing</a></p>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+    <div class="footer-links">
+      <a href="https://github.com/felixyeboah">GitHub</a>
+      <a href="https://x.com/sudocode_">X</a>
+      <a href="resume.html">Résumé</a>
+      <a href="photos.html">Photos</a>
+      <span class="copy">© 2026</span>
+    </div>
+  </footer>
+</div>
+<script>
+document.querySelectorAll('.code').forEach(function (fig) {
+  var b = fig.querySelector('.code__copy'), pre = fig.querySelector('pre');
+  if (!b || !pre || !navigator.clipboard) { if (b) b.hidden = true; return; }
+  b.addEventListener('click', function () {
+    var text = [].map.call(pre.querySelectorAll('.l'), function (l) { return l.textContent; }).join('\n') || pre.textContent;
+    navigator.clipboard.writeText(text).then(function () {
+      b.classList.add('is-done'); b.querySelector('span').textContent = 'Copied';
+      setTimeout(function () { b.classList.remove('is-done'); b.querySelector('span').textContent = 'Copy'; }, 1600);
+    });
+  });
+});
+</script>
+</body>
+</html>

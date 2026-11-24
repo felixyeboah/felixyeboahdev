@@ -1,0 +1,171 @@
+/* =====================================================================
+   Site chrome: the column wrapper, header (logo + nav), footer and the hover underline.
+   Loaded by every page, including Photos, whose own stylesheet uses different tokens.
+   The tokens these rules need are set on the chrome elements themselves so they hold on both.
+   ===================================================================== */
+.column, .site-header, .site-footer {
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px;
+  --t-xl: 2rem; --t-sm: 0.875rem;
+  --hair: #E8E7E2; --accent: #D9480F;
+  --ease: cubic-bezier(0.2, 0, 0, 1); --dur: 200ms;
+}
+
+/* ---------- column ---------- */
+.column {
+  width: 100%;
+  max-width: calc(720px + 2 * var(--s-5));
+  margin: 0 auto;
+  padding: 0 var(--s-5);
+}
+
+/* ---------- header ---------- */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--s-3) var(--s-5);
+  padding-top: var(--s-6);
+}
+
+.identity {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-weight: 600;
+  text-decoration: none;
+  min-height: 44px;
+}
+
+/* the logo in the header: drawn in the text colour, so it is black on the light page.
+   On hover or keyboard focus the face reacts: the prompt winks once and the grin widens while you stay. */
+.logo {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  color: var(--ink);
+  overflow: visible;
+}
+
+.logo-eye, .logo-grin { transform-box: fill-box; }
+
+.logo-eye { transform-origin: 50% 50%; }
+
+.logo-grin {
+  transform-origin: 50% 0%;
+  transition: transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1), stroke-width 320ms var(--ease);
+}
+
+@keyframes logo-wink {
+  0%, 100% { transform: scaleY(1); }
+  45% { transform: scaleY(0.12); }
+}
+
+.identity:hover .logo-eye,
+.identity:focus-visible .logo-eye { animation: logo-wink 360ms var(--ease) 1; }
+
+.identity:hover .logo-grin,
+/* the stroke is thinned as the grin grows, so the line keeps its weight */
+.identity:focus-visible .logo-grin { transform: scale(1.3, 1.5); stroke-width: 5.8; }
+
+.site-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--s-1);
+  margin-right: calc(-1 * var(--s-2));
+}
+
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--s-2);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--ink); }
+
+/* ---------- underline that draws on hover (transform only) ---------- */
+.u {
+  position: relative;
+  display: inline;
+}
+
+.u::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur) var(--ease);
+}
+
+/* ---------- footer ---------- */
+.site-footer {
+  margin-top: var(--s-9);
+  padding: var(--s-7) 0 var(--s-6);
+  border-top: 1px solid var(--hair);
+}
+
+.footer-email {
+  display: inline-block;
+  font-size: var(--t-xl);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.2;
+  text-decoration: none;
+  padding: var(--s-1) 0;
+  overflow-wrap: anywhere;
+}
+
+.footer-email .u::after { height: 2px; bottom: -3px; }
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--s-5);
+  margin-top: var(--s-6);
+  font-size: var(--t-sm);
+  color: var(--muted);
+}
+
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+  color: var(--muted);
+}
+
+.footer-links a:hover { color: var(--ink); }
+
+.footer-links .copy { margin-left: auto; }
+
+@media (hover: hover) {
+  a:hover .u::after,
+  a:focus-visible .u::after { transform: scaleX(1); }
+}
+
+a:focus-visible .u::after { transform: scaleX(1); }
+
+@media (max-width: 640px) {
+  .column { padding: 0 var(--s-4); }
+  .site-header { padding-top: var(--s-5); }
+  .site-footer { margin-top: var(--s-8); }
+  .footer-links { gap: 0 var(--s-4); }
+  .footer-links .copy { margin-left: 0; flex-basis: 100%; min-height: 44px; display: flex; align-items: center; }
+}
+
+@media (max-width: 420px) {
+  .site-header { flex-direction: column; align-items: flex-start; gap: var(--s-1); }
+  .site-nav ul { margin-left: calc(-1 * var(--s-2)); margin-right: 0; }
+}

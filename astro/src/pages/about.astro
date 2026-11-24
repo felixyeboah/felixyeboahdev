@@ -1,0 +1,116 @@
+---
+import { Image } from 'astro:assets';
+import Site from '../layouts/Site.astro';
+import portrait from '../assets/portrait.jpg';
+
+/* Copy is Felix's own, from the previous About page and the Uses page (content/pages/uses). */
+---
+
+<Site title="About" description="A software developer, and a life-long learner. Self-taught, based in Accra." section="about">
+        <section class="page-head" aria-labelledby="page-title">
+          <h1 id="page-title">About</h1>
+          <p class="lede">A software developer, and a life-long learner. Over the years I&rsquo;ve been building functional, beautiful interfaces and experiences that leave a positive impact on people and businesses.</p>
+        </section>
+
+        <figure class="figure about-portrait">
+          <span class="frame">
+            <Image
+              src={portrait}
+              widths={[540, 720, 1086]}
+              sizes="(max-width: 768px) 100vw, 720px"
+              alt="Felix Yeboah in a car, wearing headphones and glasses, looking out of the window"
+              loading="eager"
+              fetchpriority="high"
+            />
+          </span>
+        </figure>
+
+        <section aria-labelledby="story-title">
+          <h2 id="story-title">How I got into tech</h2>
+          <div class="prose">
+            <p>After high school in 2011, I wanted to further my education at university, but the financial burden was too much for my parents to bear. I had to find a way to make money to support myself.</p>
+            <p>I started learning how to code on my own in 2012 and got my first job as a software developer in 2016. Before that, I was mostly working as a freelancer. I have been working as a software developer since then.</p>
+          </div>
+          <p class="about-more"><a class="link" href="/writing/how-i-got-here-pt-1-the-childhood">Read my full story</a></p>
+        </section>
+
+        <section aria-labelledby="off-title">
+          <h2 id="off-title">Off the résumé</h2>
+          <ul class="ruled">
+            <li class="about-row">
+              <h3>Eye for design</h3>
+              <div>
+                <p>I have a keen eye for design and I love to create beautiful and easy to use interfaces. I have a good understanding of design principles and I am able to create beautiful and functional interfaces that are easy to use.</p>
+              </div>
+            </li>
+            <li class="about-row">
+              <h3>My experience</h3>
+              <div>
+                <p>Currently, I build solutions at <a class="link" href="https://completefarmer.com">Complete Farmer</a> to connect farmers to global food buyers and growing with them to give them a competitive edge across the supply chain.</p>
+                <p>I worked as a contractor for a few months at a UK based startup called <a class="link" href="https://primer.io">Primer API Limited</a> as a frontend engineer contributing directly to the success and growth of the product area. Working closely with Product, Design, and Engineering teams to bring elegant and intuitive experiences to life.</p>
+              </div>
+            </li>
+            <li class="about-row">
+              <h3>My hobbies</h3>
+              <div>
+                <p>In my spare time, you&rsquo;ll find me either learning something new, playing COD or FC24. I like listening to music, watching movies and traveling which helps me understand life and approach problems in different ways. Photography is the other one: I shoot wherever I go, and the pictures live on the <a class="link" href="/photos">Photos</a> page.</p>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="uses-title">
+          <h2 id="uses-title">Uses</h2>
+          <ul class="ruled about-list">
+            <li class="kv"><span class="k">Stack</span><span class="v">React, Remix, Next.js, TypeScript, Go, Python, Prisma, Tailwind CSS, Vite</span></li>
+            <li class="kv"><span class="k">Testing</span><span class="v">Testing Library, Jest, Cypress, MSW</span></li>
+            <li class="kv"><span class="k">Editor</span><span class="v">WebStorm, PyCharm, VS Code for markdown and quick edits, Dank Mono</span></li>
+            <li class="kv"><span class="k">Terminal</span><span class="v">iTerm2 with Oh My Zsh</span></li>
+            <li class="kv"><span class="k">Hosting</span><span class="v">Fly.io, Vercel, Cloudinary, GitHub Actions</span></li>
+            <li class="kv"><span class="k">Desk</span><span class="v">MacBook Pro 16-inch (2021, M1 Max), Steelcase adjustable desk, Logitech MX Keys and MX Master 3, Dell P2721Q and Xiaomi 34&Prime; curved monitor</span></li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="elsewhere-title">
+          <h2 id="elsewhere-title">Elsewhere</h2>
+          <ul class="ruled">
+            <li><a class="kv" href="mailto:me@felixyeboah.dev"><span class="k">Email</span><span class="v"><span class="u">me@felixyeboah.dev</span></span></a></li>
+            <li><a class="kv" href="https://github.com/felixyeboah"><span class="k">GitHub</span><span class="v"><span class="u">github.com/felixyeboah</span></span></a></li>
+            <li><a class="kv" href="https://x.com/sudocode_"><span class="k">X</span><span class="v"><span class="u">x.com/sudocode_</span></span></a></li>
+            <li><a class="kv" href="/resume"><span class="k">Résumé</span><span class="v"><span class="u">felixyeboah.dev/resume</span></span></a></li>
+            <li><a class="kv" href="/photos"><span class="k">Photos</span><span class="v"><span class="u">felixyeboah.dev/photos</span></span></a></li>
+          </ul>
+        </section>
+  
+</Site>
+
+<style is:global>
+      /* portrait: 3:4 source shown 3:2 so it sits inside the reading column */
+      .about-portrait { margin-top: var(--s-7); }
+      .about-portrait .frame { aspect-ratio: 3 / 2; }
+      /* the photo is upright (3:4); the frame shows the band from the top of the head to the hand */
+      .about-portrait .frame img { height: 100%; object-fit: cover; object-position: center 30%; }
+
+      .about-more { margin-top: var(--s-4); font-size: var(--t-sm); }
+
+      /* heading-left / text-right rows, same grid as .xp and .kv */
+      .about-row {
+        display: grid;
+        grid-template-columns: 9rem minmax(0, 1fr);
+        column-gap: var(--s-5);
+        align-items: baseline;
+        padding: var(--s-4) 0;
+      }
+      .about-row h3 { margin: 0; font-size: var(--t-md); font-weight: 600; }
+      .about-row p { color: var(--muted); text-wrap: pretty; }
+      .about-row p + p { margin-top: var(--s-3); }
+
+      .about-list .v { font-weight: 400; text-wrap: pretty; }
+
+      a.kv { text-decoration: none; }
+
+      @media (max-width: 640px) {
+        .about-portrait { margin-top: var(--s-6); }
+        .about-row { grid-template-columns: minmax(0, 1fr); row-gap: var(--s-1); }
+      }
+</style>

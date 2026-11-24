@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>How I got here pt.2 The Software Development Journey — Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/column.css">
+<style>
+  .post-head h1 { text-wrap: balance; }
+
+  /* 32em ~ 69 characters per line (Schibsted Grotesk averages ~7.4px per character at 16px) */
+  .post-body { margin-top: var(--s-7); }
+  .post-body > :first-child { margin-top: 0; }
+  .post-body hr + h2 { margin-top: var(--s-7); }
+  .post-body .post-note { font-size: var(--t-sm); color: var(--muted); }
+  .post-body .post-note + h2 { margin-top: var(--s-7); }
+  .post-body .post-label + ul { margin-top: var(--s-3); }
+  .post-body h2, .post-body h3 { scroll-margin-top: var(--s-5); text-wrap: balance; }
+
+  /* tables, when a post has them: hairline rows, scroll on narrow screens */
+  .post-table { overflow-x: auto; }
+  .post-table table { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
+  .post-table th, .post-table td { padding: var(--s-2) var(--s-4) var(--s-2) 0; border-bottom: 1px solid var(--hair); text-align: left; vertical-align: top; }
+  .post-table th { font-weight: 600; }
+
+  .post-author {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1) var(--s-3);
+    margin-top: var(--s-8);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--hair);
+    font-size: var(--t-sm);
+  }
+  .post-author .name { font-weight: 600; margin-right: var(--s-1); }
+  .post-author .link { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
+
+  .post-pager { margin-top: var(--s-7); }
+  .post-all { margin-top: var(--s-5); }
+  .post-all .link { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--t-sm); }
+
+  @media (max-width: 640px) {
+    .post-body { margin-top: var(--s-6); }
+    .post-body > h2 { margin-top: var(--s-7); }
+    .post-body hr + h2 { margin-top: var(--s-6); }
+    .post-body hr { margin-top: var(--s-6); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="column">
+  <header class="site-header">
+    <a class="identity" href="index.html" aria-label="Felix Yeboah, home">
+      <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="">
+      <span>Felix Yeboah</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html">Work</a></li>
+        <li><a href="writing.html" aria-current="page">Writing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="photos.html">Photos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article aria-labelledby="post-title">
+      <header class="page-head post-head">
+        <a class="crumb" href="writing.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M8.5 3.5L5 7l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Writing</a>
+        <h1 id="post-title">How I got here pt.2 The Software Development Journey</h1>
+        <ul class="meta-line">
+          <li><time class="mono" datetime="2021-07-12">12 Jul 2021</time></li>
+          <li>4 min read</li>
+        </ul>
+      </header>
+
+      <div class="prose post-body">
+<p>Life took a challenging turn for me after high school as I found myself needing to navigate the world on my own. While I had a roof over my head and some food to eat at home, it was far from satisfying. The situation pushed me to seek employment and take responsibility for myself, but I had a different plan in mind. Driven by my love for computers, I enrolled in a graphic design school to pursue my own path. My early fascination with technology, starting from creating my first email in primary school and having access to a desktop computer at a young age, fueled my determination.</p>
+<p>I began working as a cafe attendant in Dansoman, a suburb of Accra, for a few months. It was a decent job that allowed me to study online and connect with new people. However, it soon became monotonous, and I yearned for something more fulfilling. So, I made the decision to quit and took some time off. Eventually, I found another cafe attendant job, but this one was different. My boss was a skilled database manager, and I saw an opportunity to learn from one of the best in the country.</p>
+<p>This new job turned out to be a blessing in disguise. My boss took the time to teach me database management, particularly PostgreSQL. I delved into creating and querying databases and even gained experience in developing a user interface. Although I didn’t pursue formal education, the practical knowledge I gained laid a solid foundation for a potential career. I continued to learn from my boss until a turning point arrived when one of his developer friends came into the picture.</p>
+<p>This software developer was working on a website project with my boss, but due to my boss’s unavailability, he had to wait. Intrigued by his work, I kindly asked if he could teach me, but he was occupied with his own commitments. He suggested I start learning from online tutorials on platforms like YouTube. It was a revelation for me, as I had only used YouTube for music videos before. I immediately began exploring tutorials and found an excellent channel to learn HTML and CSS. I immersed myself in the content, spending countless hours studying and understanding the concepts. Sleep became secondary to my thirst for knowledge.</p>
+<p>Day by day, I practiced relentlessly and worked on dummy projects. This routine continued for a year. At some point, I made the bold decision to quit my job and focus solely on website development. In 2014, I secured my first project—a website for a hotel. I completed it within a week, and the client was delighted with the outcome. This success led to recommendations, and I started receiving more projects through word-of-mouth referrals. In 2016, I landed my first official web development job at WopeDigital, where I worked for a year before deciding to move on.</p>
+<figure class="pull" aria-hidden="true" data-reveal><svg class="pull__mark" viewBox="0 0 44 44" fill="none"><path d="M8 30c0-8 4-14 11-17l1.5 2.6C16 18 14 21.4 14 25h6v11H8v-6Zm18 0c0-8 4-14 11-17l1.5 2.6C34 18 32 21.4 32 25h6v11H26v-6Z" fill="currentColor"/></svg><blockquote><p>Sleep became secondary<span class="pull__rest"> to my thirst for knowledge.</span></p></blockquote></figure>
+<p>Continuing my education, I delved into learning JavaScript, which proved to be a challenging endeavor that took me several years to fully grasp. With HTML, CSS, and JavaScript in my arsenal, I embarked on projects and honed my skills. In 2018, I joined another web development company where I had the opportunity to learn and grow further. Making mistakes, fixing them, and continuously learning became the norm. I also had the privilege of interacting with experienced professionals in the field, expanding my knowledge base. I ventured into JavaScript frameworks like React and Vue and utilized them in various projects. I’m forever grateful for the supportive environment at that company, where making mistakes was encouraged and everyone fostered a sense of camaraderie.</p>
+<p>In 2019, I received an offer from a startup company where I am currently employed. They entrusted me with developing their website and a dashboard for their clients. Working on this project was a significant milestone for me, as it allowed me to showcase my skills and contribute to a noteworthy venture.</p>
+<p>Impressed with my work, the startup offered me a permanent position. While I cherished my previous workplace for its freedom to work on other projects and pursue self-study, I decided to join the startup on a part-time basis initially to familiarize myself with the team and the company’s culture.</p>
+<p>Finally, in 2020, I made the full transition to the startup and became the Senior Frontend Developer at Complete Farmer. I take pride in ensuring that the frontend aspects of our software are up to date and user-friendly. Additionally, I oversee and mentor a group of National Service Personnel who have also become software developers at the company. Witnessing their progress and being able to impart knowledge to them brings me immense satisfaction and a sense of giving back to society.</p>
+<p>Being a software developer has been a fulfilling journey, but it hasn’t been without its challenges. Burnout, in particular, has posed significant difficulties. It robs me of my passion, happiness, and enjoyment in my work. In part one, I mentioned that work is both my hobby and my best friend, which makes burnout especially detrimental to my well-being. Recently, I’ve faced numerous personal and professional challenges, leaving me feeling depressed on multiple occasions. It often feels like the world is indifferent to my struggles, with everyone focused on their own interests. My work only cares about my output, my family prioritizes financial matters, and life seems to revolve around mere existence.</p>
+<p>These past few months have been incredibly challenging, and I’ve been striving to escape this difficult situation. However, every attempt seems to exacerbate the problem further. I hope that one day, I will find the strength to break free from this unfortunate predicament.</p>
+<p>In the <a href="post-how-i-got-here-pt-3-the-love-life.html">next part</a>, I will delve into my love life and provide an update on my current situation.</p>
+      </div>
+
+      <footer class="post-author">
+        <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="" loading="lazy">
+        <span class="name">Felix Yeboah</span>
+        <a class="link" href="https://x.com/sudocode_">@sudocode_ on X</a>
+      </footer>
+    </article>
+
+    <nav class="pager post-pager" aria-label="More writing">
+      <a href="post-how-i-got-here-pt-1-the-childhood.html" rel="prev">
+        <span class="dir">Previous</span>
+        <span class="name"><span class="u">How I got here pt.1 The Childhood</span></span>
+      </a>
+      <a href="post-how-i-got-here-pt-3-the-love-life.html" rel="next">
+        <span class="dir">Next</span>
+        <span class="name"><span class="u">How I got here pt.3 The Love Life</span></span>
+      </a>
+    </nav>
+
+    <p class="post-all"><a class="link" href="writing.html">All writing</a></p>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+    <div class="footer-links">
+      <a href="https://github.com/felixyeboah">GitHub</a>
+      <a href="https://x.com/sudocode_">X</a>
+      <a href="resume.html">Résumé</a>
+      <a href="photos.html">Photos</a>
+      <span class="copy">© 2026</span>
+    </div>
+  </footer>
+</div>
+<script>
+document.querySelectorAll('.code').forEach(function (fig) {
+  var b = fig.querySelector('.code__copy'), pre = fig.querySelector('pre');
+  if (!b || !pre || !navigator.clipboard) { if (b) b.hidden = true; return; }
+  b.addEventListener('click', function () {
+    var text = [].map.call(pre.querySelectorAll('.l'), function (l) { return l.textContent; }).join('\n') || pre.textContent;
+    navigator.clipboard.writeText(text).then(function () {
+      b.classList.add('is-done'); b.querySelector('span').textContent = 'Copied';
+      setTimeout(function () { b.classList.remove('is-done'); b.querySelector('span').textContent = 'Copy'; }, 1600);
+    });
+  });
+});
+</script>
+</body>
+</html>

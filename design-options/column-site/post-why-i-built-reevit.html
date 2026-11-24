@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Why I Built Reevit: A Developer’s Reaction to a Real Problem — Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/column.css">
+<style>
+  .post-head h1 { text-wrap: balance; }
+
+  /* 32em ~ 69 characters per line (Schibsted Grotesk averages ~7.4px per character at 16px) */
+  .post-body { margin-top: var(--s-7); }
+  .post-body > :first-child { margin-top: 0; }
+  .post-body hr + h2 { margin-top: var(--s-7); }
+  .post-body .post-note { font-size: var(--t-sm); color: var(--muted); }
+  .post-body .post-note + h2 { margin-top: var(--s-7); }
+  .post-body .post-label + ul { margin-top: var(--s-3); }
+  .post-body h2, .post-body h3 { scroll-margin-top: var(--s-5); text-wrap: balance; }
+
+  /* tables, when a post has them: hairline rows, scroll on narrow screens */
+  .post-table { overflow-x: auto; }
+  .post-table table { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
+  .post-table th, .post-table td { padding: var(--s-2) var(--s-4) var(--s-2) 0; border-bottom: 1px solid var(--hair); text-align: left; vertical-align: top; }
+  .post-table th { font-weight: 600; }
+
+  .post-author {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1) var(--s-3);
+    margin-top: var(--s-8);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--hair);
+    font-size: var(--t-sm);
+  }
+  .post-author .name { font-weight: 600; margin-right: var(--s-1); }
+  .post-author .link { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
+
+  .post-pager { margin-top: var(--s-7); }
+  .post-all { margin-top: var(--s-5); }
+  .post-all .link { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--t-sm); }
+
+  @media (max-width: 640px) {
+    .post-body { margin-top: var(--s-6); }
+    .post-body > h2 { margin-top: var(--s-7); }
+    .post-body hr + h2 { margin-top: var(--s-6); }
+    .post-body hr { margin-top: var(--s-6); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="column">
+  <header class="site-header">
+    <a class="identity" href="index.html" aria-label="Felix Yeboah, home">
+      <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="">
+      <span>Felix Yeboah</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html">Work</a></li>
+        <li><a href="writing.html" aria-current="page">Writing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="photos.html">Photos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article aria-labelledby="post-title">
+      <header class="page-head post-head">
+        <a class="crumb" href="writing.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M8.5 3.5L5 7l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Writing</a>
+        <h1 id="post-title">Why I Built Reevit: A Developer’s Reaction to a Real Problem</h1>
+        <ul class="meta-line">
+          <li><time class="mono" datetime="2025-12-01">1 Dec 2025</time></li>
+          <li>3 min read</li>
+        </ul>
+      </header>
+
+      <div class="prose post-body">
+<aside class="callout callout--info" role="note"><p class="callout__label mono"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-width="1.2"/><path d="M8 7.25v4M8 4.9v.1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Editor’s note</p><p>Primeflow has since been renamed Reevit. The post below keeps its original wording.</p></aside>
+<h2 id="the-origin-story">The Origin Story</h2>
+<p>I didn’t set out to build a payment product. <strong>Primeflow</strong> started from a frustration common to many developers: <strong>Payment integration fragility.</strong></p>
+<p>It began with an e-commerce app I built for a client selling natural spice products. Everything worked perfectly until the payments started failing. The webhook, the critical automated message from the Payment Service Provider (PSP) became unreliable. Sometimes it fired, sometimes it was total silence.</p>
+<p>Switching PSPs meant rewriting almost every part of the integration. It was a painful amount of work for something that should’ve been simple.</p>
+<p><strong>The Realization:</strong> If I struggled like this with one client, how many other developers are silently dealing with the same problem? How many merchants accept broken payment flows as "normal"?</p>
+<p>Inspired by the enterprise architectures of companies like <em>Primer.io</em>, but simplified for builders starting from scratch, I decided to build a solution. Not a Frankenstein monster. Just something practical.</p>
+<figure class="pull" aria-hidden="true" data-reveal><svg class="pull__mark" viewBox="0 0 44 44" fill="none"><path d="M8 30c0-8 4-14 11-17l1.5 2.6C16 18 14 21.4 14 25h6v11H8v-6Zm18 0c0-8 4-14 11-17l1.5 2.6C34 18 32 21.4 32 25h6v11H26v-6Z" fill="currentColor"/></svg><blockquote><p>It was a painful amount of work<span class="pull__rest"> for something that should’ve been simple.</span></p></blockquote></figure>
+<hr>
+<h2 id="core-philosophy">Core Philosophy</h2>
+<p>The goal was simple. I wanted to build a "Universal Remote" for payments.</p>
+<ol><li><strong>A Single Integration Layer:</strong> Developers integrate once.</li><li><strong>Consistent Data Structures:</strong> Standardized request and response bodies so switching PSPs never requires rewriting business logic.</li><li><strong>Zero Downtime:</strong> If your app communicates with Primeflow, it shouldn’t matter if the backend forwards to Hubtel, Paystack, or Stripe.</li></ol>
+<hr>
+<h2 id="key-features">Key Features</h2>
+<h3 id="automatic-fallback-routing">Automatic Fallback Routing</h3>
+<p><em>The biggest win for merchants.</em> We connect multiple PSPs—one as default, one as backup. If <strong>PSP A</strong> has issues or goes offline, Primeflow:</p>
+<ul><li>Automatically forwards the transaction to <strong>PSP B</strong>.</li><li>Checks health in real-time.</li><li>Keeps the business running without manual toggles or emergency code rewrites.</li></ul>
+<h3 id="merchant-first-fraud-control">Merchant-First Fraud Control</h3>
+<p>Most PSPs run their own fraud checks, but Primeflow adds a layer of <strong>merchant-level control</strong> <em>before</em> the transaction leaves the system.</p>
+<ul><li><strong>Geography:</strong> Apply rules based on country.</li><li><strong>Transaction Limits:</strong> Set rules based on amounts.</li><li><strong>Blocklists:</strong> Block specific BIN ranges or card types.</li><li><strong>Custom Policies:</strong> It’s like checking who’s at the door before opening it—not after.</li></ul>
+<h3 id="enterprise-grade-security">Enterprise-Grade Security</h3>
+<p>We treat merchant credentials as secrets in every possible sense.</p>
+<ul><li><strong>Envelope Encryption:</strong> Merchant client/secret keys are encrypted using a temporary Data Encryption Key (DEK), which is protected by a KMS-managed Master Key (KEK).</li><li><strong>In-Memory Decryption:</strong> Keys are only decrypted at call-time.</li><li><strong>Zero Leakage:</strong> Nothing is stored in plain text. Nothing is leaked to logs. Nothing touches external traffic until encrypted.</li></ul>
+<hr>
+<h2 id="status-roadmap">Status &amp; Roadmap</h2>
+<p>The current version is live and serving early clients (including the original spice merchant!). We are actively pushing the product further to give merchants full control.</p>
+<p><strong>Currently Building:</strong></p>
+<ul><li><strong>BYOK (Bring Your Own Key):</strong> Full support for merchants to securely input their own provider API keys.</li><li><strong>Custom Notifications:</strong> Configurable Email and SMS templates.</li><li><strong>Team Alerts:</strong> Webhooks for Slack, Microsoft Teams, and other platforms.</li><li><strong>Post-Payment Actions:</strong> Trigger workflows directly from the dashboard after a successful transaction.</li></ul>
+<hr>
+<h2 id="why-this-matters">Why This Matters</h2>
+<p>No developer wants to spend days relearning PSP integrations every time a provider changes. And no merchant wants to lose business just because a webhook decided not to behave today.</p>
+<p><strong>Primeflow is built for:</strong></p>
+<ul><li><strong>Developers</strong> building payment features who want a clean, unified API.</li><li><strong>Merchants</strong> who depend on stable transactions.</li><li><strong>Teams</strong> requiring secure, flexible, encrypted payment routing.</li></ul>
+<p>It’s not the final version. But it’s a start I believe in.</p>
+<blockquote><p><em>"Not glamorous. Just useful. And sometimes, that’s all innovation really needs to be."</em></p></blockquote>
+      </div>
+
+      <footer class="post-author">
+        <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="" loading="lazy">
+        <span class="name">Felix Yeboah</span>
+        <a class="link" href="https://x.com/sudocode_">@sudocode_ on X</a>
+      </footer>
+    </article>
+
+    <nav class="pager post-pager" aria-label="More writing">
+      <a href="post-my-2024-in-review.html" rel="prev">
+        <span class="dir">Previous</span>
+        <span class="name"><span class="u">A Year of Resilience and Growth</span></span>
+      </a>
+      <a href="post-redesigning-my-portfolio-dark-studio.html" rel="next">
+        <span class="dir">Next</span>
+        <span class="name"><span class="u">Redesigning My Portfolio: The Dark Studio Design Language</span></span>
+      </a>
+    </nav>
+
+    <p class="post-all"><a class="link" href="writing.html">All writing</a></p>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+    <div class="footer-links">
+      <a href="https://github.com/felixyeboah">GitHub</a>
+      <a href="https://x.com/sudocode_">X</a>
+      <a href="resume.html">Résumé</a>
+      <a href="photos.html">Photos</a>
+      <span class="copy">© 2026</span>
+    </div>
+  </footer>
+</div>
+<script>
+document.querySelectorAll('.code').forEach(function (fig) {
+  var b = fig.querySelector('.code__copy'), pre = fig.querySelector('pre');
+  if (!b || !pre || !navigator.clipboard) { if (b) b.hidden = true; return; }
+  b.addEventListener('click', function () {
+    var text = [].map.call(pre.querySelectorAll('.l'), function (l) { return l.textContent; }).join('\n') || pre.textContent;
+    navigator.clipboard.writeText(text).then(function () {
+      b.classList.add('is-done'); b.querySelector('span').textContent = 'Copied';
+      setTimeout(function () { b.classList.remove('is-done'); b.querySelector('span').textContent = 'Copy'; }, 1600);
+    });
+  });
+});
+</script>
+</body>
+</html>

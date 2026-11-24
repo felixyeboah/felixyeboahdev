@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Résumé — Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/column.css">
+<style>
+  .resume-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3) var(--s-4);
+  }
+  .resume-print[hidden] { display: none; }
+  .resume-print svg { width: 16px; height: 16px; flex: none; }
+
+  .resume-summary {
+    font-size: var(--t-lg);
+    line-height: 1.5;
+    letter-spacing: -0.008em;
+    max-width: 36em;
+    text-wrap: pretty;
+  }
+
+  .resume-xp .desc { margin-top: var(--s-2); color: var(--muted); text-wrap: pretty; }
+  .resume-xp .desc + .desc { margin-top: var(--s-2); }
+
+  .resume-skills .v { font-weight: 400; text-wrap: pretty; }
+
+  @media (max-width: 640px) {
+    .resume-xp .years { order: 0; }
+  }
+
+  @media print {
+    @page { margin: 16mm; }
+    :root { --page: #fff; --ink: #000; --muted: #333; --hair: #bbb; }
+    body { background: #fff; color: #000; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .skip, .nav, .site-footer, .btn { display: none !important; }
+    .site-header { padding-top: 0; }
+    .page-head { margin-top: var(--s-5); }
+    main > section { margin-top: var(--s-6); }
+    h2 { break-after: avoid; }
+    .xp, .kv, .row { break-inside: avoid; }
+    .u::after { display: none; }
+    .meta-line a { text-decoration: none; }
+    .meta-line a[href^="https"]::after { content: " " attr(href); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="column">
+  <header class="site-header">
+    <a class="identity" href="index.html" aria-label="Felix Yeboah, home">
+      <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="">
+      <span>Felix Yeboah</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html">Work</a></li>
+        <li><a href="writing.html">Writing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="photos.html">Photos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="page-head" aria-labelledby="page-title">
+      <div class="resume-title">
+        <h1 id="page-title">Résumé</h1>
+        <button class="btn btn--ghost resume-print" type="button" data-print hidden>
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4.5 6V2.5h7V6M4.5 11.5h-2v-5h11v5h-2M4.5 9.5h7v4h-7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          Print
+        </button>
+      </div>
+      <ul class="meta-line">
+        <li>Accra, Ghana</li>
+        <li><a class="link" href="mailto:me@felixyeboah.dev">me@felixyeboah.dev</a></li>
+        <li><a class="link" href="https://github.com/felixyeboah">GitHub</a></li>
+        <li><a class="link" href="https://x.com/sudocode_">X</a></li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="summary-title">
+      <h2 id="summary-title">Summary</h2>
+      <p class="resume-summary">Self-taught, based in Accra. Ten years taking products from first sketch to production — React and Remix on the front, Go and Postgres underneath.</p>
+    </section>
+
+    <section aria-labelledby="experience-title">
+      <h2 id="experience-title">Experience</h2>
+      <ul class="ruled resume-xp">
+        <li class="xp">
+          <span class="years mono">2019 – Present</span>
+          <div>
+            <span class="role">Senior Frontend Engineer</span> <span class="org">· Complete Farmer</span>
+            <p class="desc">Frontend engineer building performant, scalable products used by clients and in-house. I review code from other engineers and manage junior developers.</p>
+            <p class="desc">The Grower Agent Platform has onboarded over 60,000 farmers and increased their productivity by 30%.</p>
+            <p class="desc">I also run the Buyer Dashboard, where buyers source crops from Complete Farmer&rsquo;s farmers. I manage it day to day, check that every flow works, iterate on it as buyers use it, and keep it stable.</p>
+          </div>
+        </li>
+        <li class="xp">
+          <span class="years mono">2022</span>
+          <div>
+            <span class="role">Frontend Engineer</span> <span class="org">· Primer API Limited</span>
+            <p class="desc">Frontend engineer contributing directly to the success and growth of the product area. Working closely with Product, Design, and Engineering teams to bring elegant and intuitive experiences to life. Heavily involved in key technology decisions and features, building for scale, and optimizing for output.</p>
+          </div>
+        </li>
+        <li class="xp">
+          <span class="years mono">2018 – 2021</span>
+          <div>
+            <span class="role">Web Developer</span> <span class="org">· Bee and Bloom</span>
+            <p class="desc">Frontend engineer role focused on implementing small to medium features and leads on design. Make sure every feature implemented is well tested and is used by end-users.</p>
+          </div>
+        </li>
+        <li class="xp">
+          <span class="years mono">2020 – 2024</span>
+          <div>
+            <span class="role">Independent client work</span> <span class="org">· Payments, commerce, drones, ride-sharing and more</span>
+            <p class="desc">Products and sites designed and built end to end for clients.</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="earlier-title">
+      <h2 id="earlier-title">Earlier</h2>
+      <ul class="ruled resume-xp">
+        <li class="xp">
+          <span class="years mono">2016</span>
+          <div><span class="role">First job as a software developer</span></div>
+        </li>
+        <li class="xp">
+          <span class="years mono">2012 – 2016</span>
+          <div>
+            <span class="role">Self-taught, freelancing</span>
+            <p class="desc">Started learning to code on my own after high school, working mostly as a freelancer.</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="skills-title">
+      <h2 id="skills-title">Skills</h2>
+      <ul class="ruled resume-skills">
+        <li class="kv"><span class="k">Engineering</span><span class="v">Web &amp; mobile apps end to end, Remix, Next.js, React, TypeScript, Paystack, Hubtel, Sanity</span></li>
+        <li class="kv"><span class="k">Design</span><span class="v">Product &amp; UI design in Figma, design systems with Tailwind, motion with GSAP and Framer, prototyping in code</span></li>
+        <li class="kv"><span class="k">Backend</span><span class="v">Go, Node, Postgres, Prisma, Mockery, AWS, Vercel</span></li>
+        <li class="kv"><span class="k">Community</span><span class="v">Remix Community Ghana lead, 1:1 mentoring, writing</span></li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="selected-title">
+      <h2 id="selected-title">Selected work</h2>
+      <ul class="ruled">
+        <li><a class="row" href="work-reevit.html"><span class="num mono">01</span><span class="label"><span class="name"><span class="u">Reevit</span></span><span class="cat">Payments</span></span><span class="domain mono">reevit.io</span></a></li>
+        <li><a class="row" href="work-reevit.html"><span class="num mono">02</span><span class="label"><span class="name"><span class="u">Miss Cookie Spices</span></span><span class="cat">E-commerce</span></span><span class="domain mono">misscookieghana.com</span></a></li>
+        <li><a class="row" href="work-reevit.html"><span class="num mono">03</span><span class="label"><span class="name"><span class="u">Waytu</span></span><span class="cat">Ride-sharing</span></span><span class="domain mono">waytu.io</span></a></li>
+        <li><a class="row" href="work-reevit.html"><span class="num mono">04</span><span class="label"><span class="name"><span class="u">Drobotix</span></span><span class="cat">Ag-Tech Drones</span></span><span class="domain mono">drobotixas.com</span></a></li>
+        <li><a class="row" href="work-reevit.html"><span class="num mono">05</span><span class="label"><span class="name"><span class="u">Studio Theon</span></span><span class="cat">Agency</span></span><span class="domain mono">studiotheon.com</span></a></li>
+        <li><a class="row" href="work-reevit.html"><span class="num mono">06</span><span class="label"><span class="name"><span class="u">Dasheen Atelier</span></span><span class="cat">Fashion</span></span><span class="domain mono">dasheenatelier.com</span></a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+    <div class="footer-links">
+      <a href="https://github.com/felixyeboah">GitHub</a>
+      <a href="https://x.com/sudocode_">X</a>
+      <a href="resume.html">Résumé</a>
+      <a href="photos.html">Photos</a>
+      <span class="copy">© 2026</span>
+    </div>
+  </footer>
+</div>
+<script>
+  (function () {
+    var b = document.querySelector('[data-print]');
+    if (!b || !window.print) return;
+    b.hidden = false;
+    b.addEventListener('click', function () { window.print(); });
+  })();
+</script>
+</body>
+</html>

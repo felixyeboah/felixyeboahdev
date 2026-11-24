@@ -1,0 +1,507 @@
+'use client';
+
+import { type CSSProperties, type MouseEvent as ReactMouseEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+
+import { type Photo, pad3, photoFull } from '@/lib/site/photos';
+
+import { Frame } from './frame';
+import type { ViewProps } from './gallery';
+
+const motionOn = () => document.documentElement.classList.contains('motion');
+
+const altFor = (p: Photo, n: number, setTitle: Record<string, string>) =>
+    p.title ?? `Photograph ${pad3(n)}, ${setTitle[p.set] ?? p.set}${p.location ? ', ' + p.location : ''}`;
+
+/** Plain left click only; modified clicks keep the link's native behaviour (open the full image in a new tab). */
+const plainClick = (e: ReactMouseEvent) => e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
+
+function Caption({ p, n, setTitle }: { p: Photo; n: number; setTitle: Record<string, string> }) {
+    return (
+        <span className="pcap mono" aria-hidden="true">
+            <b>{pad3(n)}</b>
+            <span>{p.location ?? setTitle[p.set]}</span>
+        </span>
+    );
+}
+
+/* =====================================================================
+   Wall: masonry columns that drift at different speeds as the page scrolls
+   ===================================================================== */
+const DRIFT = [0, 0.085, 0.03, 0.11];
+
+export function Wall({ list, no, setTitle, onOpen }: ViewProps) {
+    const ref = useRef<HTMLDivElement>(null);
+    /* three columns is what the server renders; the real count is measured before first paint */
+    const [cols, setCols] = useState(3);
+
+    useLayoutEffect(() => {
+        const el = ref.current!;
+        const measure = () => {
+            const w = el.clientWidth;
+            setCols(w < 700 ? 2 : w < 1500 ? 3 : 4);
+        };
+        measure();
+        const ro = new ResizeObserver(measure);
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, []);
+
+    /* each photo goes to the shortest column so far, which keeps reading order roughly left-to-right */
+    const columns = useMemo(() => {
+        const out: Photo[][] = Array.from({ length: cols }, () => []);
+        const heights = new Array(cols).fill(0);
+        for (const p of list) {
+            const i = heights.indexOf(Math.min(...heights));
+            out[i].push(p);
+            heights[i] += p.h / p.w;
+        }
+        return out;
+    }, [list, cols]);
+
+    /* unmask tiles as they scroll in */
+    useEffect(() => {
+        const el = ref.current!;
+        const tiles = el.querySelectorAll('.pt:not(.is-in)');
+        if (!motionOn() || !('IntersectionObserver' in window)) {
+            tiles.forEach((t) => t.classList.add('is-in'));
+            return;
+        }
+        const io = new IntersectionObserver(
+            (entries) =>
+                entries.forEach((en) => {
+                    if (!en.isIntersecting) return;
+                    en.target.classList.add('is-in');
+                    io.unobserve(en.target);
+                }),
+            { rootMargin: '0px 0px -6% 0px', threshold: 0.05 },
+        );
+        tiles.forEach((t) => io.observe(t));
+        return () => io.disconnect();
+    }, [columns]);
+
+    /* column drift */
+    useEffect(() => {
+        const el = ref.current!;
+        if (!motionOn() || cols < 3) return;
+        const colEls = Array.from(el.children) as HTMLElement[];
+        let raf = 0;
+        const apply = () => {
+            raf = 0;
+            const travelled = Math.max(0, innerHeight * 0.6 - el.getBoundingClientRect().top);
+            colEls.forEach((c, i) => (c.style.transform = `translate3d(0,${(-travelled * DRIFT[i % DRIFT.length]).toFixed(1)}px,0)`));
+        };
+        const onScroll = () => {
+            if (!raf) raf = requestAnimationFrame(apply);
+        };
+        apply();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        return () => {
+            cancelAnimationFrame(raf);
+            window.removeEventListener('scroll', onScroll);
+            window.removeEventListener('resize', onScroll);
+            colEls.forEach((c) => (c.style.transform = ''));
+        };
+    }, [cols, columns]);
+
+    return (
+        <div className="wrap">
+            <div className="wall" ref={ref} style={{ '--cols': cols } as CSSProperties}>
+                {columns.map((col, ci) => (
+                    <div className="wall__col" key={ci}>
+                        {col.map((p) => {
+                            const n = no.get(p.id)!;
+                            return (
+                                <a
+                                    key={p.id}
+                                    className="pt"
+                                    href={photoFull(p)}
+                                    data-id={p.id}
+                                    data-cur="View"
+                                    style={{ aspectRatio: `${p.w} / ${p.h}`, '--d': ci * 70 + 'ms' } as CSSProperties}
+                                    onClick={(e) => {
+                                        if (!plainClick(e)) return;
+                                        e.preventDefault();
+                                        onOpen(p.id, e.currentTarget.querySelector<HTMLElement>('.fr'));
+                                    }}
+                                >
+                                    <Frame p={p} alt={altFor(p, n, setTitle)} sizes="(max-width: 700px) 50vw, (max-width: 1500px) 33vw, 25vw" />
+                                    <Caption p={p} n={n} setTitle={setTitle} />
+                                </a>
+                            );
+                        })}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+/* =====================================================================
+   Reel: one horizontal strip. Wheel, drag, swipe or keyboard to travel; each photograph slides
+   a little inside its own frame as it crosses the screen.
+   ===================================================================== */
+export function Reel({ list, no, setTitle, onOpen }: ViewProps) {
+    const ref = useRef<HTMLDivElement>(null);
+    const bar = useRef<HTMLElement>(null);
+    const count = useRef<HTMLSpanElement>(null);
+    const dragged = useRef(false);
+
+    useEffect(() => {
+        const el = ref.current!;
+        const frames = Array.from(el.querySelectorAll<HTMLElement>('.rf'));
+        const motion = motionOn();
+        let raf = 0;
+        let glide = 0;
+
+        const paint = () => {
+            raf = 0;
+            const vw = el.clientWidth;
+            const mid = el.getBoundingClientRect().left + vw / 2;
+            let nearest = 0;
+            let best = Infinity;
+            frames.forEach((f, i) => {
+                const r = f.getBoundingClientRect();
+                const d = r.left + r.width / 2 - mid;
+                if (Math.abs(d) < best) {
+                    best = Math.abs(d);
+                    nearest = i;
+                }
+                if (motion && r.right > -200 && r.left < innerWidth + 200) f.style.setProperty('--px', (-(d / vw) * 6).toFixed(2) + '%');
+            });
+            const max = el.scrollWidth - vw;
+            if (bar.current) bar.current.style.transform = `scaleX(${max > 0 ? Math.max(0.02, el.scrollLeft / max) : 1})`;
+            if (count.current) count.current.textContent = pad3(nearest + 1);
+        };
+        const queue = () => {
+            if (!raf) raf = requestAnimationFrame(paint);
+        };
+
+        /* a vertical wheel travels the strip until it runs out, then the page scrolls on */
+        const onWheel = (e: WheelEvent) => {
+            if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+            const max = el.scrollWidth - el.clientWidth;
+            if ((e.deltaY < 0 && el.scrollLeft <= 0) || (e.deltaY > 0 && el.scrollLeft >= max - 1)) return;
+            e.preventDefault();
+            el.scrollLeft += e.deltaY;
+        };
+
+        /* mouse drag with a little glide (touch already scrolls natively) */
+        let down = false;
+        let startX = 0;
+        let startLeft = 0;
+        let lastX = 0;
+        let v = 0;
+        const onDown = (e: PointerEvent) => {
+            if (e.pointerType !== 'mouse' || e.button !== 0) return;
+            down = true;
+            dragged.current = false;
+            startX = lastX = e.clientX;
+            startLeft = el.scrollLeft;
+            v = 0;
+            cancelAnimationFrame(glide);
+        };
+        const onMove = (e: PointerEvent) => {
+            if (!down) return;
+            const dx = e.clientX - startX;
+            if (Math.abs(dx) > 5 && !dragged.current) {
+                dragged.current = true;
+                el.classList.add('is-drag');
+            }
+            v = e.clientX - lastX;
+            lastX = e.clientX;
+            if (dragged.current) el.scrollLeft = startLeft - dx;
+        };
+        const onUp = () => {
+            if (!down) return;
+            down = false;
+            el.classList.remove('is-drag');
+            if (!dragged.current || !motion) return;
+            const step = () => {
+                v *= 0.94;
+                el.scrollLeft -= v;
+                if (Math.abs(v) > 0.4) glide = requestAnimationFrame(step);
+            };
+            glide = requestAnimationFrame(step);
+        };
+
+        paint();
+        el.addEventListener('scroll', queue, { passive: true });
+        el.addEventListener('wheel', onWheel, { passive: false });
+        el.addEventListener('pointerdown', onDown);
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+        window.addEventListener('resize', queue);
+        return () => {
+            cancelAnimationFrame(raf);
+            cancelAnimationFrame(glide);
+            el.removeEventListener('scroll', queue);
+            el.removeEventListener('wheel', onWheel);
+            el.removeEventListener('pointerdown', onDown);
+            window.removeEventListener('pointermove', onMove);
+            window.removeEventListener('pointerup', onUp);
+            window.removeEventListener('resize', queue);
+        };
+    }, [list]);
+
+    return (
+        <div className="reelwrap">
+            <div className="reel" ref={ref} data-cur="Drag">
+                <div className="reel__track">
+                    {list.map((p, i) => {
+                        const n = no.get(p.id)!;
+                        return (
+                            <a
+                                key={p.id}
+                                className="rf"
+                                href={photoFull(p)}
+                                data-id={p.id}
+                                draggable={false}
+                                style={{ '--r': (p.w / p.h).toFixed(4) } as CSSProperties}
+                                onClick={(e) => {
+                                    if (dragged.current) {
+                                        e.preventDefault();
+                                        dragged.current = false;
+                                        return;
+                                    }
+                                    if (!plainClick(e)) return;
+                                    e.preventDefault();
+                                    onOpen(p.id, e.currentTarget.querySelector<HTMLElement>('.fr'));
+                                }}
+                            >
+                                <Frame p={p} alt={altFor(p, n, setTitle)} eager={i < 4} sizes="(max-width: 700px) 90vw, 60vw" />
+                                <Caption p={p} n={n} setTitle={setTitle} />
+                            </a>
+                        );
+                    })}
+                </div>
+            </div>
+            <div className="wrap reel__hud mono" aria-hidden="true">
+                <span>
+                    <span ref={count}>001</span> / {pad3(list.length)}
+                </span>
+                <span className="reel__bar">
+                    <i ref={bar} />
+                </span>
+            </div>
+        </div>
+    );
+}
+
+/* =====================================================================
+   Canvas: photographs scattered over an endless plane on three depths. Drag to wander; it drifts
+   on its own when left alone. Every tile exists once and wraps around the plane's edges.
+   ===================================================================== */
+type Tile = { p: Photo; key: string; x: number; y: number; w: number; h: number; depth: number };
+type Plane = { w: number; h: number; cw: number; ch: number; tiles: Tile[] };
+
+/** deterministic 0-1 from an integer, so the scatter is the same on every visit */
+const rand = (n: number) => {
+    const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+    return x - Math.floor(x);
+};
+const DEPTHS = [0.72, 1, 1.24];
+const mod = (n: number, m: number) => ((n % m) + m) % m;
+
+function scatter(list: Photo[], vw: number, vh: number): Plane {
+    const cw = vw < 700 ? 168 : vw < 1200 ? 236 : 288;
+    const ch = cw * 1.06;
+    const cols = Math.ceil(vw / cw) + 1;
+    const minRows = Math.ceil(vh / ch) + 1;
+    const src = list.slice(0, 90);
+    /* every photograph gets a cell; the list repeats only to fill the last row or a plane smaller than the screen */
+    const rows = Math.max(minRows, Math.ceil(src.length / cols));
+    const cells = src.length ? Array.from({ length: cols * rows }, (_, i) => src[i % src.length]) : [];
+    const tiles = cells.map((p, i): Tile => {
+        const depth = DEPTHS[Math.floor(rand(i + 3) * 3)];
+        const r = p.w / p.h;
+        let w = cw * (r > 1 ? 0.8 : 0.6) * (0.84 + rand(i + 11) * 0.3) * (0.82 + (depth - 0.72) * 0.5);
+        let h = w / r;
+        const cap = 0.92;
+        if (h > ch * cap) {
+            h = ch * cap;
+            w = h * r;
+        }
+        if (w > cw * cap) {
+            w = cw * cap;
+            h = w / r;
+        }
+        return {
+            p,
+            key: p.id + ':' + i,
+            w,
+            h,
+            depth,
+            x: (i % cols) * cw + rand(i + 29) * (cw - w),
+            y: Math.floor(i / cols) * ch + rand(i + 47) * (ch - h),
+        };
+    });
+    return { w: cols * cw, h: rows * ch, cw, ch, tiles };
+}
+
+export function Canvas({ list, no, setTitle, onOpen }: ViewProps) {
+    const ref = useRef<HTMLDivElement>(null);
+    const [size, setSize] = useState<{ w: number; h: number } | null>(null);
+    const dragged = useRef(false);
+
+    useLayoutEffect(() => {
+        const el = ref.current!;
+        const measure = () => setSize((s) => (s && s.w === el.clientWidth && s.h === el.clientHeight ? s : { w: el.clientWidth, h: el.clientHeight }));
+        measure();
+        const ro = new ResizeObserver(measure);
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, []);
+
+    const plane = useMemo(() => (size ? scatter(list, size.w, size.h) : null), [list, size]);
+
+    useEffect(() => {
+        const el = ref.current!;
+        if (!plane) return;
+        const nodes = Array.from(el.querySelectorAll<HTMLElement>('.ct'));
+        const motion = motionOn();
+        let px = 0;
+        let py = 0;
+        let vx = 0;
+        let vy = 0;
+        let raf = 0;
+        let visible = true;
+        let down = false;
+        let pid = -1;
+        let sx = 0;
+        let sy = 0;
+        let lx = 0;
+        let ly = 0;
+        let dirty = true;
+
+        const frame = () => {
+            raf = 0;
+            if (!down) {
+                if (motion) {
+                    px += vx - 0.32;
+                    py += vy - 0.14;
+                } else {
+                    px += vx;
+                    py += vy;
+                }
+                vx *= 0.93;
+                vy *= 0.93;
+                if (Math.abs(vx) < 0.02) vx = 0;
+                if (Math.abs(vy) < 0.02) vy = 0;
+            }
+            if (dirty || motion || vx || vy || down) {
+                plane.tiles.forEach((t, i) => {
+                    const x = mod(t.x + px * t.depth, plane.w) - plane.cw;
+                    const y = mod(t.y + py * t.depth, plane.h) - plane.ch;
+                    nodes[i].style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
+                });
+                dirty = false;
+            }
+            if (visible && (motion || down || vx || vy)) raf = requestAnimationFrame(frame);
+        };
+        const kick = () => {
+            if (!raf && visible) raf = requestAnimationFrame(frame);
+        };
+
+        const onDown = (e: PointerEvent) => {
+            if (e.pointerType === 'mouse' && e.button !== 0) return;
+            down = true;
+            pid = e.pointerId;
+            dragged.current = false;
+            sx = lx = e.clientX;
+            sy = ly = e.clientY;
+            vx = vy = 0;
+            kick();
+        };
+        const onMove = (e: PointerEvent) => {
+            if (!down || e.pointerId !== pid) return;
+            const touch = e.pointerType !== 'mouse';
+            if (!dragged.current && Math.hypot(e.clientX - sx, e.clientY - sy) > 6) {
+                dragged.current = true;
+                el.classList.add('is-drag');
+            }
+            if (!dragged.current) return;
+            vx = e.clientX - lx;
+            vy = touch ? 0 : e.clientY - ly; /* touch keeps vertical for scrolling the page */
+            px += vx;
+            py += vy;
+            lx = e.clientX;
+            ly = e.clientY;
+        };
+        const onUp = (e: PointerEvent) => {
+            if (e.pointerId !== pid) return;
+            down = false;
+            el.classList.remove('is-drag');
+            kick();
+        };
+        const onWheel = (e: WheelEvent) => {
+            if (e.ctrlKey || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+            e.preventDefault();
+            px -= e.deltaX;
+            dirty = true;
+            kick();
+        };
+        const onKey = (e: KeyboardEvent) => {
+            const step = { ArrowLeft: [1, 0], ArrowRight: [-1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
+            if (!step || e.target !== el) return;
+            e.preventDefault();
+            vx += step[0] * 14;
+            vy += step[1] * 14;
+            kick();
+        };
+
+        const io = new IntersectionObserver(([en]) => {
+            visible = en.isIntersecting;
+            if (visible) kick();
+        });
+        io.observe(el);
+        frame();
+        el.addEventListener('pointerdown', onDown);
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+        window.addEventListener('pointercancel', onUp);
+        el.addEventListener('wheel', onWheel, { passive: false });
+        el.addEventListener('keydown', onKey);
+        return () => {
+            cancelAnimationFrame(raf);
+            io.disconnect();
+            el.removeEventListener('pointerdown', onDown);
+            window.removeEventListener('pointermove', onMove);
+            window.removeEventListener('pointerup', onUp);
+            window.removeEventListener('pointercancel', onUp);
+            el.removeEventListener('wheel', onWheel);
+            el.removeEventListener('keydown', onKey);
+        };
+    }, [plane]);
+
+    return (
+        <div className="cv" ref={ref} data-cur="Drag" tabIndex={0} role="group" aria-label="Photographs on a draggable canvas. Arrow keys move it.">
+            {plane?.tiles.map((t) => {
+                const n = no.get(t.p.id)!;
+                return (
+                    <a
+                        key={t.key}
+                        className="ct"
+                        href={photoFull(t.p)}
+                        data-id={t.p.id}
+                        data-depth={t.depth}
+                        draggable={false}
+                        style={{ width: t.w, height: t.h, zIndex: Math.round(t.depth * 10) }}
+                        onClick={(e) => {
+                            if (dragged.current) {
+                                e.preventDefault();
+                                dragged.current = false;
+                                return;
+                            }
+                            if (!plainClick(e)) return;
+                            e.preventDefault();
+                            onOpen(t.p.id, e.currentTarget.querySelector<HTMLElement>('.fr'));
+                        }}
+                    >
+                        <Frame p={t.p} alt={altFor(t.p, n, setTitle)} eager sizes={`${Math.ceil(t.w)}px`} />
+                    </a>
+                );
+            })}
+        </div>
+    );
+}

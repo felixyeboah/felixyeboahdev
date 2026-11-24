@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Writing — Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/column.css">
+<style>
+  [hidden] { display: none !important; }
+
+  .writing-filter { margin-top: var(--s-6); }
+  /* chips stay 36px tall visually; the hit area grows to 44px into the row gap */
+
+  .writing-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    column-gap: var(--s-5);
+    padding: var(--s-3) 0;
+    min-height: 52px;
+    text-decoration: none;
+  }
+  .writing-row:has(.feature-desc) { padding: var(--s-4) 0; }
+  .writing-main { min-width: 0; }
+  .writing-title { font-weight: 500; text-wrap: pretty; }
+  .writing-row .feature-desc { max-width: 36em; }
+  .writing-row time { color: var(--muted); white-space: nowrap; text-align: right; }
+
+  main > .writing-year + .writing-year { margin-top: var(--s-8); }
+  .writing-rss { margin-top: var(--s-7); }
+  .writing-rss .link { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--t-sm); }
+
+  @media (max-width: 640px) {
+    .writing-row { grid-template-columns: minmax(0, 1fr); row-gap: 2px; }
+    .writing-row time { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="column">
+  <header class="site-header">
+    <a class="identity" href="index.html" aria-label="Felix Yeboah, home">
+      <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="">
+      <span>Felix Yeboah</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html">Work</a></li>
+        <li><a href="writing.html" aria-current="page">Writing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="photos.html">Photos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="page-head" aria-labelledby="writing-title">
+      <h1 id="writing-title">Writing</h1>
+      <div class="writing-filter" hidden>
+        <div class="chips" role="group" aria-label="Filter by topic">
+          <button class="chip" type="button" data-cat="all" aria-pressed="true">All</button>
+          <button class="chip" type="button" data-cat="engineering" aria-pressed="false">Engineering</button>
+          <button class="chip" type="button" data-cat="design" aria-pressed="false">Design</button>
+          <button class="chip" type="button" data-cat="remix" aria-pressed="false">Remix</button>
+          <button class="chip" type="button" data-cat="go" aria-pressed="false">Go</button>
+          <button class="chip" type="button" data-cat="react" aria-pressed="false">React</button>
+          <button class="chip" type="button" data-cat="javascript" aria-pressed="false">JavaScript</button>
+          <button class="chip" type="button" data-cat="frameworks" aria-pressed="false">Frameworks</button>
+          <button class="chip" type="button" data-cat="review" aria-pressed="false">Review</button>
+          <button class="chip" type="button" data-cat="family" aria-pressed="false">Family</button>
+          <button class="chip" type="button" data-cat="health" aria-pressed="false">Health</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="writing-year" aria-labelledby="y2026">
+      <h2 id="y2026">2026</h2>
+      <ul class="ruled">
+        <li data-cats="engineering case-study"><a class="writing-row" href="post-from-paper-trails-to-apps-building-miss-cookies-systems.html"><span class="writing-main"><span class="writing-title"><span class="u">From Paper Trails to Apps: Building Miss Cookie's Systems</span></span><span class="feature-desc">How a spice business went from handwritten orders to a till, a back office, records and a rider app, one paper habit at a time.</span></span><time class="mono" datetime="2026-10-15">15 Oct</time></a></li>
+        <li data-cats="design engineering"><a class="writing-row" href="post-redesigning-my-portfolio-dark-studio.html"><span class="writing-main"><span class="writing-title"><span class="u">Redesigning My Portfolio: The Dark Studio Design Language</span></span><span class="feature-desc">One design system for fifteen projects and twenty-one posts, and the rules I set before drawing anything.</span></span><time class="mono" datetime="2026-09-27">27 Sep</time></a></li>
+      </ul>
+    </section>
+
+    <section class="writing-year" aria-labelledby="y2025">
+      <h2 id="y2025">2025</h2>
+      <ul class="ruled">
+        <li data-cats="review"><a class="writing-row" href="post-why-i-built-reevit.html"><span class="writing-main"><span class="writing-title"><span class="u">Why I Built Reevit: A Developer’s Reaction to a Real Problem</span></span><span class="feature-desc">It began with an e-commerce app for a client selling natural spice products, and a payment webhook that sometimes fired and sometimes went total silence.</span></span><time class="mono" datetime="2025-12-01">1 Dec</time></a></li>
+      </ul>
+    </section>
+
+    <section class="writing-year" aria-labelledby="y2024">
+      <h2 id="y2024">2024</h2>
+      <ul class="ruled">
+        <li data-cats="review"><a class="writing-row" href="post-my-2024-in-review.html"><span class="writing-main"><span class="writing-title"><span class="u">A Year of Resilience and Growth</span></span></span><time class="mono" datetime="2024-12-22">22 Dec</time></a></li>
+        <li data-cats="engineering"><a class="writing-row" href="post-from-zero-to-go-how-real-projects-shaped-my-golang-skills.html"><span class="writing-main"><span class="writing-title"><span class="u">From Zero to Go: How Real Projects Shaped My Golang Skills</span></span></span><time class="mono" datetime="2024-09-07">7 Sep</time></a></li>
+        <li data-cats="engineering go"><a class="writing-row" href="post-mock-testing-with-go-mockery.html"><span class="writing-main"><span class="writing-title"><span class="u">Mock Testing with Go Mockery</span></span></span><time class="mono" datetime="2024-08-23">23 Aug</time></a></li>
+        <li data-cats="engineering go"><a class="writing-row" href="post-transitioning-to-backend-engineering.html"><span class="writing-main"><span class="writing-title"><span class="u">Transitioning to Backend Engineering</span></span></span><time class="mono" datetime="2024-08-19">19 Aug</time></a></li>
+      </ul>
+    </section>
+
+    <section class="writing-year" aria-labelledby="y2023">
+      <h2 id="y2023">2023</h2>
+      <ul class="ruled">
+        <li data-cats="review"><a class="writing-row" href="post-2023-mid-year-review.html"><span class="writing-main"><span class="writing-title"><span class="u">2023 Mid-Year Review</span></span></span><time class="mono" datetime="2023-07-25">25 Jul</time></a></li>
+        <li data-cats="engineering javascript"><a class="writing-row" href="post-understanding-the-call-apply-and-bind-functions-in-javascript.html"><span class="writing-main"><span class="writing-title"><span class="u">Understanding the Call, Apply, and Bind functions in JavaScript</span></span></span><time class="mono" datetime="2023-07-13">13 Jul</time></a></li>
+        <li data-cats="engineering remix"><a class="writing-row" href="post-reusable-form-hook-with-remix-hook-form.html"><span class="writing-main"><span class="writing-title"><span class="u">Reusable form hook with Remix Hook Form</span></span></span><time class="mono" datetime="2023-07-11">11 Jul</time></a></li>
+        <li data-cats="engineering remix"><a class="writing-row" href="post-forms-with-fetcher-and-zod.html"><span class="writing-main"><span class="writing-title"><span class="u">Forms with useFetcher and Zod in Remix</span></span></span><time class="mono" datetime="2023-07-01">1 Jul</time></a></li>
+        <li data-cats="engineering remix"><a class="writing-row" href="post-how-to-think-in-remix.html"><span class="writing-main"><span class="writing-title"><span class="u">How to think in Remix</span></span></span><time class="mono" datetime="2023-06-27">27 Jun</time></a></li>
+        <li data-cats="engineering remix"><a class="writing-row" href="post-how-i-got-sold-on-remix.html"><span class="writing-main"><span class="writing-title"><span class="u">How I got sold on Remix</span></span></span><time class="mono" datetime="2023-06-21">21 Jun</time></a></li>
+        <li data-cats="engineering remix"><a class="writing-row" href="post-building-my-portfolio-with-remix.html"><span class="writing-main"><span class="writing-title"><span class="u">Building my portfolio with Remix</span></span></span><time class="mono" datetime="2023-06-18">18 Jun</time></a></li>
+      </ul>
+    </section>
+
+    <section class="writing-year" aria-labelledby="y2022">
+      <h2 id="y2022">2022</h2>
+      <ul class="ruled">
+        <li data-cats="review"><a class="writing-row" href="post-review-of-my-time-at-primer.html"><span class="writing-main"><span class="writing-title"><span class="u">Review of my time at Primer</span></span></span><time class="mono" datetime="2022-10-19">19 Oct</time></a></li>
+        <li data-cats="engineering react"><a class="writing-row" href="post-migrating-a-project-from-legacy-routes-to-typesafe-named-routes.html"><span class="writing-main"><span class="writing-title"><span class="u">Migrating a project routes from legacy routes to typed-safe named routes</span></span></span><time class="mono" datetime="2022-07-31">31 Jul</time></a></li>
+        <li data-cats="engineering frameworks"><a class="writing-row" href="post-framework-wars-2022.html"><span class="writing-main"><span class="writing-title"><span class="u">Framework Wars 2022</span></span></span><time class="mono" datetime="2022-07-26">26 Jul</time></a></li>
+        <li data-cats="health"><a class="writing-row" href="post-dealing-with-burnout-as-a-developer.html"><span class="writing-main"><span class="writing-title"><span class="u">Dealing with burnout as a developer</span></span></span><time class="mono" datetime="2022-05-26">26 May</time></a></li>
+      </ul>
+    </section>
+
+    <section class="writing-year" aria-labelledby="y2021">
+      <h2 id="y2021">2021</h2>
+      <ul class="ruled">
+        <li data-cats="review"><a class="writing-row" href="post-my-2021-in-review.html"><span class="writing-main"><span class="writing-title"><span class="u">My 2021 in review</span></span></span><time class="mono" datetime="2021-12-28">28 Dec</time></a></li>
+        <li data-cats="engineering react"><a class="writing-row" href="post-migrating-an-existing-project-to-blitzjs.html"><span class="writing-main"><span class="writing-title"><span class="u">Migrating an existing project to Blitzjs</span></span></span><time class="mono" datetime="2021-12-26">26 Dec</time></a></li>
+        <li data-cats="family"><a class="writing-row" href="post-how-i-got-here-pt-3-the-love-life.html"><span class="writing-main"><span class="writing-title"><span class="u">How I got here pt.3 The Love Life</span></span></span><time class="mono" datetime="2021-07-14">14 Jul</time></a></li>
+        <li data-cats="engineering"><a class="writing-row" href="post-how-i-got-here-pt-2-the-software-development-journey.html"><span class="writing-main"><span class="writing-title"><span class="u">How I got here pt.2 The Software Development Journey</span></span></span><time class="mono" datetime="2021-07-12">12 Jul</time></a></li>
+        <li data-cats="family"><a class="writing-row" href="post-how-i-got-here-pt-1-the-childhood.html"><span class="writing-main"><span class="writing-title"><span class="u">How I got here pt.1 The Childhood</span></span></span><time class="mono" datetime="2021-07-10">10 Jul</time></a></li>
+      </ul>
+    </section>
+
+    <p class="writing-rss"><a class="link" href="#">RSS</a></p>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+    <div class="footer-links">
+      <a href="https://github.com/felixyeboah">GitHub</a>
+      <a href="https://x.com/sudocode_">X</a>
+      <a href="resume.html">Résumé</a>
+      <a href="photos.html">Photos</a>
+      <span class="copy">© 2026</span>
+    </div>
+  </footer>
+</div>
+<script>
+(function () {
+  var filter = document.querySelector('.writing-filter');
+  if (!filter) return;
+  var chips = filter.querySelectorAll('.chip');
+  var years = document.querySelectorAll('.writing-year');
+  filter.hidden = false;
+  filter.addEventListener('click', function (e) {
+    var chip = e.target.closest('.chip');
+    if (!chip) return;
+    var cat = chip.dataset.cat;
+    chips.forEach(function (c) { c.setAttribute('aria-pressed', String(c === chip)); });
+    years.forEach(function (year) {
+      var shown = 0;
+      year.querySelectorAll('li[data-cats]').forEach(function (li) {
+        var match = cat === 'all' || li.dataset.cats.split(' ').indexOf(cat) !== -1;
+        li.hidden = !match;
+        if (match) shown++;
+      });
+      year.hidden = shown === 0;
+    });
+  });
+})();
+</script>
+</body>
+</html>

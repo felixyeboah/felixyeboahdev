@@ -267,17 +267,10 @@
   },
   "night-032": {
     "version": 1,
-    "mtimeMs": 1795095478928.364,
-    "size": 1374863,
-    "date": "2026-07-22",
-    "exif": {
-      "camera": "Apple iPhone 17 Pro Max",
-      "lens": "iPhone 17 Pro Max back triple camera 16.891mm f/2.8",
-      "focal": "17mm",
-      "aperture": "f/2.8",
-      "shutter": "1/25s",
-      "iso": 1250
-    }
+    "mtimeMs": 1795553432902.2612,
+    "size": 1998834,
+    "date": null,
+    "exif": null
   },
   "night-036": {
     "version": 1,
@@ -292,6 +285,20 @@
       "shutter": "1/50s",
       "iso": 125
     }
+  },
+  "night-102": {
+    "version": 1,
+    "mtimeMs": 1795552992994.1428,
+    "size": 2154982,
+    "date": null,
+    "exif": null
+  },
+  "night-103": {
+    "version": 1,
+    "mtimeMs": 1795555899193.2537,
+    "size": 1955055,
+    "date": null,
+    "exif": null
   },
   "places-071": {
     "version": 1,
@@ -916,6 +923,34 @@
     "date": null,
     "exif": null
   },
+  "skyline-105": {
+    "version": 1,
+    "mtimeMs": 1795555899202.834,
+    "size": 2824719,
+    "date": null,
+    "exif": null
+  },
+  "skyline-106": {
+    "version": 1,
+    "mtimeMs": 1795555899207.3193,
+    "size": 2790914,
+    "date": null,
+    "exif": null
+  },
+  "skyline-107": {
+    "version": 1,
+    "mtimeMs": 1795555899211.9817,
+    "size": 2549198,
+    "date": null,
+    "exif": null
+  },
+  "skyline-108": {
+    "version": 1,
+    "mtimeMs": 1795555899218.6006,
+    "size": 2210493,
+    "date": null,
+    "exif": null
+  },
   "streets-001": {
     "version": 1,
     "mtimeMs": 1795095359888.975,
@@ -1116,6 +1151,13 @@
     "version": 1,
     "mtimeMs": 1795096442553.5173,
     "size": 2308323,
+    "date": null,
+    "exif": null
+  },
+  "streets-104": {
+    "version": 1,
+    "mtimeMs": 1795555899198.6233,
+    "size": 3046785,
     "date": null,
     "exif": null
   }

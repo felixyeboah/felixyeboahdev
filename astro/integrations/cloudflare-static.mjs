@@ -1,7 +1,10 @@
 import { copyFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-/* Writes what Cloudflare needs next to the built pages:
+/* The live site is on Vercel, configured by vercel.json (redirects, clean URLs, feed type). The Cloudflare
+   preview needs the same rules as files, written here. Keep RULES in step with vercel.json's redirects.
+
+   Writes next to the built pages (the Cloudflare files are skipped on Vercel, where they would be public):
    - _headers: the RSS content type for the feed
    - _redirects: every redirect the Next app defines in next.config.ts, with the same status codes
    - favicon.svg: the logo (src/assets/logo.svg). The public folder is shared with the Next app, so it is written here.
@@ -36,9 +39,11 @@ export default function cloudflareStatic() {
         hooks: {
             'astro:build:done': ({ dir }) => {
                 const out = fileURLToPath(dir);
-                writeFileSync(out + '_redirects', RULES.join('\n') + '\n');
-                /* feed readers expect the RSS type; Cloudflare would otherwise serve .xml as application/xml */
-                writeFileSync(out + '_headers', '/writing/feed.xml\n  Content-Type: application/rss+xml; charset=utf-8\n');
+                if (!process.env.VERCEL) {
+                    writeFileSync(out + '_redirects', RULES.join('\n') + '\n');
+                    /* feed readers expect the RSS type; Cloudflare would otherwise serve .xml as application/xml */
+                    writeFileSync(out + '_headers', '/writing/feed.xml\n  Content-Type: application/rss+xml; charset=utf-8\n');
+                }
                 copyFileSync(fileURLToPath(new URL('../src/assets/favicon.ico', import.meta.url)), out + 'favicon.ico');
                 copyFileSync(fileURLToPath(new URL('../src/assets/logo.svg', import.meta.url)), out + 'favicon.svg');
                 copyFileSync(fileURLToPath(new URL('../src/assets/og.png', import.meta.url)), out + 'og.png');

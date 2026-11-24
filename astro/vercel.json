@@ -1,0 +1,33 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "installCommand": "bun install",
+  "buildCommand": "bun --bun astro build",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/blog", "destination": "/writing", "permanent": true },
+    {
+      "source": "/blog/why-i-built-primeflow-a-developers-reaction-to-a-real-problem",
+      "destination": "/writing/why-i-built-reevit",
+      "permanent": true
+    },
+    { "source": "/blog/:slug", "destination": "/writing/:slug", "permanent": true },
+    { "source": "/docs/:slug", "destination": "/writing/:slug", "permanent": true },
+    { "source": "/case-studies", "destination": "/work", "permanent": true },
+    { "source": "/case-studies/miss-cookie", "destination": "/work/miss-cookie-spices", "permanent": true },
+    { "source": "/case-studies/dnaweds", "destination": "/work/desmond-weds-akyeamaa", "permanent": true },
+    { "source": "/case-studies/seven-sports", "destination": "/work/7even-sports-group", "permanent": true },
+    { "source": "/case-studies/drobotix", "destination": "/work/drobotix", "permanent": true },
+    { "source": "/case-studies/dronehub", "destination": "/work/dronehub", "permanent": true },
+    { "source": "/case-studies/undisciplined", "destination": "/work/undisciplined", "permanent": true },
+    { "source": "/case-studies/:slug", "destination": "/work", "permanent": false }
+  ],
+  "headers": [
+    {
+      "source": "/writing/feed.xml",
+      "headers": [{ "key": "Content-Type", "value": "application/rss+xml; charset=utf-8" }]
+    }
+  ]
+}

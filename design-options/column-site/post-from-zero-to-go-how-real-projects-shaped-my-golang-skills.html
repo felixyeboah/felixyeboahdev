@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>From Zero to Go: How Real Projects Shaped My Golang Skills — Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/column.css">
+<style>
+  .post-head h1 { text-wrap: balance; }
+
+  /* 32em ~ 69 characters per line (Schibsted Grotesk averages ~7.4px per character at 16px) */
+  .post-body { margin-top: var(--s-7); }
+  .post-body > :first-child { margin-top: 0; }
+  .post-body hr + h2 { margin-top: var(--s-7); }
+  .post-body .post-note { font-size: var(--t-sm); color: var(--muted); }
+  .post-body .post-note + h2 { margin-top: var(--s-7); }
+  .post-body .post-label + ul { margin-top: var(--s-3); }
+  .post-body h2, .post-body h3 { scroll-margin-top: var(--s-5); text-wrap: balance; }
+
+  /* tables, when a post has them: hairline rows, scroll on narrow screens */
+  .post-table { overflow-x: auto; }
+  .post-table table { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
+  .post-table th, .post-table td { padding: var(--s-2) var(--s-4) var(--s-2) 0; border-bottom: 1px solid var(--hair); text-align: left; vertical-align: top; }
+  .post-table th { font-weight: 600; }
+
+  .post-author {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1) var(--s-3);
+    margin-top: var(--s-8);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--hair);
+    font-size: var(--t-sm);
+  }
+  .post-author .name { font-weight: 600; margin-right: var(--s-1); }
+  .post-author .link { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
+
+  .post-pager { margin-top: var(--s-7); }
+  .post-all { margin-top: var(--s-5); }
+  .post-all .link { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--t-sm); }
+
+  @media (max-width: 640px) {
+    .post-body { margin-top: var(--s-6); }
+    .post-body > h2 { margin-top: var(--s-7); }
+    .post-body hr + h2 { margin-top: var(--s-6); }
+    .post-body hr { margin-top: var(--s-6); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="column">
+  <header class="site-header">
+    <a class="identity" href="index.html" aria-label="Felix Yeboah, home">
+      <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="">
+      <span>Felix Yeboah</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html">Work</a></li>
+        <li><a href="writing.html" aria-current="page">Writing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="photos.html">Photos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article aria-labelledby="post-title">
+      <header class="page-head post-head">
+        <a class="crumb" href="writing.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M8.5 3.5L5 7l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Writing</a>
+        <h1 id="post-title">From Zero to Go: How Real Projects Shaped My Golang Skills</h1>
+        <ul class="meta-line">
+          <li><time class="mono" datetime="2024-09-07">7 Sep 2024</time></li>
+          <li>8 min read</li>
+        </ul>
+      </header>
+
+      <div class="prose post-body">
+<p>My first Go repository has one commit. It’s called <code>go-notes</code>, it’s from 25 March, and this is the whole program:</p>
+<figure class="code" data-lang="go" data-lines="6"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1.75V5.25h3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="code__name">main.go</span></span><span class="code__lang mono">Go</span><button class="code__copy mono" type="button" aria-label="Copy code: main.go"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="main.go"><code><span class="l"><span class="k">package</span> main</span><span class="l"></span><span class="l"><span class="k">func</span> <span class="f">main</span>() {</span><span class="l">	<span class="c">// Run the server</span></span><span class="l"></span><span class="l">}</span></code></pre></div></figure>
+<p>That’s what zero looked like. Five months later I had an auth service with email verification, sessions and password resets, split into packages I could test on their own. I didn’t get there by reading. I got there by building four small projects, getting the structure wrong in each one, and fixing a different part of it in the next.</p>
+<p>This post walks through those projects in order. The code is all on my GitHub, mistakes included. At the end there’s a newer section on Reevit, the payments platform whose backend I now write in Go, because that’s where all of this ended up.</p>
+<h2 id="a-coffee-api-built-like-an-express-app">A coffee API, built like an Express app</h2>
+<p>A week after <code>go-notes</code> I built <a href="https://github.com/felixyeboah/coffee-app" target="_blank" rel="noopener">coffee-app</a>, a CRUD API for a coffee menu. Chi for routing, Postgres through <code>database/sql</code>, <code>godotenv</code> for config and SQL migration files for the schema. It took two days.</p>
+<p>I came from JavaScript, so I gave it the folders I knew from Express. <code>controllers</code>, <code>services</code>, <code>routes</code> and <code>helpers</code>. The problem was how those folders talked to each other. The database lived in a package-level variable, and so did the service:</p>
+<figure class="code" data-lang="go" data-lines="1"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1.75V5.25h3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="code__name">services/main.go</span></span><span class="code__lang mono">Go</span><button class="code__copy mono" type="button" aria-label="Copy code: services/main.go"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="services/main.go"><code><span class="l"><span class="k">var</span> db *sql.<span class="t">DB</span></span></code></pre></div></figure>
+<figure class="code" data-lang="go" data-lines="6"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1.75V5.25h3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="code__name">controllers/coffee.go</span></span><span class="code__lang mono">Go</span><button class="code__copy mono" type="button" aria-label="Copy code: controllers/coffee.go"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="controllers/coffee.go"><code><span class="l"><span class="k">var</span> coffeeService services.Coffee</span><span class="l"></span><span class="l"><span class="k">func</span> <span class="f">GetCoffees</span>(w http.<span class="t">ResponseWriter</span>, r *http.<span class="t">Request</span>) {</span><span class="l">	coffees, err := coffeeService.<span class="f">GetAll</span>()</span><span class="l">	<span class="c">// ...</span></span><span class="l">}</span></code></pre></div></figure>
+<p>It worked, and that was the trap. Every function could reach the database, so nothing said what it depended on. I couldn’t test a controller without a real Postgres running, because there was no way to hand it anything else.</p>
+<p>Reading it now, I can also spot two bugs. <code>GetAll</code> calls <code>defer rows.Close()</code> before it checks the query’s error, so a failed query closes a nil <code>rows</code> and panics. And <code>Run</code> calls <code>server.ListenAndServe()</code> twice. Go compiled both happily. Neither is a Go problem. They’re what happens when you write a new language with the habits of an old one.</p>
+<h2 id="a-bank-that-taught-me-sqlc-and-transactions">A bank that taught me sqlc and transactions</h2>
+<p>In June I built <a href="https://github.com/felixyeboah/simplebank" target="_blank" rel="noopener">simplebank</a>, which has accounts, entries and transfers between accounts. This is where two tools changed how I write every Go service since.</p>
+<p>The first was sqlc. In coffee-app I wrote every query as a string and scanned every column by hand, nine <code>&amp;coffee.Field</code> arguments per row. With sqlc I write the SQL in a <code>.sql</code> file, run <code>sqlc generate</code>, and get typed Go functions back. If I rename a column, the generated code changes and the compiler tells me what broke.</p>
+<p>The second was the store. A transfer touches three tables, so it has to happen inside one transaction or not at all. The store wraps sqlc’s queries and runs a function inside a transaction:</p>
+<figure class="code code--ln" data-lang="go" data-lines="22"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1.75V5.25h3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="code__name">db/sqlc/store.go</span></span><span class="code__lang mono">Go</span><button class="code__copy mono" type="button" aria-label="Copy code: db/sqlc/store.go"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="db/sqlc/store.go"><code><span class="l"><span class="k">type</span> <span class="t">Store</span> <span class="k">interface</span> {</span><span class="l">	Querier</span><span class="l">	<span class="f">TransferTx</span>(ctx context.<span class="t">Context</span>, arg <span class="t">TransferTxParams</span>) (<span class="t">TransferTxResult</span>, <span class="t">error</span>)</span><span class="l">}</span><span class="l"></span><span class="l"><span class="k">func</span> (store *<span class="t">SQLStore</span>) <span class="f">execTx</span>(ctx context.<span class="t">Context</span>, fn <span class="k">func</span>(*<span class="t">Queries</span>) <span class="t">error</span>) <span class="t">error</span> {</span><span class="l">	tx, err := store.db.<span class="f">BeginTx</span>(ctx, <span class="n">nil</span>)</span><span class="l">	<span class="k">if</span> err != <span class="n">nil</span> {</span><span class="l">		<span class="k">return</span> err</span><span class="l">	}</span><span class="l"></span><span class="l">	q := <span class="f">New</span>(tx)</span><span class="l">	err = <span class="f">fn</span>(q)</span><span class="l">	<span class="k">if</span> err != <span class="n">nil</span> {</span><span class="l">		<span class="k">if</span> rbErr := tx.<span class="f">Rollback</span>(); rbErr != <span class="n">nil</span> {</span><span class="l">			<span class="k">return</span> fmt.<span class="f">Errorf</span>(<span class="s">"tx error: %v, rb error: %v"</span>, err, rbErr)</span><span class="l">		}</span><span class="l">		<span class="k">return</span> err</span><span class="l">	}</span><span class="l"></span><span class="l">	<span class="k">return</span> tx.<span class="f">Commit</span>()</span><span class="l">}</span></code></pre></div></figure>
+<p>Look at the return type of <code>NewStore</code>. It’s the <code>Store</code> interface, not the struct. The HTTP layer only knows about the interface, so a test can hand it a fake store. That was the first time an interface in Go made sense to me as something I needed, not something I was told to write.</p>
+<p>simplebank was also the first project with tests. Every query has its own test file, and the transfer test runs transfers concurrently to check the balances still add up. Config moved from <code>godotenv</code> to Viper, and a Makefile took over the commands I kept retyping.</p>
+<h2 id="an-auth-service-split-by-feature">An auth service, split by feature</h2>
+<p>In August I started <a href="https://github.com/felixyeboah/go-huma-auth" target="_blank" rel="noopener">go-huma-auth</a>, the auth service I mentioned in <a href="post-transitioning-to-backend-engineering.html">my post about moving to backend engineering</a>. It’s the biggest of the four, with 59 commits. It uses Huma on top of Chi, sqlc and Postgres, PASETO tokens, Redis for short-lived verification tokens and Resend for email. Users can register, verify their email, log in, and reset a forgotten password. Each login is stored as a session with the browser and IP address it came from.</p>
+<p>The big change is the layout. coffee-app grouped code by what kind of code it was. go-huma-auth groups it by what it’s for:</p>
+<figure class="code code--ln" data-lang="bash" data-lines="21"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 2.5v9.5h4M3 7h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><rect x="8.5" y="5" width="5" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8.5" y="10" width="5" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/></svg><span class="code__name">File tree</span></span><span class="code__lang mono">Text</span><button class="code__copy mono" type="button" aria-label="Copy code"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="File tree"><code><span class="l">go-huma-auth/</span><span class="l">├── cmd/server/main.go</span><span class="l">├── config/</span><span class="l">├── internal/</span><span class="l">│   ├── auth/</span><span class="l">│   │   ├── handler.go</span><span class="l">│   │   ├── service.go</span><span class="l">│   │   ├── repository.go</span><span class="l">│   │   ├── model.go</span><span class="l">│   │   └── payload.go</span><span class="l">│   ├── users/</span><span class="l">│   ├── session/</span><span class="l">│   └── middlewares/</span><span class="l">├── pkg/</span><span class="l">│   ├── token/</span><span class="l">│   ├── redis/</span><span class="l">│   ├── database/</span><span class="l">│   └── utils/</span><span class="l">└── sql/</span><span class="l">    ├── queries/</span><span class="l">    └── sqlc/</span></code></pre></div></figure>
+<p>Everything about logging in lives in <code>internal/auth</code>. The handler reads the request, the service holds the rules, and the repository talks to Postgres and Redis. Things that aren’t about this app, like making tokens or connecting to Redis, go in <code>pkg</code>.</p>
+<p>Dependencies come in through constructors now, not package variables:</p>
+<figure class="code code--ln" data-lang="go" data-lines="10"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1.75V5.25h3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="code__name">internal/auth/repository.go</span></span><span class="code__lang mono">Go</span><button class="code__copy mono" type="button" aria-label="Copy code: internal/auth/repository.go"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="internal/auth/repository.go"><code><span class="l"><span class="k">func</span> <span class="f">NewRepository</span>(database *sql.<span class="t">DB</span>, tokenMaker *token.PasetoMaker, redis *redis.Store,</span><span class="l">	session *session.Repository) *<span class="t">Repository</span> {</span><span class="l">	<span class="k">return</span> &amp;<span class="t">Repository</span>{</span><span class="l">		Queries:    db.<span class="f">New</span>(database),</span><span class="l">		db:         database,</span><span class="l">		tokenMaker: tokenMaker,</span><span class="l">		redis:      redis,</span><span class="l">		session:    session,</span><span class="l">	}</span><span class="l">}</span></code></pre></div></figure>
+<p>Compare that with <code>var db *sql.DB</code> in coffee-app. Every dependency is in the function signature, so I can see what the repository needs without reading its body.</p>
+<p>It isn’t finished, and parts of it are still wrong. The service holds a <code>*Repository</code> struct instead of an interface, so I can’t swap the repository out in a test the way simplebank let me swap the store. <code>RegisterUser</code> ignores the error from <code>CreateUser</code>, which means a failed insert turns into a nil pointer panic. Both are on my list.</p>
+<h2 id="testing-the-e-commerce-api">Testing the e-commerce API</h2>
+<p>The fourth project is an e-commerce API I’m still building. It uses the same sqlc setup, and it’s where I finally sorted out testing. I tried gomock and testify first. What stuck was Mockery generating mocks from the interfaces sqlc writes, so I can test the repository and the HTTP handlers without a database. I wrote that up in <a href="post-mock-testing-with-go-mockery.html">Mock Testing with Go Mockery</a>.</p>
+<h2 id="where-it-led-reevit">Where it led: Reevit</h2>
+<p><em>Added in September 2026.</em></p>
+<p>When I first published this, the e-commerce API was the biggest thing I’d written in Go. Today it’s the backend of <a href="work-reevit.html">Reevit</a>, the payments platform I wrote about in <a href="post-why-i-built-reevit.html">Why I Built Reevit</a>.</p>
+<p>Reevit sends each charge through a merchant’s own Paystack, Hubtel or Flutterwave account. If that provider declines or stops answering, the backend sends the same charge to the next provider in the chain. The customer taps Pay once. The backend is Go, and so are two public pieces of it, the <a href="https://github.com/Reevit-Platform/go-sdk" target="_blank" rel="noopener">Go SDK</a> and the <a href="https://github.com/Reevit-Platform/cli" target="_blank" rel="noopener">CLI</a>.</p>
+<p>Almost every hard part of it goes back to one of the small projects above.</p>
+<p>The transfer in simplebank had to happen in one transaction or not at all. A payment that fails over to a second provider has the same rule with more at stake, because the customer must be charged exactly once. So every request can carry an idempotency key, and the SDK builds one from the sorted request fields, so a retry of the same order within five minutes gets the same key.</p>
+<p>The auth service was the first time I stored secrets properly, with hashed passwords and PASETO tokens. Reevit holds something worse to leak, the merchants' provider API keys. Each key is encrypted with its own data key, that data key is wrapped by a key held in a KMS, and the plaintext only exists in memory for the call that needs it. It never gets logged.</p>
+<p>Reevit exists because of a webhook that sometimes fired and sometimes didn’t, so its own webhooks had to be the part merchants never worry about. Every event is signed, and the SDK checks the signature like this:</p>
+<figure class="code code--ln" data-lang="go" data-lines="12"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1.75V5.25h3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="code__name">webhooks/verify.go</span></span><span class="code__lang mono">Go</span><button class="code__copy mono" type="button" aria-label="Copy code: webhooks/verify.go"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="webhooks/verify.go"><code><span class="l"><span class="k">func</span> <span class="f">Sign</span>(payload []<span class="t">byte</span>, secret <span class="t">string</span>) <span class="t">string</span> {</span><span class="l">	mac := hmac.<span class="f">New</span>(sha256.New, []<span class="t">byte</span>(secret))</span><span class="l">	mac.<span class="f">Write</span>(payload)</span><span class="l">	<span class="k">return</span> <span class="t">SignaturePrefix</span> + hex.<span class="f">EncodeToString</span>(mac.<span class="f">Sum</span>(<span class="n">nil</span>))</span><span class="l">}</span><span class="l"></span><span class="l"><span class="k">func</span> <span class="f">Verify</span>(payload []<span class="t">byte</span>, signature, secret <span class="t">string</span>) <span class="t">bool</span> {</span><span class="l">	<span class="k">if</span> signature == <span class="s">""</span> || secret == <span class="s">""</span> {</span><span class="l">		<span class="k">return</span> <span class="n">false</span></span><span class="l">	}</span><span class="l">	<span class="k">return</span> hmac.<span class="f">Equal</span>([]<span class="t">byte</span>(<span class="f">Sign</span>(payload, secret)), []<span class="t">byte</span>(signature))</span><span class="l">}</span></code></pre></div></figure>
+<p><code>hmac.Equal</code> compares in constant time. Comparing the two strings with <code>==</code> would also pass every test, and leak timing information to anyone probing the endpoint. A valid signature isn’t enough either, because a captured delivery can be sent again word for word. <code>VerifyWithTolerance</code> rejects anything signed more than five minutes ago, and the handlers the CLI generates skip a <code>delivery_id</code> they’ve already processed.</p>
+<p>The SDK’s client is the coffee-app lesson in its final form. There’s no package-level state. Everything the client needs comes in through the constructor, and optional settings use functional options:</p>
+<figure class="code" data-lang="go" data-lines="3"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1.75V5.25h3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="code__name">main.go</span></span><span class="code__lang mono">Go</span><button class="code__copy mono" type="button" aria-label="Copy code: main.go"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="main.go"><code><span class="l">client := reevit.<span class="f">NewClient</span>(<span class="s">"pfk_live_xxx"</span>, <span class="s">"org_123"</span>, reevit.<span class="f">WithTimeout</span>(<span class="n">10</span>*time.<span class="t">Second</span>))</span><span class="l"></span><span class="l">payment, err := client.Payments.<span class="f">CreateIntent</span>(ctx, req, reevit.<span class="f">WithIdempotencyKey</span>(key))</span></code></pre></div></figure>
+<p>And the CLI tool from my 2024 plans exists now. <code>reevit init</code> logs you in through the browser, detects your framework, creates test credentials for the project and wires up a working checkout. <code>reevit listen</code> forwards signed webhook events to your local server, and <code>reevit doctor</code> checks the setup. It’s built with Cobra and has more test files than commands.</p>
+<h2 id="what-changed-between-the-first-project-and-the-fourth">What changed between the first project and the fourth</h2>
+<p>Side by side, the four projects come down to five changes.</p>
+<ol><li><strong>Pass dependencies in.</strong> A package-level <code>db</code> works until you want to test something. A constructor that takes the database makes the dependency visible and replaceable.</li><li><strong>Write SQL, generate the Go.</strong> sqlc removed the hand-written <code>Scan</code> calls, and with them a whole class of column-order bugs.</li><li><strong>Put interfaces where tests need them.</strong> simplebank’s <code>Store</code> and sqlc’s <code>Querier</code> are interfaces because tests needed a seam there, not because every struct needs one.</li><li><strong>Group by feature.</strong> <code>internal/auth</code> with its own handler, service and repository is easier to change than a <code>controllers</code> folder that knows about everything.</li><li><strong>Check the error first.</strong> Two of the bugs above come from using a value before checking the error that came with it. Go makes you write <code>if err != nil</code> often. It only helps if it comes first.</li></ol>
+<p>None of this is new to experienced Go developers. I’m writing it down because I learned each point from something I built, not from a list like this one.</p>
+<h2 id="whats-next">What’s next</h2>
+<p>In 2024 my plan was the e-commerce API, then a web server and a CLI tool. The CLI turned out to be Reevit’s. go-huma-auth, simplebank and coffee-app are still public, bugs included, so if you’re learning Go too, fork one, break it, or open a pull request. I’d like to see what you’d change.</p>
+      </div>
+
+      <footer class="post-author">
+        <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="" loading="lazy">
+        <span class="name">Felix Yeboah</span>
+        <a class="link" href="https://x.com/sudocode_">@sudocode_ on X</a>
+      </footer>
+    </article>
+
+    <nav class="pager post-pager" aria-label="More writing">
+      <a href="post-mock-testing-with-go-mockery.html" rel="prev">
+        <span class="dir">Previous</span>
+        <span class="name"><span class="u">Mock Testing with Go Mockery</span></span>
+      </a>
+      <a href="post-my-2024-in-review.html" rel="next">
+        <span class="dir">Next</span>
+        <span class="name"><span class="u">A Year of Resilience and Growth</span></span>
+      </a>
+    </nav>
+
+    <p class="post-all"><a class="link" href="writing.html">All writing</a></p>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+    <div class="footer-links">
+      <a href="https://github.com/felixyeboah">GitHub</a>
+      <a href="https://x.com/sudocode_">X</a>
+      <a href="resume.html">Résumé</a>
+      <a href="photos.html">Photos</a>
+      <span class="copy">© 2026</span>
+    </div>
+  </footer>
+</div>
+<script>
+document.querySelectorAll('.code').forEach(function (fig) {
+  var b = fig.querySelector('.code__copy'), pre = fig.querySelector('pre');
+  if (!b || !pre || !navigator.clipboard) { if (b) b.hidden = true; return; }
+  b.addEventListener('click', function () {
+    var text = [].map.call(pre.querySelectorAll('.l'), function (l) { return l.textContent; }).join('\n') || pre.textContent;
+    navigator.clipboard.writeText(text).then(function () {
+      b.classList.add('is-done'); b.querySelector('span').textContent = 'Copied';
+      setTimeout(function () { b.classList.remove('is-done'); b.querySelector('span').textContent = 'Copy'; }, 1600);
+    });
+  });
+});
+</script>
+</body>
+</html>

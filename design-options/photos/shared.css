@@ -1,0 +1,150 @@
+/* Shared by the three /photos prototypes. Link after ../../app/site.css (tokens, nav, chips, footer, toast).
+   Holds only what every option needs: the photograph frame, cursor label, lightbox and the option switcher.
+   The lightbox reads the site tokens, so an option that re-themes :root re-themes it too. Extra knobs:
+   --lb-bg (backdrop), --lb-veil (nav button backing), --lb-sheet (mobile details sheet). */
+
+@property --lbc{syntax:'<color>';inherits:true;initial-value:#111113}
+
+/* ---------- a photograph ---------- */
+.fr{display:block;width:100%;height:100%;overflow:hidden;background-size:cover;background-position:center}
+.fr img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .7s var(--ease),transform 1.4s var(--ease-out),scale 1.2s var(--ease-out)}
+.fr.is-loaded img{opacity:1}
+
+/* ---------- cursor label ---------- */
+.pcur{
+  position:fixed;left:0;top:0;z-index:80;display:grid;place-items:center;width:76px;height:76px;margin:-38px 0 0 -38px;
+  border-radius:50%;background:var(--accent);color:var(--on-accent);font-size:11px;font-weight:500;pointer-events:none;
+  opacity:0;scale:.3;transition:opacity .25s var(--ease),scale .5s var(--ease-out);
+}
+.pcur.is-on{opacity:1;scale:1}
+.pcur.is-on.is-down{scale:.8}
+html.has-cur [data-cur],html.has-cur [data-cur] *{cursor:none}
+
+/* ---------- option switcher (prototype only; bottom-left) ---------- */
+.optsw{
+  position:fixed;left:16px;bottom:16px;z-index:95;display:flex;align-items:center;gap:2px;padding:4px;border-radius:999px;
+  background:rgba(18,18,20,.9);border:1px solid rgba(242,239,233,.16);color:#BDB9B1;
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 40px -14px rgba(0,0,0,.7);
+}
+.optsw a{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;font-size:12px;transition:background-color .25s var(--ease),color .25s var(--ease)}
+.optsw a svg{width:14px;height:14px}
+.optsw a:hover{color:#F2EFE9;background:rgba(242,239,233,.08)}
+.optsw a[aria-current]{background:#D4FF3A;color:#0B0B0C}
+html.lb-open .optsw{display:none}
+/* the page must not travel behind an open photograph */
+html.lb-open{overflow:hidden}
+
+/* ---------- lightbox ---------- */
+.lb{
+  --lbc:#111113;--top:64px;--bottom:92px;
+  position:fixed;inset:0;z-index:100;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:var(--top) minmax(0,1fr) var(--bottom);
+  background:var(--lb-bg,#070708);color:var(--ink);outline:0;isolation:isolate;overflow:hidden;transition:--lbc .9s var(--ease);
+}
+.lb[hidden]{display:none}
+.lb__glow{
+  position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(64% 58% at 50% 46%,color-mix(in srgb,var(--lbc) 46%,transparent),transparent 74%);
+}
+.lb__progress{position:absolute;left:0;top:0;z-index:5;width:100%;height:2px;background:var(--accent);transform-origin:left center;animation:lb-progress linear both}
+@keyframes lb-progress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+.lb__top{grid-column:1 / -1;display:flex;justify-content:space-between;align-items:center;gap:16px;padding-inline:var(--pad)}
+.lb__count{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.lb__count b{color:var(--ink);font-weight:500}
+.lb__count i{font-style:normal}
+.lb__count span{margin-left:14px;padding-left:14px;border-left:1px solid var(--line-2)}
+.lb__tools{display:flex;gap:6px}
+.lb__btn{
+  display:grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1px solid var(--line-2);color:var(--ink-2);
+  transition:background-color .25s var(--ease),border-color .25s var(--ease),color .25s var(--ease);
+}
+.lb__btn svg{width:16px;height:16px}
+.lb__btn:hover{color:var(--ink);border-color:var(--ink-2)}
+.lb__btn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.lb__btn--close{margin-left:8px}
+:root:fullscreen .lb__btn--full{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+
+.lb__stage{
+  position:relative;grid-column:1;grid-row:2;display:grid;grid-template-columns:minmax(0,1fr);place-items:center;min-height:0;overflow:hidden;
+  padding:8px clamp(12px,5.5vw,96px);touch-action:none;
+}
+.lb__frame{
+  position:relative;width:min(100%,calc((100svh - var(--top) - var(--bottom) - 16px) * var(--r,1.5)));aspect-ratio:var(--r,1.5);
+  background-size:cover;background-position:center;
+}
+.lb__zoom{display:block;width:100%;height:100%;cursor:zoom-in;border-radius:0;overflow:visible}
+.lb__zoom:focus-visible{outline-offset:4px}
+/* travelling between photographs: the frame clips while it reshapes, the old picture sits on top and dissolves */
+.lb__zoom{position:relative}
+.lb__frame.is-morph{overflow:hidden}
+.lb__frame.is-morph .lb__zoom img{transition:opacity .34s var(--ease)}
+.lb__zoom img.lb__ghost{position:absolute;inset:0;opacity:1;transition:none;pointer-events:none}
+.lb__zoom img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s var(--ease),transform .7s var(--ease-out);transform-origin:var(--ox,50%) var(--oy,50%)}
+.lb__zoom img.is-loaded{opacity:1}
+.lb.is-zoom .lb__zoom{cursor:zoom-out}
+.lb.is-zoom .lb__zoom img{transform:scale(2.4);transition:opacity .5s var(--ease),transform .7s var(--ease-out),transform-origin .25s linear}
+.lb.is-zoom .lb__frame{z-index:2}
+.lb.is-zoom .lb__nav{opacity:0;pointer-events:none}
+html.motion .lb__zoom[data-dir]{animation:lb-in .7s var(--ease-out) both}
+html.motion .lb__zoom[data-dir="-1"]{--from:-32px}
+@keyframes lb-in{from{opacity:0;transform:translate3d(var(--from,32px),0,0)}to{opacity:1;transform:none}}
+
+.lb__nav{
+  position:absolute;top:50%;z-index:3;display:grid;place-items:center;width:48px;height:48px;margin-top:-24px;border-radius:50%;
+  border:1px solid var(--line-2);background:var(--lb-veil,rgba(11,11,12,.5));color:var(--ink);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  transition:background-color .3s var(--ease),border-color .3s var(--ease),color .3s var(--ease),opacity .3s var(--ease),transform .5s var(--ease-out);
+}
+.lb__nav svg{width:16px;height:16px}
+.lb__nav--prev{left:clamp(8px,2vw,28px)}
+.lb__nav--next{right:clamp(8px,2vw,28px)}
+.lb__nav:hover{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.lb__nav--prev:hover{transform:translateX(-3px)}
+.lb__nav--next:hover{transform:translateX(3px)}
+
+.lb__info{grid-column:2;grid-row:2 / 4;width:min(340px,86vw);overflow-y:auto;padding:8px var(--pad) 28px 28px;border-left:1px solid var(--line)}
+.lb__info[hidden]{display:none}
+html.motion .lb__info{animation:lb-info .55s var(--ease-out) both}
+@keyframes lb-info{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.lb__no{color:var(--lb-no,var(--accent));margin-bottom:10px}
+.lb__info h3{font-size:1.7rem;line-height:1.05;letter-spacing:-.04em;font-weight:500;text-wrap:balance;margin-bottom:22px}
+.lb__meta{margin:0;border-top:1px solid var(--line-2);font-size:11.5px}
+.lb__meta div{display:flex;justify-content:space-between;gap:20px;padding:11px 0;border-bottom:1px solid var(--line)}
+.lb__meta dt{color:var(--dim);flex:none}
+.lb__meta dd{margin:0;text-align:right;color:var(--ink-2)}
+.lb__meta a{border-bottom:1px solid var(--line-2);transition:color .25s var(--ease),border-color .25s var(--ease)}
+.lb__meta a:hover{color:var(--ink);border-color:var(--ink)}
+.lb__palette{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin-top:24px}
+.lb__palette button{display:grid;gap:8px;width:100%;font-size:9.5px;letter-spacing:.02em;color:var(--muted);text-align:left;transition:color .25s var(--ease)}
+.lb__palette i{display:block;height:52px;border-radius:3px;background:var(--sw);box-shadow:inset 0 0 0 1px rgba(128,128,128,.18);transition:transform .5s var(--ease-out)}
+.lb__palette button:hover{color:var(--ink)}
+.lb__palette button:hover i{transform:translateY(-4px)}
+
+.lb__bottom{grid-column:1;grid-row:3;display:grid;place-items:center;min-width:0;padding:0 var(--pad) 18px;overflow:hidden}
+.lb__strip{display:flex;align-items:center;gap:5px}
+.lb__strip button{
+  display:block;flex:none;width:38px;height:50px;border-radius:2px;background-size:cover;background-position:center;opacity:.34;
+  transition:opacity .3s var(--ease),width .5s var(--ease-out);
+}
+.lb__strip button:hover{opacity:.8}
+.lb__strip button[aria-current]{width:68px;opacity:1}
+
+@media (max-width:900px){
+  .lb{--top:60px;--bottom:76px}
+  .lb__info{
+    /* an absolutely positioned grid child is placed against its grid area, so span the whole viewer */
+    grid-column:1 / -1;grid-row:1 / -1;
+    position:absolute;inset:auto 0 0 0;z-index:6;width:auto;max-height:64svh;padding:22px var(--pad) 28px;
+    border-left:0;border-top:1px solid var(--line-2);border-radius:22px 22px 0 0;background:var(--lb-sheet,rgba(14,14,16,.97));
+  }
+  @keyframes lb-info{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+  .lb__stage{padding-inline:0}
+  .lb__nav,.lb__btn--full{display:none}
+  .lb__strip button{width:30px;height:40px}
+  .lb__strip button[aria-current]{width:52px}
+  .lb__count span{display:none}
+}
+
+/* thumbnail <-> lightbox morph (the name is set from shared.js for the length of the transition only) */
+::view-transition-group(ph-active){animation-duration:.62s;animation-timing-function:cubic-bezier(.2,.85,.2,1)}
+::view-transition-old(ph-active),::view-transition-new(ph-active){height:100%;object-fit:cover}

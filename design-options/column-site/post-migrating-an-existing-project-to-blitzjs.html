@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Migrating an existing project to Blitzjs — Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/column.css">
+<style>
+  .post-head h1 { text-wrap: balance; }
+
+  /* 32em ~ 69 characters per line (Schibsted Grotesk averages ~7.4px per character at 16px) */
+  .post-body { margin-top: var(--s-7); }
+  .post-body > :first-child { margin-top: 0; }
+  .post-body hr + h2 { margin-top: var(--s-7); }
+  .post-body .post-note { font-size: var(--t-sm); color: var(--muted); }
+  .post-body .post-note + h2 { margin-top: var(--s-7); }
+  .post-body .post-label + ul { margin-top: var(--s-3); }
+  .post-body h2, .post-body h3 { scroll-margin-top: var(--s-5); text-wrap: balance; }
+
+  /* tables, when a post has them: hairline rows, scroll on narrow screens */
+  .post-table { overflow-x: auto; }
+  .post-table table { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
+  .post-table th, .post-table td { padding: var(--s-2) var(--s-4) var(--s-2) 0; border-bottom: 1px solid var(--hair); text-align: left; vertical-align: top; }
+  .post-table th { font-weight: 600; }
+
+  .post-author {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1) var(--s-3);
+    margin-top: var(--s-8);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--hair);
+    font-size: var(--t-sm);
+  }
+  .post-author .name { font-weight: 600; margin-right: var(--s-1); }
+  .post-author .link { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
+
+  .post-pager { margin-top: var(--s-7); }
+  .post-all { margin-top: var(--s-5); }
+  .post-all .link { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--t-sm); }
+
+  @media (max-width: 640px) {
+    .post-body { margin-top: var(--s-6); }
+    .post-body > h2 { margin-top: var(--s-7); }
+    .post-body hr + h2 { margin-top: var(--s-6); }
+    .post-body hr { margin-top: var(--s-6); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="column">
+  <header class="site-header">
+    <a class="identity" href="index.html" aria-label="Felix Yeboah, home">
+      <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="">
+      <span>Felix Yeboah</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html">Work</a></li>
+        <li><a href="writing.html" aria-current="page">Writing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="photos.html">Photos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article aria-labelledby="post-title">
+      <header class="page-head post-head">
+        <a class="crumb" href="writing.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M8.5 3.5L5 7l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Writing</a>
+        <h1 id="post-title">Migrating an existing project to Blitzjs</h1>
+        <ul class="meta-line">
+          <li><time class="mono" datetime="2021-12-26">26 Dec 2021</time></li>
+          <li>6 min read</li>
+        </ul>
+      </header>
+
+      <div class="prose post-body">
+<p>It was difficult deciding on moving my existing project from NextJS to BlitzJS. But what makes BlitzJS better than NextJS? Should anyone use this framework? First of all, what is BlitzJS?</p>
+<h2 id="what-is-blitz">What is Blitz?</h2>
+<p>Blitz.js is a full-stack React framework with a zero-API data layer built on Next.js Inspired by Ruby on Rails.</p>
+<p>Let’s see the main features and goodies of Blitz.js according to its creator’s words:</p>
+<ol><li>“Zero-API” data layer lets you import server code directly into your React components instead of having to manually add API endpoints and do the client-side fetching and caching.</li><li>Includes everything you need for production apps. Everything is end-to-end from the database to the frontend.</li><li>Bring back the simplicity and conventions of frameworks like Ruby on Rails while preserving everything we love about React.</li></ol>
+<p>This page on the BlitzJS docs talks more about Why BlitzJS is the best. Why Blitz?</p>
+<h3 id="why-did-i-move-my-project-to-blitz">Why did I move my project to Blitz?</h3>
+<p>Initially developed with NextJS, everything was running smoothly until I hosted on Vercel; the issues started coming in. The issue was the serverless functions running on Vercel and the data running server-side rendering (SSR) in NextJS. I noticed that on some occasions I get This Serverless Function has timed out 504 GATEWAY_TIMEOUT and had no idea why I get the error. I made a lot of research and what I learnt was Vercel imposes some limits when using its platform. This includes a serverless function execution timeout, which is the amount of time that a serverless function is allowed to process an HTTP request before it must respond.</p>
+<p>Recently, they have silently reduced the serverless function execution timeout from 10s for the hobby plan, the 60s for the pro plan and 1000s for the enterprise plan to, respectively, 5s, 15s and 30s. This might be the reason why you’re experiencing this error now.</p>
+<p>I didn’t like the fact that they lowered these limits without warning their users (I wasn’t warned, at least) and giving them time to adjust. This charged my decision on moving my project from NextJS.</p>
+<p>I started searching for a new framework that can handle the project well and lo and behold, I found out about BlitzJS on Youtube. I watched a couple of videos on it and in a few hours, I installed the framework.</p>
+<p>Let’s look at the project structure.</p>
+<figure class="code code--ln" data-lang="bash" data-lines="74"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 2.5v9.5h4M3 7h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><rect x="8.5" y="5" width="5" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8.5" y="10" width="5" height="4" rx="1" stroke="currentColor" stroke-width="1.2"/></svg><span class="code__name">File tree</span></span><span class="code__lang mono">Text</span><button class="code__copy mono" type="button" aria-label="Copy code"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="File tree"><code><span class="l">├── app/</span><span class="l">│ ├── core/</span><span class="l">│ │ ├── components/</span><span class="l">│ │ │ ├── form.tsx</span><span class="l">│ │ │ └── LabeledTextField.tsx</span><span class="l">│ │ ├── hooks/</span><span class="l">│ │ │ └── useCurrentUser.ts</span><span class="l">│ │ └── layouts/</span><span class="l">│ │ └── Layout.tsx</span><span class="l">│ ├── pages/</span><span class="l">│ │ ├── 404.tsx</span><span class="l">│ │ ├── _app.tsx</span><span class="l">│ │ ├── _document.tsx</span><span class="l">│ │ ├── index.test.tsx</span><span class="l">│ │ ├── _index.tsx</span><span class="l">│ │ └── projects/</span><span class="l">│ │ ├── [id]/</span><span class="l">│ │ │ └── edit.js</span><span class="l">│ │ ├── [id].js</span><span class="l">│ │ ├── index.js</span><span class="l">│ │ └── new.js</span><span class="l">│ ├── api/</span><span class="l">│ │ └── stripe-webhook.js</span><span class="l">│ ├── auth/</span><span class="l">│ │ ├── components/</span><span class="l">│ │ │ ├── LoginForm.tsx</span><span class="l">│ │ │ └── SignupForm.tsx</span><span class="l">│ │ ├── mutations/</span><span class="l">│ │ │ ├── login.ts</span><span class="l">│ │ │ ├── logout.ts</span><span class="l">│ │ │ └── signup.ts</span><span class="l">│ │ ├── pages/</span><span class="l">│ │ │ ├── login.tsx</span><span class="l">│ │ │ └── signup.tsx</span><span class="l">│ │ ├── auth-utils.ts</span><span class="l">│ │ └── validations.ts</span><span class="l">│ ├── users/</span><span class="l">│ │ └── queries/</span><span class="l">│ │ └── getCurrentUser.ts</span><span class="l">│ └── projects/</span><span class="l">│ ├── components/</span><span class="l">│ │ ├── Project.js</span><span class="l">│ │ ├── ProjectForm.js</span><span class="l">│ │ └── Projects.js</span><span class="l">│ ├── mutations/</span><span class="l">│ │ ├── createProject.js</span><span class="l">│ │ ├── createProject.test.js</span><span class="l">│ │ ├── deleteProject.js</span><span class="l">│ │ ├── deleteProject.test.js</span><span class="l">│ │ ├── updateProject.js</span><span class="l">│ │ └── updateProject.test.js</span><span class="l">│ └── queries/</span><span class="l">│ ├── getProject.js</span><span class="l">│ └── getProjects.js</span><span class="l">├── db/</span><span class="l">│ ├── index.ts</span><span class="l">│ ├── schema.prisma</span><span class="l">│ └── seeds.ts</span><span class="l">├── integrations/</span><span class="l">│ └── sentry.ts</span><span class="l">├── public/</span><span class="l">│ ├── favicon.ico*</span><span class="l">│ └── logo.png</span><span class="l">├── test/</span><span class="l">│ ├── setup.ts</span><span class="l">│ └── utils.tsx</span><span class="l">├── README.md</span><span class="l">├── babel.config.js</span><span class="l">├── blitz.config.js</span><span class="l">├── jest.config.js</span><span class="l">├── package.json</span><span class="l">├── tsconfig.json</span><span class="l">├── types.ts</span><span class="l">└── yarn.lock</span></code></pre></div></figure>
+<h4 id="app">app</h4>
+<p>Contains all your core application code.</p>
+<ul><li>The file structure nested inside app/ can be anything you want, but we recommend the following:</li><li>First layer folders to be a "domain context", like core/, projects/, users/, billing/, etc.</li><li>All other folders like components/ and hooks/ go inside one of the above domain context folders</li><li>Special Folder Names</li><li>Can exist at any level of the hierarchy inside the app.</li><li><strong><em>pages/</em></strong> expose a React component at a URL. Follows the same semantics as the Next.js pages/ folder.</li><li><strong><em>api/</em></strong> expose a Node.js request handler at URL. Same semantics as Next.js pages/API/ folder.</li><li><strong><em>queries/</em></strong> and <strong><em>mutations/</em></strong> are for your Blitz queries and mutations. Each query and mutation is exposed at a URL corresponding to its file path.</li></ul>
+<h4 id="db">db</h4>
+<p>Contains database configuration, schema, and migration files. <strong><em>db/index.js</em></strong> exports your initialized database client so you can use it anywhere in your app.</p>
+<h4 id="integrations">integrations</h4>
+<p>Contains third-party integration code. Ex: auth0.js, twilio.js, etc. These files are a good place to instantiate a client with shared configuration.</p>
+<h4 id="pages">pages</h4>
+<p>The top level pages folder and all nested pages folders inside app are merged together at build time. The build will fail if the same route is defined in two places.</p>
+<ul><li>This top-level pages folder is optional.</li><li>Has the same semantics as the Next.js pages folder. All files in here are mapped to the URL corresponding to their file paths.</li><li>While you can place any route files here, we recommend placing route files inside app. But if you want, you can instead place all your route files in this top-level folders instead of being spread out in various folders inside app</li></ul>
+<h4 id="api">api</h4>
+<p>Same as Next.js <strong><em>pages/api</em></strong> folder, but not nested inside pages.</p>
+<h4 id="public">public</h4>
+<p>All files in here are served statically from your app’s root URL</p>
+<h4 id="blitz-config-js">blitz.config.js</h4>
+<p>A configuration file with the same format as next.config.js</p>
+<h4 id="blitz-cli-overview">Blitz CLI Overview</h4>
+<p>BlitzJS comes with a few CLI commands that help to scaffold and makes working with BlitzJS faster and easier. It is opinionated and will guide you towards best practices, while flexible enough to allow you to build your project however you’d like.</p>
+<h4 id="blitz-generate">Blitz generate</h4>
+<p>The Blitz CLI tool is quite automated. With this CLI tool, we can use the generate sub-command to scaffold all code we want in our Blitz app.</p>
+<figure class="code" data-lang="bash" data-lines="1"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 4.5 6.5 8 3 11.5M8.5 12h4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="code__name">Bash</span></span><span class="code__lang mono">Bash</span><button class="code__copy mono" type="button" aria-label="Copy code"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="Bash"><code><span class="l"><span class="f">blitz</span> generate [type] [model]</span></code></pre></div></figure>
+<p>blitz generate all project will generate the following files:</p>
+<figure class="code code--ln" data-lang="bash" data-lines="10"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 4.5 6.5 8 3 11.5M8.5 12h4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="code__name">Bash</span></span><span class="code__lang mono">Bash</span><button class="code__copy mono" type="button" aria-label="Copy code"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="Bash"><code><span class="l"><span class="f">app/pages/projects/[projectId]/edit.tsx</span></span><span class="l"><span class="f">app/pages/projects/[projectId].tsx</span></span><span class="l"><span class="f">app/pages/projects/_index.tsx</span></span><span class="l"><span class="f">app/pages/projects/new.tsx</span></span><span class="l"><span class="f">app/projects/components/ProjectForm.tsx</span></span><span class="l"><span class="f">app/projects/queries/getProject.ts</span></span><span class="l"><span class="f">app/projects/queries/getProjects.ts</span></span><span class="l"><span class="f">app/projects/mutations/createProject.ts</span></span><span class="l"><span class="f">app/projects/mutations/deleteProject.ts</span></span><span class="l"><span class="f">app/projects/mutations/updateProject.ts</span></span></code></pre></div></figure>
+<h4 id="blitz-codegen">Blitz codegen</h4>
+<p>Use this command to generate the <a href="https://blitzjs.com/docs/route-manifest" target="_blank" rel="noopener">Route Manifest</a> and Prisma client (if Prisma schema is defined in <code>package.json)</code>.</p>
+<h4 id="blitz-install">Blitz install</h4>
+<p>Use this command to install a Blitz Recipe into your project.</p>
+<p>Supports both official recipes and custom third-party recipes. Recipe names can be specified in any of the following formats:</p>
+<ul><li><code>blitz install select and install</code> from the list of official Blitz recipes</li><li><code>blitz install official-recipe</code> for an official recipe from the Blitz team</li><li><code>blitz install ./recipes/my-local-recipes.ts</code> for a locally-authored recipe</li><li><code>blitz install github-user/my-published-recipe</code> for a custom recipe hosted on GitHub</li></ul>
+<p>Also, you can pass arguments to recipe itself in the form of key=value (if it accepts them):</p>
+<figure class="code" data-lang="bash" data-lines="1"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 4.5 6.5 8 3 11.5M8.5 12h4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="code__name">Bash</span></span><span class="code__lang mono">Bash</span><button class="code__copy mono" type="button" aria-label="Copy code"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="Bash"><code><span class="l">  <span class="c">$</span> <span class="f">blitz</span> install my-recipe key=value</span></code></pre></div></figure>
+<p>These are a few Blitz commands I can list here, I don’t want to make this article longer than it is already. Go through the docs of BlitzJS and I promise you will love this framework. <a href="https://blitzjs.com/docs/get-started" target="_blank" rel="noopener">BlitzJS Doc</a></p>
+<p>I moved my existing project from NextJS to BlitzJS within 2 weeks and within that time rame, it wasn’t easy as it was a new framework I wasn’t used to and I had to take time to learn whiles implementing.</p>
+<p>Prisma comes default with BlitzJS to interface with the DB and it helps a lot in terms of dealing with complex queries and mutations.</p>
+<p>Cloudinary was used as well. Cloudinary helps with uploading, transforming and optimization of photos.</p>
+<p>Chakra UI is a simple, modular and accessible component library that gives you the building blocks you need to build your React applications. This is the CSS library is used to build the UI of the project.</p>
+<p>I think I have convinced you enough why I chose to move my project from NextJS to BlitzJS. It’s about time you check it out and start playing with this framework. This is missing but found Gem.</p>
+      </div>
+
+      <footer class="post-author">
+        <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="" loading="lazy">
+        <span class="name">Felix Yeboah</span>
+        <a class="link" href="https://x.com/sudocode_">@sudocode_ on X</a>
+      </footer>
+    </article>
+
+    <nav class="pager post-pager" aria-label="More writing">
+      <a href="post-how-i-got-here-pt-3-the-love-life.html" rel="prev">
+        <span class="dir">Previous</span>
+        <span class="name"><span class="u">How I got here pt.3 The Love Life</span></span>
+      </a>
+      <a href="post-my-2021-in-review.html" rel="next">
+        <span class="dir">Next</span>
+        <span class="name"><span class="u">My 2021 in review</span></span>
+      </a>
+    </nav>
+
+    <p class="post-all"><a class="link" href="writing.html">All writing</a></p>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+    <div class="footer-links">
+      <a href="https://github.com/felixyeboah">GitHub</a>
+      <a href="https://x.com/sudocode_">X</a>
+      <a href="resume.html">Résumé</a>
+      <a href="photos.html">Photos</a>
+      <span class="copy">© 2026</span>
+    </div>
+  </footer>
+</div>
+<script>
+document.querySelectorAll('.code').forEach(function (fig) {
+  var b = fig.querySelector('.code__copy'), pre = fig.querySelector('pre');
+  if (!b || !pre || !navigator.clipboard) { if (b) b.hidden = true; return; }
+  b.addEventListener('click', function () {
+    var text = [].map.call(pre.querySelectorAll('.l'), function (l) { return l.textContent; }).join('\n') || pre.textContent;
+    navigator.clipboard.writeText(text).then(function () {
+      b.classList.add('is-done'); b.querySelector('span').textContent = 'Copied';
+      setTimeout(function () { b.classList.remove('is-done'); b.querySelector('span').textContent = 'Copy'; }, 1600);
+    });
+  });
+});
+</script>
+</body>
+</html>

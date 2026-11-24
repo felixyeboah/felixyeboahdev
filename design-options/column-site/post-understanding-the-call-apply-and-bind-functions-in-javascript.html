@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Understanding the Call, Apply, and Bind functions in JavaScript — Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/column.css">
+<style>
+  .post-head h1 { text-wrap: balance; }
+
+  /* 32em ~ 69 characters per line (Schibsted Grotesk averages ~7.4px per character at 16px) */
+  .post-body { margin-top: var(--s-7); }
+  .post-body > :first-child { margin-top: 0; }
+  .post-body hr + h2 { margin-top: var(--s-7); }
+  .post-body .post-note { font-size: var(--t-sm); color: var(--muted); }
+  .post-body .post-note + h2 { margin-top: var(--s-7); }
+  .post-body .post-label + ul { margin-top: var(--s-3); }
+  .post-body h2, .post-body h3 { scroll-margin-top: var(--s-5); text-wrap: balance; }
+
+  /* tables, when a post has them: hairline rows, scroll on narrow screens */
+  .post-table { overflow-x: auto; }
+  .post-table table { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
+  .post-table th, .post-table td { padding: var(--s-2) var(--s-4) var(--s-2) 0; border-bottom: 1px solid var(--hair); text-align: left; vertical-align: top; }
+  .post-table th { font-weight: 600; }
+
+  .post-author {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1) var(--s-3);
+    margin-top: var(--s-8);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--hair);
+    font-size: var(--t-sm);
+  }
+  .post-author .name { font-weight: 600; margin-right: var(--s-1); }
+  .post-author .link { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
+
+  .post-pager { margin-top: var(--s-7); }
+  .post-all { margin-top: var(--s-5); }
+  .post-all .link { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--t-sm); }
+
+  @media (max-width: 640px) {
+    .post-body { margin-top: var(--s-6); }
+    .post-body > h2 { margin-top: var(--s-7); }
+    .post-body hr + h2 { margin-top: var(--s-6); }
+    .post-body hr { margin-top: var(--s-6); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="column">
+  <header class="site-header">
+    <a class="identity" href="index.html" aria-label="Felix Yeboah, home">
+      <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="">
+      <span>Felix Yeboah</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html">Work</a></li>
+        <li><a href="writing.html" aria-current="page">Writing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="photos.html">Photos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article aria-labelledby="post-title">
+      <header class="page-head post-head">
+        <a class="crumb" href="writing.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M8.5 3.5L5 7l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Writing</a>
+        <h1 id="post-title">Understanding the Call, Apply, and Bind functions in JavaScript</h1>
+        <ul class="meta-line">
+          <li><time class="mono" datetime="2023-07-13">13 Jul 2023</time></li>
+          <li>3 min read</li>
+        </ul>
+      </header>
+
+      <div class="prose post-body">
+<p>JavaScript provides three powerful functions: <code>call</code>, <code>apply</code>, and <code>bind</code>, that allow you to manipulate the context (<code>this</code> value) of a function and pass arguments to it. These functions are particularly useful when you need to explicitly control the execution context or set predefined arguments for a function. In this blog post, we will explore how to use these functions effectively in JavaScript.</p>
+<h2 id="the-call-function">The <code>call</code> Function</h2>
+<p>The <code>call</code> function allows you to invoke a function with a specific context (<code>this</code> value) and individual arguments passed as separate parameters. Here’s the syntax for <code>call</code>: <code>function.call(context, arg1, arg2, ...)</code>. Let’s take a look at an example:</p>
+<figure class="code code--ln" data-lang="js" data-lines="9"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1.75V5.25h3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="code__name">examples/call-function.js</span></span><span class="code__lang mono">JavaScript</span><button class="code__copy mono" type="button" aria-label="Copy code: examples/call-function.js"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="examples/call-function.js"><code><span class="l"><span class="k">function</span> <span class="f">greet</span>() {</span><span class="l">  console.<span class="f">log</span>(<span class="s">`Hello, ${this.name}!`</span>);</span><span class="l">}</span><span class="l"></span><span class="l"><span class="k">const</span> person = {</span><span class="l">  name: <span class="s">'John'</span></span><span class="l">};</span><span class="l"></span><span class="l">greet.<span class="f">call</span>(person); <span class="c">// Outputs: Hello, John!</span></span></code></pre></div></figure>
+<p>In the above example, we define a function <code>greet</code> that logs a greeting message using the <code>this.name</code> property. We also have an object called <code>person</code> with a <code>name</code> property. By using the <code>call</code> function, we invoke the <code>greet</code> function with the <code>person</code> object as the context. As a result, the output will be "Hello, John!".</p>
+<p>You can also pass arguments to the <code>call</code> function. Let’s see an example:</p>
+<figure class="code code--ln" data-lang="js" data-lines="9"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1.75V5.25h3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="code__name">examples/call-function-arguments.js</span></span><span class="code__lang mono">JavaScript</span><button class="code__copy mono" type="button" aria-label="Copy code: examples/call-function-arguments.js"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="examples/call-function-arguments.js"><code><span class="l"><span class="k">function</span> <span class="f">greet</span>(greeting) {</span><span class="l">  console.<span class="f">log</span>(<span class="s">`${greeting}, ${this.name}!`</span>);</span><span class="l">}</span><span class="l"></span><span class="l"><span class="k">const</span> person = {</span><span class="l">  name: <span class="s">'John'</span></span><span class="l">};</span><span class="l"></span><span class="l">greet.<span class="f">call</span>(person, <span class="s">'Hello'</span>); <span class="c">// Outputs: Hello, John!</span></span></code></pre></div></figure>
+<p>In the above example, we pass the <code>person</code> object as the context and the string "Hello" as the <code>greeting</code> parameter. The output will be "Hello, John!".</p>
+<h2 id="the-apply-function">The <code>apply</code> Function</h2>
+<p>The <code>apply</code> function is similar to <code>call</code>, but it accepts arguments as an array instead of individual parameters. The syntax for <code>apply</code> is as follows: <code>function.apply(context, [arg1, arg2, ...])</code>. Here’s an example to illustrate its usage:</p>
+<figure class="code code--ln" data-lang="js" data-lines="9"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1.75V5.25h3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="code__name">examples/apply-function.js</span></span><span class="code__lang mono">JavaScript</span><button class="code__copy mono" type="button" aria-label="Copy code: examples/apply-function.js"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="examples/apply-function.js"><code><span class="l"><span class="k">function</span> <span class="f">greet</span>(greeting) {</span><span class="l">  console.<span class="f">log</span>(<span class="s">`${greeting}, ${this.name}!`</span>);</span><span class="l">}</span><span class="l"></span><span class="l"><span class="k">const</span> person = {</span><span class="l">  name: <span class="s">'John'</span></span><span class="l">};</span><span class="l"></span><span class="l">greet.<span class="f">apply</span>(person, [<span class="s">'Hello'</span>]); <span class="c">// Outputs: Hello, John!</span></span></code></pre></div></figure>
+<p>In the above example, the <code>greet</code> function takes a <code>greeting</code> parameter. We use the <code>apply</code> function to invoke the <code>greet</code> function with the <code>person</code> object as the context. The greeting is passed as an array <code>['Hello']</code>. The output will be "Hello, John!".</p>
+<h2 id="the-bind-function">The <code>bind</code> Function</h2>
+<p>The <code>bind</code> function creates a new function with a specified context and, optionally, pre-set arguments. It allows you to create a "bound" function that always has a specific context and possibly predefined arguments. The syntax for <code>bind</code> is as follows: <code>function.bind(context, arg1, arg2, ...)</code>. Let’s see an example:</p>
+<figure class="code code--ln" data-lang="js" data-lines="11"><figcaption class="code__bar"><span class="code__tab"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25H4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 1.75V5.25h3.5" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="code__name">examples/bind-function.js</span></span><span class="code__lang mono">JavaScript</span><button class="code__copy mono" type="button" aria-label="Copy code: examples/bind-function.js"><svg class="i-copy" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.25" y="5.25" width="8" height="8" rx="1.75" stroke="currentColor" stroke-width="1.2"/><path d="M10.75 3.25v-.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h.5" stroke="currentColor" stroke-width="1.2"/></svg><svg class="i-ok" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy</span></button></figcaption><div class="code__body"><pre tabindex="0" aria-label="examples/bind-function.js"><code><span class="l"><span class="k">function</span> <span class="f">greet</span>() {</span><span class="l">  console.<span class="f">log</span>(<span class="s">`Hello, ${this.name}!`</span>);</span><span class="l">}</span><span class="l"></span><span class="l"><span class="k">const</span> person = {</span><span class="l">  name: <span class="s">'John'</span></span><span class="l">};</span><span class="l"></span><span class="l"><span class="k">const</span> greetPerson = greet.<span class="f">bind</span>(person);</span><span class="l"></span><span class="l"><span class="f">greetPerson</span>(); <span class="c">// Outputs: Hello, John!</span></span></code></pre></div></figure>
+<p>In the above example, we use the <code>bind</code> function to create a new function <code>greetPerson</code>. The <code>person</code> object is passed as the context. When <code>greetPerson</code> is called, it always has the <code>person</code> object as the context. Therefore, the output will be "Hello, John!".</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The <code>call</code>, <code>apply</code>, and <code>bind</code> functions are powerful tools in JavaScript that allow you to manipulate the context and pass arguments to a function. By understanding their usage, you can have better control over how your functions are executed and leverage the flexibility they provide. Whether you need to explicitly set the context or pass arguments dynamically, these functions will prove invaluable in your JavaScript programming journey.</p>
+<p>Remember to experiment with these functions in your own code to gain a deeper understanding of their capabilities and explore their various use cases. Happy coding!</p>
+<p>I hope you find this blog post helpful! Let me know if you have any further questions.</p>
+      </div>
+
+      <footer class="post-author">
+        <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="" loading="lazy">
+        <span class="name">Felix Yeboah</span>
+        <a class="link" href="https://x.com/sudocode_">@sudocode_ on X</a>
+      </footer>
+    </article>
+
+    <nav class="pager post-pager" aria-label="More writing">
+      <a href="post-reusable-form-hook-with-remix-hook-form.html" rel="prev">
+        <span class="dir">Previous</span>
+        <span class="name"><span class="u">Reusable form hook with Remix Hook Form</span></span>
+      </a>
+      <a href="post-2023-mid-year-review.html" rel="next">
+        <span class="dir">Next</span>
+        <span class="name"><span class="u">2023 Mid-Year Review</span></span>
+      </a>
+    </nav>
+
+    <p class="post-all"><a class="link" href="writing.html">All writing</a></p>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+    <div class="footer-links">
+      <a href="https://github.com/felixyeboah">GitHub</a>
+      <a href="https://x.com/sudocode_">X</a>
+      <a href="resume.html">Résumé</a>
+      <a href="photos.html">Photos</a>
+      <span class="copy">© 2026</span>
+    </div>
+  </footer>
+</div>
+<script>
+document.querySelectorAll('.code').forEach(function (fig) {
+  var b = fig.querySelector('.code__copy'), pre = fig.querySelector('pre');
+  if (!b || !pre || !navigator.clipboard) { if (b) b.hidden = true; return; }
+  b.addEventListener('click', function () {
+    var text = [].map.call(pre.querySelectorAll('.l'), function (l) { return l.textContent; }).join('\n') || pre.textContent;
+    navigator.clipboard.writeText(text).then(function () {
+      b.classList.add('is-done'); b.querySelector('span').textContent = 'Copied';
+      setTimeout(function () { b.classList.remove('is-done'); b.querySelector('span').textContent = 'Copy'; }, 1600);
+    });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#131312">
+<title>Felix Yeboah</title>
+<script>
+  document.documentElement.className = 'js booting';
+  setTimeout(function () {
+    var h = document.documentElement;
+    h.classList.remove('booting');
+    if (!h.hasAttribute('data-ready')) h.classList.remove('js');
+  }, 3000);
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="../../public/assets/covers/reevit.jpg">
+<style>
+  :root {
+    --carbon: #131312;
+    --bone: #DAD7CF;
+    --pad: clamp(20px, 3.2vw, 48px);
+    --ruler: 36px;
+    --bar: 72px;
+    --col: 55vw;
+    --fw: min(37vw, calc((100vh - 280px) * 1.6));
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    background: var(--carbon);
+    color: var(--bone);
+    font-family: "Archivo", ui-sans-serif, sans-serif;
+    font-variation-settings: "wdth" 100, "wght" 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body { min-height: 100vh; font-size: 15px; line-height: 1.45; }
+
+  ::selection { background: var(--bone); color: var(--carbon); }
+
+  a { color: inherit; }
+
+  :focus-visible { outline: 1.5px solid var(--bone); outline-offset: 6px; border-radius: 1px; }
+
+  ol, ul { list-style: none; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+
+  /* Film grain: one small tiled SVG, never a live full-viewport filter */
+  body::after {
+    content: "";
+    position: fixed; inset: 0; z-index: 9; pointer-events: none;
+    opacity: .085;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .855 0 0 0 0 .843 0 0 0 0 .812 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  /* ---------- Top bar ---------- */
+  .bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+    height: var(--bar);
+    padding: 0 var(--pad);
+  }
+  .bar h1 {
+    font-size: 15px; line-height: 1; letter-spacing: -.005em;
+    font-weight: 600; font-variation-settings: "wdth" 100, "wght" 600;
+  }
+  .modes { display: flex; gap: clamp(18px, 2.6vw, 40px); }
+  .modes button {
+    appearance: none; background: none; border: 0; color: inherit; cursor: pointer;
+    font: inherit; font-size: 14px; line-height: 1;
+    font-variation-settings: "wdth" 100, "wght" 500;
+    padding: 10px 0; position: relative;
+    opacity: .42; transition: opacity .25s;
+  }
+  .modes button:hover { opacity: .8; }
+  .modes button[aria-pressed="true"] { opacity: 1; }
+  .modes button::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1px;
+    background: currentColor; transform: scaleX(0); transform-origin: 0 50%;
+    transition: transform .45s cubic-bezier(.7, 0, .2, 1);
+  }
+  .modes button[aria-pressed="true"]::after { transform: scaleX(1); }
+  .modes .n { font-size: 10px; vertical-align: 5px; font-variant-numeric: tabular-nums; }
+  .bar-mail {
+    justify-self: end; font-size: 14px; text-decoration: none;
+    opacity: .7; transition: opacity .25s;
+  }
+  .bar-mail:hover { opacity: 1; }
+
+  /* ---------- Document flow (no-JS baseline) ---------- */
+  main { padding: 0 var(--pad) 96px; }
+  .panel { padding-top: 40px; }
+  .wheel li { padding: 14px 0; border-top: 1px solid rgba(218, 215, 207, .12); }
+  .wheel a {
+    display: inline-block;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: -.025em;
+    line-height: .9;
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    font-variation-settings: "wdth" 100, "wght" 700;
+  }
+  .wheel--writing a {
+    text-transform: none; letter-spacing: -.015em; line-height: 1;
+    font-size: clamp(1.4rem, 3.4vw, 2.6rem);
+  }
+  .info { margin-top: 10px; font-size: 13px; max-width: 62ch; opacity: .7; }
+  .info .num, .info .cat, .meta .num, .meta .cat { text-transform: uppercase; letter-spacing: .06em; font-variant-numeric: tabular-nums; }
+  .info .cat::before, .info .dom::before, .meta .cat::before, .meta .dom::before { content: "/"; margin: 0 .7em; opacity: .45; }
+  .info .desc { display: block; margin-top: 4px; }
+
+  /* ---------- About ---------- */
+  .about-name {
+    font-size: min(13vw, 22vh, 13rem);
+    line-height: .8;
+    letter-spacing: -.03em;
+    text-transform: uppercase;
+    font-variation-settings: "wdth" 125, "wght" 800;
+  }
+  .about-name span { display: block; }
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, .7fr);
+    gap: var(--pad);
+    margin-top: clamp(32px, 7vh, 72px);
+    max-width: 1240px;
+    align-items: start;
+  }
+  .about-intro { font-size: clamp(17px, 1.5vw, 21px); line-height: 1.4; max-width: 34ch; }
+  .about-contact { display: grid; gap: 10px; }
+  .about-contact a { font-size: clamp(17px, 1.5vw, 21px); text-decoration: none; }
+  .status { display: flex; align-items: center; gap: 10px; font-size: 14px; opacity: .75; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--bone); flex: none; }
+  .about-links { display: grid; gap: 8px; font-size: 14px; }
+  .about-links a, .about-contact a {
+    text-decoration: underline; text-decoration-thickness: 1px;
+    text-underline-offset: .3em; text-decoration-color: rgba(218, 215, 207, .3);
+    transition: text-decoration-color .25s;
+  }
+  .about-links a:hover, .about-contact a:hover { text-decoration-color: currentColor; }
+
+  .viewer, .ruler { display: none; }
+  html:not(.js) .modes { visibility: hidden; }
+
+  /* ================= Stage (JS) ================= */
+  html.js, html.js body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+
+  html.js .bar {
+    position: fixed; inset: 0 0 auto; z-index: 5;
+    background: linear-gradient(var(--carbon) 30%, rgba(19, 19, 18, 0));
+  }
+  html.js main { padding: 0; }
+  html.js .panel { position: fixed; inset: 0; z-index: 2; padding: 0; }
+  html.js .panel[hidden] { display: none; }
+  html.js .viewer, html.js .ruler { display: block; }
+
+  html.booting .panel, html.booting .frame, html.booting .meta, html.booting .ruler { opacity: 0; }
+  .panel, .frame, .meta, .ruler { transition: opacity .6s ease; }
+
+  html.js .scroller {
+    position: absolute; inset: 0;
+    overflow-x: hidden; overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+    overscroll-behavior: contain;
+  }
+  html.js .scroller::-webkit-scrollbar { display: none; }
+
+  html.js .wheel {
+    position: relative;
+    font-size: var(--fs);
+    padding-block: calc(50vh - var(--row) / 2);
+    padding-block: calc(50dvh - var(--row) / 2);
+  }
+  html.js .wheel--work {
+    --row: clamp(64px, 11vh, 120px);
+    --fs: min(clamp(2.6rem, 9vw, 9rem), calc(var(--row) * 1.15));
+  }
+  html.js .wheel--writing {
+    --row: clamp(84px, 16vh, 150px);
+    --fs: min(clamp(1.4rem, 4vw, 4rem), calc(var(--row) * .44));
+  }
+  html.js .wheel li {
+    position: relative;
+    height: var(--row);
+    width: var(--col);
+    padding: 0 16px 0 var(--pad);
+    border: 0;
+    display: flex; align-items: center;
+    scroll-snap-align: center;
+  }
+  html.js .wheel a {
+    font-size: calc(1em * var(--fit, 1));
+    line-height: .8;
+    padding-block: .06em;
+    white-space: nowrap;
+    transform-origin: 0 50%;
+    backface-visibility: hidden;
+    /* Static state: what reduced motion and a stalled script both show */
+    font-variation-settings: "wdth" 100, "wght" 400;
+    opacity: .38;
+  }
+  html.js .wheel--writing a { line-height: .98; }
+  html.js .wheel a[aria-current="true"] { font-variation-settings: "wdth" 100, "wght" 800; opacity: 1; }
+  html.js .ln { display: block; }
+  html.js .info {
+    position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+
+  .measurer {
+    position: absolute; left: -9999px; top: 0;
+    visibility: hidden; pointer-events: none;
+    white-space: pre; line-height: 1;
+    text-transform: uppercase; letter-spacing: -.025em;
+  }
+  .measurer[data-kind="writing"] { text-transform: none; letter-spacing: -.015em; }
+
+  /* Viewer: cover frame + one quiet line */
+  html.js .viewer {
+    position: fixed; z-index: 1;
+    right: calc(var(--ruler) + var(--pad));
+    top: calc(50% - var(--fw) / 3.2);
+    width: var(--fw);
+    pointer-events: none;
+  }
+  .frame {
+    position: relative; width: 100%; aspect-ratio: 16 / 10;
+    overflow: hidden; background: rgba(218, 215, 207, .04);
+  }
+  .frame img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; display: block;
+  }
+  .numeral {
+    display: none; position: absolute; inset: 0;
+    place-items: center;
+    font-size: calc(var(--fw) * .6);
+    line-height: .8; letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+    font-variation-settings: "wdth" 62, "wght" 300;
+    color: transparent;
+    -webkit-text-stroke: 2.5px var(--bone);
+  }
+  /* Fill layer on top hides the inner half of the stroke, so variable-font contour overlaps never show */
+  .numeral::after {
+    content: attr(data-n);
+    position: absolute; inset: 0; display: grid; place-items: center;
+    color: var(--carbon); -webkit-text-stroke: 0;
+  }
+  .meta { margin-top: 20px; font-size: 12px; }
+  .meta-line { display: flex; flex-wrap: wrap; font-variation-settings: "wdth" 100, "wght" 500; }
+  .meta-desc { margin-top: 8px; font-size: 15px; line-height: 1.45; max-width: 44ch; opacity: .68; }
+
+  html[data-mode="writing"] .frame { background: none; box-shadow: inset 0 0 0 1px rgba(218, 215, 207, .14); }
+  html[data-mode="writing"] .frame img, html[data-mode="writing"] .meta { display: none; }
+  html[data-mode="writing"] .numeral { display: grid; }
+  html[data-mode="about"] .viewer, html[data-mode="about"] .ruler { display: none; }
+
+  /* Tick ruler / scrubber */
+  html.js .ruler {
+    position: fixed; z-index: 4; right: 0; top: 50%;
+    width: var(--ruler);
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  .tick {
+    display: flex; align-items: center; justify-content: flex-end;
+    height: clamp(14px, 2.3vh, 22px); padding-right: 14px;
+    cursor: pointer; pointer-events: auto;
+  }
+  .tick::before {
+    content: ""; height: 1px; width: 8px; background: var(--bone); opacity: .3;
+    transition: width .35s cubic-bezier(.7, 0, .2, 1), opacity .35s;
+  }
+  .tick:hover::before { opacity: .75; }
+  .tick.on::before { width: 22px; opacity: 1; }
+
+  /* About as a stage panel */
+  html.js #about {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: calc(var(--bar) + 24px) var(--pad) 48px;
+    overflow-y: auto;
+  }
+  html.js #about[hidden] { display: none; }
+  html.js .about-name { animation: stretch 1.1s cubic-bezier(.2, .8, .2, 1) both; }
+  html.js .about-grid { animation: rise .9s .25s cubic-bezier(.2, .8, .2, 1) both; }
+  .dot { animation: breathe 2.6s ease-in-out infinite; }
+  @keyframes stretch {
+    from { font-variation-settings: "wdth" 62, "wght" 200; opacity: 0; }
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+  @keyframes breathe { 50% { opacity: .25; } }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 720px) {
+    :root { --ruler: 30px; --bar: 60px; --col: calc(100vw - var(--ruler)); }
+    .bar { grid-template-columns: auto 1fr; gap: 16px; }
+    .bar h1 { font-size: 14px; }
+    .modes { justify-self: end; gap: 18px; }
+    .modes button { font-size: 13px; }
+    .bar-mail { display: none; }
+
+    html.js .wheel--work { --fs: min(clamp(2rem, 11vw, 3.4rem), calc(var(--row) * 1.15)); }
+    html.js .wheel--writing { --fs: min(clamp(1.25rem, 6vw, 1.8rem), calc(var(--row) * .44)); }
+
+    html.js .viewer { position: static; width: auto; }
+    html.js .frame {
+      position: fixed; inset: 0; z-index: 1; aspect-ratio: auto;
+      background: var(--carbon);
+    }
+    html.js .frame img { filter: brightness(.32) saturate(.85); }
+    html.js .frame::after {
+      z-index: 3; pointer-events: none;
+      content: ""; position: absolute; inset: 0;
+      background:
+        linear-gradient(rgba(19, 19, 18, .6), rgba(19, 19, 18, 0) 30%, rgba(19, 19, 18, 0) 62%, rgba(19, 19, 18, .92) 86%);
+    }
+    html[data-mode="writing"] .frame { box-shadow: none; }
+    html.js .numeral { font-size: 78vw; opacity: .3; }
+    html.js .numeral::after { display: none; }
+    html.js .numeral { -webkit-text-stroke-width: 1px; }
+    html.js .meta {
+      position: fixed; z-index: 3;
+      left: var(--pad); right: calc(var(--ruler) + 8px);
+      bottom: calc(18px + env(safe-area-inset-bottom));
+      margin: 0;
+    }
+    .meta-desc { font-size: 13.5px; }
+
+    .about-grid { grid-template-columns: 1fr; gap: 28px; }
+  }
+
+  /* ---------- Reduced motion: a plain snap list ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    html.js .wheel a { transition: opacity .2s, font-variation-settings .2s; }
+    html.js .about-name, html.js .about-grid, .dot { animation: none; }
+    .modes button::after, .tick::before { transition: none; }
+    .panel, .frame, .meta, .ruler { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <h1>Felix Yeboah</h1>
+  <div class="modes" role="group" aria-label="View">
+    <button type="button" data-mode="work" aria-pressed="true" aria-controls="work">Work</button>
+    <button type="button" data-mode="writing" aria-pressed="false" aria-controls="writing">Writing</button>
+    <button type="button" data-mode="about" aria-pressed="false" aria-controls="about">About</button>
+  </div>
+  <a class="bar-mail" href="mailto:me@felixyeboah.dev">me@felixyeboah.dev</a>
+</header>
+
+<main>
+  <section class="panel" id="work" aria-labelledby="work-h">
+    <h2 class="sr-only" id="work-h">Work</h2>
+    <div class="scroller">
+      <ol class="wheel wheel--work" data-wmax="125">
+        <li data-cover="../../public/assets/covers/reevit.jpg"><a href="#">Reevit</a>
+          <p class="info"><span class="num">01</span><span class="cat">Payments</span><span class="dom">reevit.io</span><span class="desc">Payments that don't miss. When one provider goes down, the next one picks up and your customers never notice.</span></p></li>
+        <li data-cover="../../public/assets/covers/miss-cookie.jpg"><a href="#">Miss Cookie Spices</a>
+          <p class="info"><span class="num">02</span><span class="cat">E-commerce</span><span class="dom">misscookieghana.com</span><span class="desc">Premium Ghanaian spices and cooking ingredients, with a storefront built for mobile money.</span></p></li>
+        <li data-cover="../../public/assets/covers/waytu.jpg"><a href="#">Waytu</a>
+          <p class="info"><span class="num">03</span><span class="cat">Ride-sharing</span><span class="dom">waytu.io</span><span class="desc">Community-driven ride-sharing that pairs nearby commuters for a cheaper, greener trip.</span></p></li>
+        <li data-cover="../../public/assets/covers/drobotix.jpg"><a href="#">Drobotix</a>
+          <p class="info"><span class="num">04</span><span class="cat">Ag-Tech Drones</span><span class="dom">drobotixas.com</span><span class="desc">Drone technology, training and support that help farmers spray and survey at scale.</span></p></li>
+        <li data-cover="../../public/assets/covers/studio-theon.jpg"><a href="#">Studio Theon</a>
+          <p class="info"><span class="num">05</span><span class="cat">Agency</span><span class="dom">studiotheon.com</span><span class="desc">A creative digital agency site with a storefront for seasonal souvenirs and gifts.</span></p></li>
+        <li data-cover="../../public/assets/covers/dasheen-atelier.jpg"><a href="#">Dasheen Atelier</a>
+          <p class="info"><span class="num">06</span><span class="cat">Fashion</span><span class="dom">dasheenatelier.com</span><span class="desc">Made-to-measure bridal and traditional wear, finished by hand in Accra.</span></p></li>
+        <li data-cover="../../public/assets/covers/dronehub.jpg"><a href="#">Dronehub</a>
+          <p class="info"><span class="num">07</span><span class="cat">Drone sales &amp; services</span><span class="dom">dronehubafrica.com</span><span class="desc">Selling and servicing drones for consumer, enterprise and agriculture in Ghana.</span></p></li>
+        <li data-cover="../../public/assets/covers/uavops.jpg"><a href="#">UAVOps</a>
+          <p class="info"><span class="num">08</span><span class="cat">Aerial data intelligence</span><span class="dom">uavops.vercel.app</span><span class="desc">High-precision aerial intelligence that helps organisations make faster, safer and better-informed decisions.</span></p></li>
+        <li data-cover="../../public/assets/covers/blavior.jpg"><a href="#">Blavior</a>
+          <p class="info"><span class="num">09</span><span class="cat">Real estate</span><span class="dom">blavior.io</span><span class="desc">A real estate connection platform, opening with a waitlist for agents, developers and property owners.</span></p></li>
+        <li data-cover="../../public/assets/covers/the-rumson.jpg"><a href="#">The Rumson</a>
+          <p class="info"><span class="num">10</span><span class="cat">Restaurant</span><span class="dom">therumson.com</span><span class="desc">Elevated Ghanaian comfort food in the heart of Labone, with online ordering for dine-in, takeaway and delivery.</span></p></li>
+        <li data-cover="../../public/assets/covers/7even-sports.jpg"><a href="#">7even Sports Group</a>
+          <p class="info"><span class="num">11</span><span class="cat">Sports club</span><span class="dom">7evensportsgroup.com</span><span class="desc">Empowering Ghana's grassroots athletes through leagues, development programmes and global exposure.</span></p></li>
+        <li data-cover="../../public/assets/covers/css.jpg"><a href="#">CSS</a>
+          <p class="info"><span class="num">12</span><span class="cat">Connectivity solutions</span><span class="dom">techbycss.com</span><span class="desc">Communication and connectivity solutions for businesses.</span></p></li>
+        <li data-cover="../../public/assets/covers/the-arck.jpg"><a href="#">The Arck Interior LTD</a>
+          <p class="info"><span class="num">13</span><span class="cat">Interior design</span><span class="dom">thearckinteriorltd.com</span><span class="desc">Thoughtfully designed kitchens and living spaces that reflect your personality and style.</span></p></li>
+        <li data-cover="../../public/assets/covers/dna.jpg"><a href="#">Desmond Weds Akyeamaa</a>
+          <p class="info"><span class="num">14</span><span class="cat">Wedding</span><span class="dom">dna-8a83.fly.dev</span><span class="desc">A wedding site for Desmond and Akyeamaa to share their love story with invited guests.</span></p></li>
+        <li data-cover="../../public/assets/covers/undisciplined.jpg"><a href="#">Undisciplined</a>
+          <p class="info"><span class="num">15</span><span class="cat">Education</span><span class="dom">undisciplined.vercel.app</span><span class="desc">Education that's about understanding and applying knowledge to solve real-world problems.</span></p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="panel" id="writing" aria-labelledby="writing-h">
+    <h2 class="sr-only" id="writing-h">Writing</h2>
+    <div class="scroller">
+      <ol class="wheel wheel--writing" data-wmax="100">
+        <li data-num="01"><a href="#">Why I Built Reevit: A Developer's Reaction to a Real Problem</a></li>
+        <li data-num="02"><a href="#">A Year of Resilience and Growth — 2024 in review</a></li>
+        <li data-num="03"><a href="#">From Zero to Go: How Real Projects Shaped My Golang Skills</a></li>
+        <li data-num="04"><a href="#">Mock Testing with Go Mockery</a></li>
+        <li data-num="05"><a href="#">Transitioning to Backend Engineering</a></li>
+        <li data-num="06"><a href="#">How I got sold on Remix</a></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="panel" id="about" aria-labelledby="about-h">
+    <h2 class="about-name" id="about-h"><span>Felix</span> <span>Yeboah</span></h2>
+    <div class="about-grid">
+      <p class="about-intro">Self-taught, based in Accra. Ten years taking products from first sketch to production — React and Remix on the front, Go and Postgres underneath.</p>
+      <div class="about-contact">
+        <p class="status"><span class="dot" aria-hidden="true"></span>Taking on select projects</p>
+        <a href="mailto:me@felixyeboah.dev">me@felixyeboah.dev</a>
+      </div>
+      <ul class="about-links">
+        <li><a href="/resume">Résumé</a></li>
+        <li><a href="/photos">Photos</a></li>
+        <li><a href="https://github.com/felixyeboah" rel="noopener">GitHub</a></li>
+        <li><a href="https://x.com/sudocode_" rel="noopener">X</a></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<aside class="viewer" aria-hidden="true">
+  <div class="frame">
+    <img src="../../public/assets/covers/reevit.jpg" alt="" width="1600" height="1000" decoding="async">
+    <img src="../../public/assets/covers/reevit.jpg" alt="" width="1600" height="1000" decoding="async">
+    <div class="numeral" data-n="01">01</div>
+  </div>
+  <div class="meta">
+    <p class="meta-line"><span class="num" data-m="num">01</span><span class="cat" data-m="cat">Payments</span><span class="dom" data-m="dom">reevit.io</span></p>
+    <p class="meta-desc" data-m="desc">Payments that don't miss. When one provider goes down, the next one picks up and your customers never notice.</p>
+  </div>
+</aside>
+
+<div class="ruler" aria-hidden="true"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  const html = document.documentElement;
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let reduce = mq.matches;
+
+  const STEP_DEG = 16;
+  const RAD = STEP_DEG * Math.PI / 180;
+  const PERSPECTIVE = 900;
+  const WINDOW = 6;
+  const WDTH_MIN = 62;
+
+  const q = (s, r = document) => r.querySelector(s);
+  const qa = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const smooth = t => t * t * (3 - 2 * t);
+
+  const viewer = q('.viewer');
+  const imgs = qa('.frame img', viewer);
+  const numeral = q('.numeral', viewer);
+  const meta = {
+    box: q('.meta', viewer),
+    num: q('[data-m="num"]', viewer),
+    cat: q('[data-m="cat"]', viewer),
+    dom: q('[data-m="dom"]', viewer),
+    desc: q('[data-m="desc"]', viewer)
+  };
+  const ruler = q('.ruler');
+  const buttons = qa('.modes [data-mode]');
+  const panels = { work: q('#work'), writing: q('#writing'), about: q('#about') };
+
+  /* Offscreen measurer: lists may be display:none, so never measure them in place */
+  const measurer = document.createElement('span');
+  measurer.className = 'measurer';
+  measurer.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(measurer);
+  const measure = text => { measurer.textContent = text; return measurer.getBoundingClientRect().width; };
+
+  function makeWheel(name) {
+    const panel = panels[name];
+    const ol = q('.wheel', panel);
+    const items = qa(':scope > li', ol);
+    return {
+      name, panel, ol, items,
+      scroller: q('.scroller', panel),
+      anchors: items.map(li => q('a', li)),
+      data: items.map(li => {
+        const t = k => { const el = q('.' + k, li); return el ? el.textContent.trim() : ''; };
+        return { num: li.dataset.num || t('num'), cat: t('cat'), dom: t('dom'), desc: t('desc'), cover: li.dataset.cover || '' };
+      }),
+      n: items.length,
+      wmaxBase: Number(ol.dataset.wmax) || 125,
+      rowH: 1, vh: 0, off: 0, avail: 0,
+      cur: -1, goal: null, intro: 0, live: [], downIdx: -1,
+      split: false, fitKey: '', ticks: null
+    };
+  }
+
+  const wheels = { work: makeWheel('work'), writing: makeWheel('writing') };
+  let mode = 'work';
+
+  const wmax = w => (reduce ? 100 : w.wmaxBase);
+
+  /* Geometry is cached here; the scroll path only reads scrollTop */
+  function measureWheel(w) {
+    const li = w.items[0];
+    w.vh = w.scroller.clientHeight;
+    w.rowH = li.offsetHeight || 1;
+    const padTop = w.ol.offsetTop + li.offsetTop;
+    w.off = padTop + w.rowH / 2 - w.vh / 2;
+    const cs = getComputedStyle(li);
+    w.avail = li.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  }
+
+  /* Balanced two-line break for long post titles, decided once */
+  function splitTitles(w) {
+    w.anchors.forEach(a => {
+      const words = a.textContent.trim().split(/\s+/);
+      let best = null;
+      for (let k = 1; k < words.length; k++) {
+        if (/^[—–-]$/.test(words[k])) continue;
+        const l1 = words.slice(0, k).join(' ');
+        const l2 = words.slice(k).join(' ');
+        const cost = Math.max(measure(l1), measure(l2));
+        if (!best || cost < best.cost) best = { l1, l2, cost };
+      }
+      if (!best) return;
+      const s1 = document.createElement('span');
+      const s2 = document.createElement('span');
+      s1.className = s2.className = 'ln';
+      s1.textContent = best.l1;
+      s2.textContent = best.l2;
+      a.replaceChildren(s1, document.createTextNode(' '), s2);
+    });
+    w.split = true;
+  }
+
+  /* --fit: scale each label so its widest state (wdth max, wght 800) fills the column at most */
+  function fitWheel(w) {
+    const fs = getComputedStyle(w.ol).fontSize;
+    const key = fs + '|' + w.avail + '|' + wmax(w);
+    if (key === w.fitKey) return;
+    w.fitKey = key;
+    measurer.dataset.kind = w.name;
+    measurer.style.fontSize = fs;
+    measurer.style.fontVariationSettings = '"wdth" ' + wmax(w) + ', "wght" 800';
+    if (w.name === 'writing' && !w.split) splitTitles(w);
+    w.anchors.forEach(a => {
+      const lines = w.name === 'writing' ? qa('.ln', a).map(l => l.textContent) : [a.textContent.trim()];
+      const widest = Math.max.apply(null, lines.map(measure));
+      const fit = widest > 0 ? Math.min(1, w.avail / (widest * 1.03)) : 1;
+      a.style.setProperty('--fit', fit.toFixed(4));
+    });
+  }
+
+  function far(a) {
+    a.style.opacity = '0';
+    a.style.transform = 'none';
+  }
+
+  /* d = signed distance from the centre line, in rows */
+  function place(w, a, d) {
+    const ad = Math.abs(d);
+    const tW = smooth(1 - Math.min(ad / 1.5, 1));
+    const tG = smooth(1 - Math.min(ad / 2.2, 1));
+    const wd = WDTH_MIN + (w.wmaxBase - WDTH_MIN) * tW;
+    const wg = 300 + 500 * tG;
+    const th = clamp(d * RAD, -Math.PI / 2, Math.PI / 2);
+    const R = w.rowH / RAD;                       // drum radius so one row = one step of arc
+    const dy = R * Math.sin(th) - d * w.rowH;     // pull rows onto the drum
+    const dz = R * (Math.cos(th) - 1);            // and push them back
+    const op = ad <= 4 ? 1 - 0.88 * (ad / 4) : 0.12 * (1 - Math.min((ad - 4) / 1.5, 1));
+    a.style.fontVariationSettings = '"wdth" ' + wd.toFixed(1) + ', "wght" ' + Math.round(wg);
+    a.style.transform = 'perspective(' + PERSPECTIVE + 'px) translate3d(0,' + dy.toFixed(2) + 'px,' + dz.toFixed(2) + 'px) rotateX(' + (-th * 180 / Math.PI).toFixed(2) + 'deg)';
+    a.style.opacity = op.toFixed(3);
+  }
+
+  function render(w) {
+    const raw = (w.scroller.scrollTop - w.off) / w.rowH;
+    const p = raw - w.intro;
+    if (!reduce) {
+      const lo = Math.max(0, Math.floor(p - WINDOW));
+      const hi = Math.min(w.n - 1, Math.ceil(p + WINDOW));
+      for (const i of w.live) if (i < lo || i > hi) far(w.anchors[i]);
+      w.live.length = 0;
+      for (let i = lo; i <= hi; i++) { place(w, w.anchors[i], i - p); w.live.push(i); }
+    }
+    const idx = clamp(Math.round(raw), 0, w.n - 1);
+    if (idx !== w.cur) select(w, idx);
+    if (w.goal !== null && Math.abs(raw - w.goal) < 0.02) w.goal = null;
+  }
+
+  function select(w, idx) {
+    const prev = w.cur;
+    w.cur = idx;
+    w.anchors.forEach((a, i) => {
+      if (i === idx) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+    if (w.ticks) w.ticks.forEach((t, i) => t.classList.toggle('on', i === idx));
+    if (mode === w.name) show(w, idx, prev < 0 ? 1 : Math.sign(idx - prev) || 1);
+  }
+
+  /* ---------- Viewer ---------- */
+  let front = imgs[0];
+  let back = imgs[1];
+  let coverSeq = 0;
+  let zTop = 2;
+  front.style.zIndex = String(zTop);
+
+  function setCover(src, dir) {
+    const seq = ++coverSeq;
+    if (!src || front.getAttribute('src') === src) return;
+    const el = back;
+    el.src = src;
+    const reveal = () => {
+      if (seq !== coverSeq) return;
+      el.style.zIndex = String(++zTop);
+      if (!reduce && el.animate) {
+        el.animate([
+          { clipPath: dir > 0 ? 'inset(100% 0 0 0)' : 'inset(0 0 100% 0)', transform: 'scale(1.08)' },
+          { clipPath: 'inset(0 0 0 0)', transform: 'scale(1)' }
+        ], { duration: 640, easing: 'cubic-bezier(.7, 0, .2, 1)' });
+      }
+      back = front;
+      front = el;
+    };
+    if (el.decode) el.decode().then(reveal, reveal);
+    else reveal();
+  }
+
+  const preloaded = new Set();
+  function preload(w, idx) {
+    [1, -1, 2, -2].forEach(k => {
+      const d = w.data[idx + k];
+      if (!d || !d.cover || preloaded.has(d.cover)) return;
+      preloaded.add(d.cover);
+      const im = new Image();
+      im.decoding = 'async';
+      im.src = d.cover;
+    });
+  }
+
+  function settle(el, from) {
+    if (reduce || !el.animate) return;
+    el.animate([from, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2, .7, .2, 1)' });
+  }
+
+  function show(w, idx, dir) {
+    const d = w.data[idx];
+    if (w.name === 'work') {
+      setCover(d.cover, dir);
+      meta.num.textContent = d.num;
+      meta.cat.textContent = d.cat;
+      meta.dom.textContent = d.dom;
+      meta.desc.textContent = d.desc;
+      settle(meta.box, { opacity: 0, transform: 'translateY(' + dir * 8 + 'px)' });
+      preload(w, idx);
+    } else {
+      numeral.textContent = d.num;
+      numeral.dataset.n = d.num;
+      if (!reduce && numeral.animate) {
+        numeral.animate([
+          { opacity: 0, transform: 'translateY(' + dir * 14 + '%)', fontVariationSettings: '"wdth" 125, "wght" 300' },
+          { opacity: 1, transform: 'none', fontVariationSettings: '"wdth" 62, "wght" 300' }
+        ], { duration: 560, easing: 'cubic-bezier(.2, .7, .2, 1)' });
+      }
+    }
+  }
+
+  /* ---------- Navigation ---------- */
+  function goTo(w, i, opts) {
+    opts = opts || {};
+    i = clamp(i, 0, w.n - 1);
+    w.goal = i;
+    if (opts.focus) w.anchors[i].focus({ preventScroll: true });
+    w.scroller.scrollTo({ top: i * w.rowH + w.off, behavior: reduce || opts.instant ? 'auto' : 'smooth' });
+  }
+
+  let rafId = 0;
+  function schedule() {
+    if (rafId) return;
+    rafId = requestAnimationFrame(() => {
+      rafId = 0;
+      const w = wheels[mode];
+      if (w) render(w);
+    });
+  }
+
+  function bindWheel(w) {
+    w.scroller.addEventListener('scroll', schedule, { passive: true });
+    w.scroller.addEventListener('pointerdown', () => { w.downIdx = w.cur; });
+    w.scroller.addEventListener('click', e => {
+      const a = e.target.closest('a');
+      if (!a) return;
+      const i = w.anchors.indexOf(a);
+      if (i < 0 || e.detail === 0) return;          // keyboard activation follows the link
+      if (i !== w.downIdx) { e.preventDefault(); goTo(w, i); }
+    });
+    w.scroller.addEventListener('focusin', e => {
+      const i = w.anchors.indexOf(e.target);
+      if (i >= 0 && i !== w.cur && i !== w.goal) goTo(w, i);
+    });
+  }
+
+  document.addEventListener('keydown', e => {
+    const w = wheels[mode];
+    if (!w || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    const base = w.goal !== null ? w.goal : w.cur;
+    let t;
+    switch (e.key) {
+      case 'ArrowDown': t = base + 1; break;
+      case 'ArrowUp': t = base - 1; break;
+      case 'Home': t = 0; break;
+      case 'End': t = w.n - 1; break;
+      default: return;
+    }
+    e.preventDefault();
+    goTo(w, t, { focus: w.scroller.contains(document.activeElement) });
+  });
+
+  function buildRuler(w) {
+    if (!w.ticks) {
+      w.ticks = w.items.map((_, i) => {
+        const t = document.createElement('span');
+        t.className = 'tick';
+        t.addEventListener('click', () => goTo(w, i));
+        return t;
+      });
+    }
+    ruler.replaceChildren.apply(ruler, w.ticks);
+    w.ticks.forEach((t, i) => t.classList.toggle('on', i === w.cur));
+  }
+
+  /* Reel: rows offset from below, settling with a small overshoot */
+  let spinTok = 0;
+  function spin(w, rows, dur) {
+    if (reduce) return;
+    const tok = ++spinTok;
+    const t0 = performance.now();
+    const c1 = 1.1, c3 = c1 + 1;
+    const ease = t => 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+    w.intro = rows;
+    render(w);
+    const tick = now => {
+      if (tok !== spinTok) return;
+      const t = Math.min(1, (now - t0) / dur);
+      w.intro = t < 1 ? rows * (1 - ease(t)) : 0;
+      render(w);
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  function clearInline(w) {
+    w.live.length = 0;
+    w.anchors.forEach(a => {
+      a.style.removeProperty('transform');
+      a.style.removeProperty('opacity');
+      a.style.removeProperty('font-variation-settings');
+    });
+  }
+
+  function setMode(next, first) {
+    if (next === mode && !first) return;
+    const prevW = wheels[mode];
+    if (prevW) { prevW.intro = 0; }
+    spinTok++;
+    mode = next;
+    html.dataset.mode = next;
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === next)));
+    Object.keys(panels).forEach(k => { panels[k].hidden = k !== next; });
+    const w = wheels[next];
+    ruler.hidden = !w;
+    if (!w) return;
+    measureWheel(w);
+    fitWheel(w);
+    const idx = Math.max(0, w.cur);
+    w.scroller.scrollTop = idx * w.rowH + w.off;
+    w.goal = null;
+    w.cur = -1;
+    if (!reduce) { w.live.length = 0; w.anchors.forEach(far); }
+    buildRuler(w);
+    render(w);
+    if (!first) spin(w, Math.min(w.n - 1, 5), 640);
+  }
+
+  /* ---------- Wiring ---------- */
+  Object.keys(wheels).forEach(k => bindWheel(wheels[k]));
+  buttons.forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
+  let resizeRaf = 0;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(resizeRaf);
+    resizeRaf = requestAnimationFrame(() => {
+      const w = wheels[mode];
+      if (!w) return;
+      measureWheel(w);
+      fitWheel(w);
+      w.scroller.scrollTop = Math.max(0, w.cur) * w.rowH + w.off;
+      render(w);
+    });
+  });
+
+  const onMotionPref = e => {
+    reduce = e.matches;
+    spinTok++;
+    Object.keys(wheels).forEach(k => {
+      const w = wheels[k];
+      w.intro = 0;
+      clearInline(w);
+      if (!reduce) w.anchors.forEach(far);
+    });
+    const w = wheels[mode];
+    if (w) { fitWheel(w); render(w); }
+  };
+  if (mq.addEventListener) mq.addEventListener('change', onMotionPref);
+  else if (mq.addListener) mq.addListener(onMotionPref);
+
+  let started = false;
+  function start() {
+    if (started) return;
+    started = true;
+    setMode('work', true);
+    html.classList.remove('booting');
+    spin(wheels.work, Math.min(wheels.work.n - 1, 12), 950);
+    html.dataset.ready = '';
+  }
+
+  /* If the race timed out before Archivo arrived, refit with real metrics */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      if (!started) return;
+      Object.keys(wheels).forEach(k => { wheels[k].fitKey = ''; });
+      const w = wheels[mode];
+      if (w) { fitWheel(w); render(w); }
+    });
+  }
+
+  const fontsReady = document.fonts && document.fonts.load
+    ? Promise.all([document.fonts.load('800 1em "Archivo"'), document.fonts.ready])
+    : Promise.resolve();
+  Promise.race([fontsReady, new Promise(r => setTimeout(r, 2500))]).then(start, start);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --stone: #ECE9E3;
+    --panel: #F7F5F1;
+    --ink: #191816;
+    --muted: #6A675F;
+    --hairline: #D5D1C8;
+    --accent: #B4492A;
+
+    --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+    --sans: "DM Sans", ui-sans-serif, -apple-system, "Segoe UI", sans-serif;
+
+    /* type scale: five sizes */
+    --fs-xl: clamp(2rem, 5.2vw, 3.75rem);
+    --fs-lg: clamp(1.6rem, 2.6vw, 2.25rem);
+    --fs-md: 1.25rem;
+    --fs-base: 1rem;
+    --fs-sm: 0.8125rem;
+
+    /* spacing scale */
+    --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px;
+    --s6: 32px; --s7: 48px; --s8: 64px; --s9: 96px; --s10: 128px;
+
+    --gutter: clamp(20px, 5vw, 72px);
+    --radius: 2px;
+    --ease: cubic-bezier(.2, .7, .2, 1);
+    --dur: 220ms;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--stone);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: var(--fs-base);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  img { display: block; max-width: 100%; height: auto; }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3, p, ul, ol { margin: 0; }
+  ul, ol { padding: 0; list-style: none; }
+  button { font: inherit; color: inherit; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: var(--radius);
+  }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 1320px;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .skip {
+    position: absolute; left: var(--s4); top: var(--s4); z-index: 10;
+    padding: var(--s2) var(--s4);
+    background: var(--ink); color: var(--panel);
+    font-size: var(--fs-sm); border-radius: var(--radius);
+    transform: translateY(-200%);
+  }
+  .skip:focus-visible { transform: none; }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s2) var(--s6);
+    padding-block: var(--s5);
+  }
+  .brand {
+    font-family: var(--serif);
+    font-size: var(--fs-md);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+  }
+  .nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--s5);
+  }
+  .nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--muted);
+    min-width: 40px;
+    justify-content: center;
+  }
+  .nav a:hover { color: var(--ink); }
+
+  /* ---------- Intro ---------- */
+  .intro {
+    text-align: center;
+    padding-block: var(--s9) var(--s10);
+  }
+  .intro h1 {
+    font-family: var(--serif);
+    font-size: var(--fs-lg);
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.012em;
+    max-width: 36ch;
+    margin-inline: auto;
+    text-wrap: balance;
+  }
+  .meta-line {
+    margin-top: var(--s5);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--s1) var(--s3);
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .meta-line .sep { color: var(--hairline); }
+  .status { display: inline-flex; align-items: center; gap: var(--s2); }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    flex: none;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+  .intro > * { animation: rise 600ms var(--ease) both; }
+  .intro > :nth-child(2) { animation-delay: 80ms; }
+
+  /* ---------- Section headings ---------- */
+  .h2 {
+    font-family: var(--serif);
+    font-size: var(--fs-lg);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+  }
+
+  /* ---------- Work ---------- */
+  .work { padding-bottom: var(--s10); }
+  .work-head { text-align: center; margin-bottom: var(--s7); }
+
+  .filters {
+    margin-top: var(--s5);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--s2);
+  }
+  .pill {
+    appearance: none;
+    min-height: 40px;
+    padding: 0 var(--s4);
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    background: transparent;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .pill:hover { color: var(--ink); border-color: var(--ink); }
+  .pill[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--panel);
+  }
+  .pill:focus-visible { outline-offset: 3px; border-radius: 999px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s7) var(--s6);
+    transition: opacity 160ms var(--ease);
+  }
+  .grid.is-fading { opacity: 0; }
+  @media (min-width: 600px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 980px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+  .card { display: block; }
+  .card:focus-visible { outline-offset: 6px; }
+  .cover {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    background: var(--panel);
+  }
+  .cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform var(--dur) var(--ease);
+  }
+  .caption {
+    padding-block: var(--s4) var(--s4);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .caption-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s4);
+  }
+  .name {
+    font-family: var(--serif);
+    font-size: var(--fs-md);
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+  .num {
+    font-size: var(--fs-sm);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    flex: none;
+  }
+  .sub {
+    margin-top: var(--s1);
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .card:hover .cover img,
+  .card:focus-visible .cover img { transform: scale(1.02); }
+  .card:hover .name,
+  .card:focus-visible .name { font-style: italic; }
+
+  /* ---------- Writing + Experience ---------- */
+  .split {
+    border-top: 1px solid var(--hairline);
+    padding-block: var(--s8) var(--s10);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s8);
+  }
+  @media (min-width: 900px) {
+    .split { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s9); }
+  }
+  .split .h2 { margin-bottom: var(--s5); }
+
+  .posts { border-top: 1px solid var(--hairline); }
+  .posts li { border-bottom: 1px solid var(--hairline); }
+  .posts a {
+    display: block;
+    padding-block: var(--s4);
+    font-family: var(--serif);
+    font-size: var(--fs-md);
+    line-height: 1.35;
+  }
+  .posts a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--muted);
+  }
+
+  .jobs { border-top: 1px solid var(--hairline); }
+  .jobs li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0 var(--s4);
+    padding-block: var(--s4);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .role { font-weight: 500; line-height: 1.45; }
+  .company { font-size: var(--fs-sm); color: var(--muted); grid-column: 1; }
+  .years {
+    grid-column: 2; grid-row: 1;
+    font-size: var(--fs-sm);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+
+  /* ---------- About ---------- */
+  .about {
+    border-top: 1px solid var(--hairline);
+    padding-block: var(--s8) var(--s10);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s6);
+    align-items: end;
+  }
+  @media (min-width: 760px) {
+    .about { grid-template-columns: 300px minmax(0, 1fr); gap: var(--s8); }
+  }
+  .portrait {
+    width: 100%;
+    max-width: 300px;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    object-position: center 25%;
+    border-radius: var(--radius);
+    border: 1px solid var(--hairline);
+    background: var(--panel);
+  }
+  .about-text .h2 { margin-bottom: var(--s5); }
+  .about-text p {
+    font-family: var(--serif);
+    font-size: var(--fs-md);
+    line-height: 1.5;
+    max-width: 40ch;
+  }
+
+  /* ---------- Contact / footer ---------- */
+  .contact {
+    border-top: 1px solid var(--hairline);
+    padding-block: var(--s9) var(--s6);
+    text-align: center;
+  }
+  .contact .h2 { color: var(--muted); }
+  .email {
+    display: inline-block;
+    margin-top: var(--s4);
+    font-family: var(--serif);
+    font-size: var(--fs-xl);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+    background-image: linear-gradient(var(--ink), var(--ink));
+    background-size: 100% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    padding-bottom: 2px;
+  }
+  .email:hover { color: var(--accent); background-image: linear-gradient(var(--accent), var(--accent)); }
+
+  .foot {
+    margin-top: var(--s9);
+    padding-top: var(--s4);
+    border-top: 1px solid var(--hairline);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0 var(--s5);
+    font-size: var(--fs-sm);
+    color: var(--muted);
+  }
+  .foot a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    font-weight: 500;
+    min-width: 40px;
+    justify-content: center;
+  }
+  .foot a:hover { color: var(--ink); }
+  .foot small { font-size: inherit; display: inline-flex; align-items: center; min-height: 40px; }
+
+  @media (max-width: 599px) {
+    .intro { padding-block: var(--s8) var(--s9); }
+    .work { padding-bottom: var(--s9); }
+    .split, .about { padding-block: var(--s7) var(--s9); }
+    .nav ul { gap: 0 var(--s3); }
+    .meta-line { flex-direction: column; align-items: center; gap: var(--s1); }
+    .meta-line .sep { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="wrap topbar">
+  <a class="brand" href="#">Felix Yeboah</a>
+  <nav class="nav" aria-label="Primary">
+    <ul>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#writing">Writing</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#">Photos</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="wrap intro" aria-labelledby="intro-title">
+    <h1 id="intro-title">Self-taught, based in Accra. Ten years taking products from first sketch to production — React and Remix on the front, Go and Postgres underneath.</h1>
+    <p class="meta-line">
+      <span>Software engineer &amp; UI/UX designer</span>
+      <span class="sep" aria-hidden="true">·</span>
+      <span>Accra, Ghana</span>
+      <span class="sep" aria-hidden="true">·</span>
+      <span class="status"><span class="dot" aria-hidden="true"></span>Taking on select projects</span>
+    </p>
+  </section>
+
+  <section class="wrap work" id="work" aria-labelledby="work-title">
+    <div class="work-head">
+      <h2 class="h2" id="work-title">Work</h2>
+      <div class="filters" role="group" aria-label="Filter projects" hidden>
+        <button class="pill" type="button" data-filter="all" aria-pressed="true">All</button>
+        <button class="pill" type="button" data-filter="products" aria-pressed="false">Products</button>
+        <button class="pill" type="button" data-filter="commerce" aria-pressed="false">Commerce</button>
+        <button class="pill" type="button" data-filter="drones" aria-pressed="false">Drones &amp; aerial</button>
+        <button class="pill" type="button" data-filter="brands" aria-pressed="false">Brands &amp; events</button>
+      </div>
+      <p class="sr-only" aria-live="polite" id="filter-status"></p>
+    </div>
+
+    <ul class="grid" id="grid">
+      <li data-group="products">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/reevit.jpg" width="1600" height="1000" alt="" loading="eager"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">Reevit</h3><span class="num">01</span></div>
+            <p class="sub">Payments · reevit.io</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="commerce">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/miss-cookie.jpg" width="1600" height="1000" alt="" loading="eager"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">Miss Cookie Spices</h3><span class="num">02</span></div>
+            <p class="sub">E-commerce · misscookieghana.com</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="products">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/waytu.jpg" width="1600" height="1000" alt="" loading="lazy"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">Waytu</h3><span class="num">03</span></div>
+            <p class="sub">Ride-sharing · waytu.io</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="drones">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/drobotix.jpg" width="1600" height="1000" alt="" loading="lazy"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">Drobotix</h3><span class="num">04</span></div>
+            <p class="sub">Ag-Tech Drones · drobotixas.com</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="commerce">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/studio-theon.jpg" width="1600" height="1000" alt="" loading="lazy"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">Studio Theon</h3><span class="num">05</span></div>
+            <p class="sub">Agency · studiotheon.com</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="brands">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/dasheen-atelier.jpg" width="1600" height="1000" alt="" loading="lazy"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">Dasheen Atelier</h3><span class="num">06</span></div>
+            <p class="sub">Fashion · dasheenatelier.com</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="drones">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/dronehub.jpg" width="1600" height="1000" alt="" loading="lazy"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">Dronehub</h3><span class="num">07</span></div>
+            <p class="sub">Drone sales &amp; services · dronehubafrica.com</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="drones">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/uavops.jpg" width="1600" height="1000" alt="" loading="lazy"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">UAVOps</h3><span class="num">08</span></div>
+            <p class="sub">Aerial data intelligence · uavops.vercel.app</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="products">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/blavior.jpg" width="1600" height="1000" alt="" loading="lazy"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">Blavior</h3><span class="num">09</span></div>
+            <p class="sub">Real estate · blavior.io</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="commerce">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/the-rumson.jpg" width="1600" height="1000" alt="" loading="lazy"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">The Rumson</h3><span class="num">10</span></div>
+            <p class="sub">Restaurant · therumson.com</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="brands">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/7even-sports.jpg" width="1600" height="1000" alt="" loading="lazy"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">7even Sports Group</h3><span class="num">11</span></div>
+            <p class="sub">Sports club · 7evensportsgroup.com</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="brands">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/css.jpg" width="1600" height="1000" alt="" loading="lazy"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">CSS</h3><span class="num">12</span></div>
+            <p class="sub">Connectivity solutions · techbycss.com</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="brands">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/the-arck.jpg" width="1600" height="1000" alt="" loading="lazy"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">The Arck Interior LTD</h3><span class="num">13</span></div>
+            <p class="sub">Interior design · thearckinteriorltd.com</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="brands">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/dna.jpg" width="1600" height="1000" alt="" loading="lazy"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">Desmond Weds Akyeamaa</h3><span class="num">14</span></div>
+            <p class="sub">Wedding · dna-8a83.fly.dev</p>
+          </div>
+        </a>
+      </li>
+      <li data-group="products">
+        <a class="card" href="#">
+          <div class="cover"><img src="../../public/assets/covers/undisciplined.jpg" width="1600" height="1000" alt="" loading="lazy"></div>
+          <div class="caption">
+            <div class="caption-top"><h3 class="name">Undisciplined</h3><span class="num">15</span></div>
+            <p class="sub">Education · undisciplined.vercel.app</p>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <div class="wrap">
+    <div class="split">
+      <section id="writing" aria-labelledby="writing-title">
+        <h2 class="h2" id="writing-title">Writing</h2>
+        <ul class="posts">
+          <li><a href="#">Why I Built Reevit: A Developer's Reaction to a Real Problem</a></li>
+          <li><a href="#">A Year of Resilience and Growth — 2024 in review</a></li>
+          <li><a href="#">From Zero to Go: How Real Projects Shaped My Golang Skills</a></li>
+          <li><a href="#">Mock Testing with Go Mockery</a></li>
+          <li><a href="#">Transitioning to Backend Engineering</a></li>
+          <li><a href="#">How I got sold on Remix</a></li>
+        </ul>
+      </section>
+
+      <section id="experience" aria-labelledby="experience-title">
+        <h2 class="h2" id="experience-title">Experience</h2>
+        <ul class="jobs">
+          <li>
+            <span class="role">Senior Frontend Engineer</span>
+            <span class="company">Complete Farmer</span>
+            <span class="years">2019 – Present</span>
+          </li>
+          <li>
+            <span class="role">Frontend Engineer</span>
+            <span class="company">Primer API Limited</span>
+            <span class="years">2022</span>
+          </li>
+          <li>
+            <span class="role">Web Developer</span>
+            <span class="company">Bee and Bloom</span>
+            <span class="years">2018 – 2021</span>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <section class="about" id="about" aria-labelledby="about-title">
+      <img class="portrait" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_700/felixyeboah.dev/IMG_7337_tmsrzq" width="700" height="933" alt="Felix Yeboah" loading="lazy">
+      <div class="about-text">
+        <h2 class="h2" id="about-title">About</h2>
+        <p>A software developer, and a life-long learner. Over the years I've been building functional, beautiful interfaces and experiences that leave a positive impact on people and businesses.</p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="wrap contact" id="contact" aria-labelledby="contact-title">
+  <h2 class="h2" id="contact-title">Contact</h2>
+  <a class="email" href="mailto:me@felixyeboah.dev">me@felixyeboah.dev</a>
+  <div class="foot">
+    <a href="https://github.com/felixyeboah">GitHub</a>
+    <a href="https://x.com/sudocode_">X</a>
+    <a href="#">Résumé</a>
+    <a href="#">Photos</a>
+    <small>© 2026</small>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var filters = document.querySelector('.filters');
+    var grid = document.getElementById('grid');
+    var status = document.getElementById('filter-status');
+    if (!filters || !grid) return;
+
+    var pills = Array.prototype.slice.call(filters.querySelectorAll('.pill'));
+    var items = Array.prototype.slice.call(grid.children);
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var timer;
+
+    filters.hidden = false;
+
+    function apply(filter, label) {
+      var shown = 0;
+      items.forEach(function (item) {
+        var match = filter === 'all' || item.getAttribute('data-group') === filter;
+        item.hidden = !match;
+        if (match) shown++;
+      });
+      grid.classList.remove('is-fading');
+      status.textContent = label + ': ' + shown + (shown === 1 ? ' project' : ' projects');
+    }
+
+    pills.forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        if (pill.getAttribute('aria-pressed') === 'true') return;
+        pills.forEach(function (p) { p.setAttribute('aria-pressed', String(p === pill)); });
+        var filter = pill.getAttribute('data-filter');
+        var label = pill.textContent;
+        clearTimeout(timer);
+        if (reduce.matches) { apply(filter, label); return; }
+        grid.classList.add('is-fading');
+        timer = setTimeout(function () { apply(filter, label); }, 160);
+      });
+    });
+  })();
+</script>
+</body>
+</html>

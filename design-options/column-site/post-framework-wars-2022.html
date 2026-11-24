@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Framework Wars 2022 — Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/column.css">
+<style>
+  .post-head h1 { text-wrap: balance; }
+
+  /* 32em ~ 69 characters per line (Schibsted Grotesk averages ~7.4px per character at 16px) */
+  .post-body { margin-top: var(--s-7); }
+  .post-body > :first-child { margin-top: 0; }
+  .post-body hr + h2 { margin-top: var(--s-7); }
+  .post-body .post-note { font-size: var(--t-sm); color: var(--muted); }
+  .post-body .post-note + h2 { margin-top: var(--s-7); }
+  .post-body .post-label + ul { margin-top: var(--s-3); }
+  .post-body h2, .post-body h3 { scroll-margin-top: var(--s-5); text-wrap: balance; }
+
+  /* tables, when a post has them: hairline rows, scroll on narrow screens */
+  .post-table { overflow-x: auto; }
+  .post-table table { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
+  .post-table th, .post-table td { padding: var(--s-2) var(--s-4) var(--s-2) 0; border-bottom: 1px solid var(--hair); text-align: left; vertical-align: top; }
+  .post-table th { font-weight: 600; }
+
+  .post-author {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1) var(--s-3);
+    margin-top: var(--s-8);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--hair);
+    font-size: var(--t-sm);
+  }
+  .post-author .name { font-weight: 600; margin-right: var(--s-1); }
+  .post-author .link { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
+
+  .post-pager { margin-top: var(--s-7); }
+  .post-all { margin-top: var(--s-5); }
+  .post-all .link { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--t-sm); }
+
+  @media (max-width: 640px) {
+    .post-body { margin-top: var(--s-6); }
+    .post-body > h2 { margin-top: var(--s-7); }
+    .post-body hr + h2 { margin-top: var(--s-6); }
+    .post-body hr { margin-top: var(--s-6); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="column">
+  <header class="site-header">
+    <a class="identity" href="index.html" aria-label="Felix Yeboah, home">
+      <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="">
+      <span>Felix Yeboah</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html">Work</a></li>
+        <li><a href="writing.html" aria-current="page">Writing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="photos.html">Photos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article aria-labelledby="post-title">
+      <header class="page-head post-head">
+        <a class="crumb" href="writing.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M8.5 3.5L5 7l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Writing</a>
+        <h1 id="post-title">Framework Wars 2022</h1>
+        <ul class="meta-line">
+          <li><time class="mono" datetime="2022-07-26">26 Jul 2022</time></li>
+          <li>8 min read</li>
+        </ul>
+      </header>
+
+      <div class="prose post-body">
+<p>Framework wars have been on the verge for quite sometime now. I certainly do not want to be caught in them. I sometimes don’t know what to learn or what framework to use for my next project. Bootstrap, Foundation Zurb, TailwindCSS, Material CSS, few to mention are great CSS frameworks with a lot of features and good for prototyping. They make Front-end developers work much easier but sometimes a bit difficult to handle them. To handle them? Yes, I said they make prototyping easier and also our works fairly simple but sometimes you might have to learn new terms to be able to use them, on top of all the CSS terms we know.</p>
+<figure class="figure"><div class="figure__frame"><img src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/1_LyZcwuLWv2FArOumCxobpA" srcset="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_700/blog/1_LyZcwuLWv2FArOumCxobpA 700w, https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/1_LyZcwuLWv2FArOumCxobpA 1400w" sizes="(max-width: 760px) 92vw, 680px" width="1366" height="768" alt="Javascript Frameworks" loading="lazy" decoding="async"></div><figcaption>Javascript Frameworks</figcaption></figure>
+<p>Coming to javascript, there are 3 top frameworks that makes our work very simple and easy but also comes with their headaches. Angular, React and Vue are the top 3 frameworks as at 2019 (Some may say React and Vue are libraries, true but lets just stick to the term framework for now).</p>
+<figure class="figure"><div class="figure__frame"><img src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/1_uGRvXkzzytZ-8YxKaxYEBA" srcset="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_700/blog/1_uGRvXkzzytZ-8YxKaxYEBA 700w, https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/1_uGRvXkzzytZ-8YxKaxYEBA 1400w" sizes="(max-width: 760px) 92vw, 680px" width="1400" height="792" alt="AngularJS" loading="lazy" decoding="async"></div><figcaption>AngularJS</figcaption></figure>
+<p><a href="https://angular.io/" target="_blank" rel="noopener">Angular</a> is a TypeScript-based free and open-source web application framework led by the Angular Team at Google and by a community of individuals and corporations. Angular is a complete rewrite from the same team that built AngularJS.</p>
+<p>Angular is a complete framework and has everything you might need for your project.</p>
+<p>Pros and Cons of Angular</p>
+<p><strong>Benefits of Angular:</strong></p>
+<ul><li>Angular’s created to be used alongside with Typescript. And has exceptional support for it.</li><li>Angular-language-service — which allows intelligence and autocomplete inside of component external HTML template files.</li><li>New features like a generation of Angular based npm libraries from CLI, generation, and development of WebComponents based on Angular.</li><li>Detailed documentation that allows getting all necessary information for the individual developer without asking his colleagues. However, this requires more time for education.</li><li>One-way data binding that enables singular behavior for the app which minimized risks of possible errors.</li><li>MVVM (Model-View-ViewModel) that allows developers to work separately on the same app section using the same set of data.</li><li>Dependency injection of the features related to the components with modules and modularity in general.</li><li>Structure and architecture specifically created for great project scalability</li></ul>
+<p><strong>Drawbacks of Angular:</strong></p>
+<ul><li>Variety of different structures(Injectables, Components, Pipes, Modules etc.) makes it a bit harder to learn in comparison with React and Vue.js, which have an only “Component” in mind.</li><li>Relatively slower performance, according to different benchmarks. On the other hand, it can be easily tackled by utilizing so-called “ChangeDetectionStrategy”, which helps to control the rendering process of components manually.</li></ul>
+<p>Companies that use Angular: Companies that use Angular: Microsoft, Autodesk, MacDonald’s, UPS, Cisco Solution Partner Program, AT&amp;T, Apple, Adobe, GoPro, ProtonMail, Clarity Design System, Upwork, Freelancer, Udemy, YouTube, Paypal, Nike, Google, Telegram, Weather, iStockphoto, AWS, Crunchbase.</p>
+<figure class="figure"><div class="figure__frame"><img src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/react-context-api-4929b3703a1a7082d99b53eb1bbfc31f" srcset="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_700/blog/react-context-api-4929b3703a1a7082d99b53eb1bbfc31f 700w, https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/react-context-api-4929b3703a1a7082d99b53eb1bbfc31f 1400w" sizes="(max-width: 760px) 92vw, 680px" width="1400" height="733" alt="React" loading="lazy" decoding="async"></div><figcaption>React</figcaption></figure>
+<p><a href="https://react.org" target="_blank" rel="noopener">React</a> is a javascript library, which means it doesn’t have all the functionalities or features Angular has, yet its very powerful and does whatever Angular do. Since React is a library, you might want to get to libraries or add-on packages whenever you need some new features. They do not have a state management, you need to get a third party state management tools such as Redux, Mobx, etc</p>
+<p>Pros and Cons of React</p>
+<p><strong>Benefits of React:</strong></p>
+<ul><li>Easy to learn, thanks to its simple design, use of JSX (an HTML-like syntax) for templating, and highly detailed documentation.</li><li>Developers spend more time writing modern JavaScript, and less time worrying about the framework-specific code.</li><li>Extremely fast, courtesy of React’s Virtual DOM implementation and various rendering optimizations.</li><li>Great support for server-side rendering, making it a powerful framework for content-focused applications.</li><li>First-class Progressive Web App (PWA) support, thanks to the <code>create-react-app</code> application generator.</li><li>Data-binding is one-way, meaning less unwanted side effects.</li><li>Redux, the most popular framework for managing application state in React, is easy to learn and master.</li><li>React implements Functional Programming (FP) concepts, creating easy-to-test and highly reusable code.</li><li>Applications can be made type-safe with either Microsoft’s TypeScript or Facebook’s Flow, with both featuring native support for JSX.</li><li>Migrating between versions is generally very easy, with Facebook providing “codemods” to automate much of the process.</li><li>Skills learned in React can be applied (often directly) to React Native development.</li></ul>
+<p><strong>Drawbacks of React:</strong></p>
+<ul><li>React is un-opinionated and leaves developers to make choices about the best way to develop. This can be tackled by strong project leadership and good processes.</li><li>The community is divided on the best way to write CSS in React, split between traditional stylesheets (CSS Modules) and CSS-in-JS (i.e. Emotion and Styled Components).</li><li>React is moving away from class-based components, which may be a barrier for developers more comfortable with Object Oriented Programming (OOP).</li><li>Mixing templating with logic (JSX) can be confusing for some developers at first.</li></ul>
+<p>Companies that use React: Facebook, Instagram, Netflix, New York Times, Yahoo, Khan Academy, Whatsapp, Codecademy, Dropbox, Airbnb, Asana, Atlassian, Intercom, Microsoft, Slack, Storybook, and many more.</p>
+<figure class="figure"><div class="figure__frame"><img src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/generic_vue_header" srcset="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_700/blog/generic_vue_header 700w, https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/generic_vue_header 1400w" sizes="(max-width: 760px) 92vw, 680px" width="1200" height="642" alt="VueJS Framework" loading="lazy" decoding="async"></div><figcaption>VueJS Framework</figcaption></figure>
+<p><a href="https://vuejs.org/" target="_blank" rel="noopener">VueJS</a> is a progressive javascript framework as stated on their website. Its not as powerful as Angular but has more features than React. Unlike React, VueJs has their own state management, Router and also has directives which helps makes Its usage simpler.</p>
+<p>Pros and Cons of VueJs</p>
+<p><strong>Benefits of VueJs:</strong></p>
+<ul><li>Empowered HTML. This means that Vue.js has many similar characteristics with Angular and this can help to optimize HTML blocks handling with the use of different components.</li><li>Detailed documentation. Vue.js has very circumstantial documentation which can fasten learning curve for developers and save a lot of time to develop an app using only the basic knowledge of HTML and JavaScript.</li><li>Adaptability. It provides a rapid switching period from other frameworks to Vue.js because of the similarity with Angular and React in terms of design and architecture.</li><li>Awesome integration. Vue.js can be used for both building single-page applications and more difficult web interfaces of apps. The main thing is that smaller interactive parts can be easily integrated into the existing infrastructure with no negative effect on the entire system.</li><li>Large scaling. Vue.js can help to develop pretty large reusable templates that can be made with no extra time allocated for that according to its simple structure.</li><li>Tiny size. Vue.js can weight around 20KB keeping its speed and flexibility that allows reaching much better performance in comparison to other frameworks.</li></ul>
+<p><strong>Drawbacks of VueJs:</strong></p>
+<ul><li>Lack of resources. Vue.js still has a pretty small market share in comparison with React or Angular, which means that knowledge sharing in this framework is still in the beginning phase.</li><li>Risk of over flexibility. Sometimes, Vue.js might have issues while integrating into huge projects and there is still no experience with possible solutions, but they will definitely come soon.</li></ul>
+<p>Companies that use Vue.js: Xiaomi, Alibaba, WizzAir, EuroNews, Grammarly, Gitlab and Laracasts, Adobe, Behance, Codeship, Reuters.</p>
+<figure class="figure"><div class="figure__frame"><img src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/1_G9fzmaoymDGy7scbkgpC7A" srcset="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_700/blog/1_G9fzmaoymDGy7scbkgpC7A 700w, https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/1_G9fzmaoymDGy7scbkgpC7A 1400w" sizes="(max-width: 760px) 92vw, 680px" width="1280" height="720" alt="Svelte Framework" loading="lazy" decoding="async"></div><figcaption>Svelte Framework</figcaption></figure>
+<p><a href="https://svelte.dev/" target="_blank" rel="noopener">Svelte</a> is a radical new approach to building user interfaces. Whereas traditional frameworks like React and Vue do the bulk of their work in the browser, Svelte shifts that work into a compile step that happens when you build your app.</p>
+<p>Pros and Cons of VueJs</p>
+<p><strong>Benefits of Svelte:</strong></p>
+<ul><li>Instead of doing most of the work in the browser, Svelte does its work when you build the app and it compiles it to efficient vanilla JavaScript.</li><li>Reduces the overhead of the JavaScript framework you’re using. By compiling Svelte to vanilla JavaScript improves the code readability, enables re-use and it produces a much faster web app.</li><li>Svelte does not require declarative, state-driven code, which the browser has to convert into DOM operations. That means you don’t need to use virtual DOM anymore.</li></ul>
+<p><strong>Drawbacks of Svelte:</strong></p>
+<ul><li>IDE support is not yet comparable to the commonly-used frameworks. It still has a lot of room for improvement. Although there are some good resources online to solve some of the issues, it can be considered as a major disadvantage as of today.</li><li>Not many Svelte dev tools exist at the moment. It is still a young and growing ecosystem. Keep that in mind. However, that’s a great opportunity to develop some for the Svelte community.</li><li>Small open-source ecosystem. Like many other frameworks, it takes time to build a large community around a specific framework. Although Svelte has gone a pretty decent way already, there are still not enough open-source contributors. Same here, you can look at it as an opportunity as well.</li></ul>
+<p>Companies that use Svelte: The New York Times, Rakuten, Nesta, Avast, 1password.com, Philips, Yellowpop, Decathlon, Appstronauts</p>
+<figure class="figure"><div class="figure__frame"><img src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/og.1" srcset="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_700/blog/og.1 700w, https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/og.1 1400w" sizes="(max-width: 760px) 92vw, 680px" width="1200" height="627" alt="Remix Framework" loading="lazy" decoding="async"></div><figcaption>Remix Framework</figcaption></figure>
+<p><a href="https://remix.run/" target="_blank" rel="noopener">Remix</a> is the new kid in town. Very powerful, all inclusive and simple to use fullstack framework. Now, what is Remix? Remix is a seamless server and browser runtime that provides snappy page loads and instant transitions by leveraging distributed systems and native browser features instead of clunky static builds. Built on the Web Fetch API (instead of Node) it can run anywhere.</p>
+<p>Remix comes with a number of advantages:</p>
+<ul><li>It compiles with esbuild, an extremely fast JavaScript/CSS bundler and minifier.</li><li>It uses progressive enhancement on the server side. Only necessary JavaScript, JSON, and CSS content are sent to the browser.</li><li>It performs dynamic server-side rendering.</li><li>It knows when to refetch mutated data, as Remix oversees the whole workflow.</li><li>It includes an end-to-end solution with React Router, server-side rendering, production server, and backend optimization.</li></ul>
+<p>Companies that uses Remix: Flipside Crypto, Traction, PXM, circa5000, quaddro, Storefront, portal, Aipha</p>
+<figure class="figure"><div class="figure__frame"><img src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/what-is-fresh" srcset="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_700/blog/what-is-fresh 700w, https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,c_limit,w_1400/blog/what-is-fresh 1400w" sizes="(max-width: 760px) 92vw, 680px" width="1400" height="824" alt="Fresh by Deno" loading="lazy" decoding="async"></div><figcaption>Fresh by Deno</figcaption></figure>
+<p>Another new Kid on the block. <a href="https://fresh.deno.dev/" target="_blank" rel="noopener">Fresh</a> is a full-stack modern web framework for JavaScript and TypeScript developers. It is designed to create high-quality, performant, and personalized web applications. Fresh 1.0 was release on June 28, 2022.</p>
+<p>Fresh is a new style web framework that is written for <a href="https://en.wikipedia.org/wiki/Deno_(software)" target="_blank" rel="noopener">Deno</a>, a runtime for JavaScript, TypeScript, and WebAssembly that is based on the V8 JavaScript engine and the Rust programming language.</p>
+<blockquote><p>As a developer, there is no substantial difference in which framework to choose, because it just takes some time to get used to the new one. I am fairly good with VueJs and also with React, I haven’t actually touched on Angular yet. It is my target to know all 3 Frameworks but at the moment, I want to shift my attention to some backend using NodeJS. Its the popular for backend if you’re a javascript developer and you want to add some backend to your application. It also has some good Frameworks such as Express, SailJS, AdonisJs, Koa, Loopback etc… and the new NestJS.</p></blockquote>
+<p>But at the moment, I am stuck with these 2 front-end frameworks (React and VueJS). I urge you to learn because they’re very good and powerful.</p>
+      </div>
+
+      <footer class="post-author">
+        <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="" loading="lazy">
+        <span class="name">Felix Yeboah</span>
+        <a class="link" href="https://x.com/sudocode_">@sudocode_ on X</a>
+      </footer>
+    </article>
+
+    <nav class="pager post-pager" aria-label="More writing">
+      <a href="post-dealing-with-burnout-as-a-developer.html" rel="prev">
+        <span class="dir">Previous</span>
+        <span class="name"><span class="u">Dealing with burnout as a developer</span></span>
+      </a>
+      <a href="post-migrating-a-project-from-legacy-routes-to-typesafe-named-routes.html" rel="next">
+        <span class="dir">Next</span>
+        <span class="name"><span class="u">Migrating a project routes from legacy routes to typed-safe named routes</span></span>
+      </a>
+    </nav>
+
+    <p class="post-all"><a class="link" href="writing.html">All writing</a></p>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+    <div class="footer-links">
+      <a href="https://github.com/felixyeboah">GitHub</a>
+      <a href="https://x.com/sudocode_">X</a>
+      <a href="resume.html">Résumé</a>
+      <a href="photos.html">Photos</a>
+      <span class="copy">© 2026</span>
+    </div>
+  </footer>
+</div>
+<script>
+document.querySelectorAll('.code').forEach(function (fig) {
+  var b = fig.querySelector('.code__copy'), pre = fig.querySelector('pre');
+  if (!b || !pre || !navigator.clipboard) { if (b) b.hidden = true; return; }
+  b.addEventListener('click', function () {
+    var text = [].map.call(pre.querySelectorAll('.l'), function (l) { return l.textContent; }).join('\n') || pre.textContent;
+    navigator.clipboard.writeText(text).then(function () {
+      b.classList.add('is-done'); b.querySelector('span').textContent = 'Copied';
+      setTimeout(function () { b.classList.remove('is-done'); b.querySelector('span').textContent = 'Copy'; }, 1600);
+    });
+  });
+});
+</script>
+</body>
+</html>

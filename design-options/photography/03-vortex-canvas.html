@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>03 · Vortex Canvas — Felix Yeboah Spatial Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Syne:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050608;
+  --panel:rgba(12,14,20,.82);
+  --ink:#F3F5F8;
+  --muted:#858C99;
+  --line:rgba(255,255,255,.10);
+  --line-2:rgba(255,255,255,.18);
+  --cyan:#7CE8FF;
+  --amber:#FFAE57;
+  --display:"Syne", system-ui, sans-serif;
+  --sans:"Inter", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans);user-select:none;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+img{display:block;max-width:100%;pointer-events:none}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+
+/* Subtle coordinate starfield grid */
+.bg-grid{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(rgba(124,232,255,.16) 1px, transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(circle at 50% 50%, #000 35%, transparent 88%);
+}
+.bg-glow{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 60% 45% at 50% 50%, rgba(124,232,255,.07), transparent 72%);
+  transition:background .8s var(--ease);
+}
+
+/* HUD Top Bar */
+.hud-top{
+  position:fixed;top:16px;left:18px;right:18px;z-index:40;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;pointer-events:none;
+}
+.hud-top > *{pointer-events:auto}
+.hud-brand{
+  display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:14px;
+  background:var(--panel);border:1px solid var(--line-2);backdrop-filter:blur(18px);
+}
+.hud-brand strong{font-family:var(--display);font-size:16px;letter-spacing:.02em}
+.hud-pill{
+  height:36px;padding:0 13px;border-radius:999px;display:inline-flex;align-items:center;gap:8px;
+  background:var(--panel);border:1px solid var(--line-2);backdrop-filter:blur(18px);
+  color:var(--ink);transition:border-color .2s,background .2s,color .2s;
+}
+.hud-pill:hover{border-color:var(--cyan)}
+.hud-pill.is-on{background:var(--cyan);color:#050608;border-color:var(--cyan);font-weight:600}
+
+/* 2D Infinite Spatial Viewport */
+.viewport-2d{
+  position:fixed;inset:0;z-index:2;overflow:hidden;cursor:grab;
+}
+.viewport-2d:active{cursor:grabbing}
+.world{
+  position:absolute;left:50%;top:50%;width:0;height:0;will-change:transform;
+}
+.node{
+  position:absolute;left:0;top:0;width:230px;padding:7px;border-radius:12px;
+  background:rgba(16,18,24,.78);border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 24px 60px rgba(0,0,0,.6);cursor:pointer;
+  transition:transform .9s var(--ease), opacity .45s var(--ease), border-color .25s, box-shadow .35s;
+  will-change:transform,opacity;
+}
+.node.is-dragging-world{transition:opacity .45s var(--ease), border-color .25s}
+.node:hover{border-color:var(--cyan);box-shadow:0 30px 75px rgba(124,232,255,.18);z-index:50!important}
+.node.is-dim{opacity:.14;filter:grayscale(.8)}
+.node.is-focus{border-color:var(--amber);box-shadow:0 0 0 2px var(--amber), 0 30px 80px rgba(255,174,87,.25);z-index:60!important}
+.node__img{width:100%;border-radius:7px;overflow:hidden;background:#0D0F14}
+.node__img img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.node:hover .node__img img{transform:scale(1.05)}
+.node__cap{
+  margin-top:7px;display:flex;justify-content:space-between;align-items:center;gap:8px;
+  font-size:12px;color:#DCE2EC;padding:0 2px;
+}
+.node__dot{width:8px;height:8px;border-radius:50%;flex:none}
+
+/* Color Compass Ring Guide */
+.compass-ring{
+  position:absolute;left:-780px;top:-780px;width:1560px;height:1560px;border-radius:50%;
+  border:1px dashed rgba(124,232,255,.22);pointer-events:none;opacity:0;
+  transition:opacity .6s var(--ease);
+}
+.compass-ring.is-on{opacity:1}
+.compass-ring::before{
+  content:"";position:absolute;inset:240px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.07);
+}
+.compass-ring::after{
+  content:"CHROMATIC WHEEL · HUE 0°–360°";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:rgba(124,232,255,.45);
+}
+
+/* 3D Z-Tunnel Stage */
+.viewport-3d{
+  position:fixed;inset:0;z-index:3;display:none;perspective:1100px;overflow:hidden;
+}
+.viewport-3d.is-on{display:block}
+.tunnel-stage{position:absolute;inset:0;transform-style:preserve-3d}
+.t-card{
+  position:absolute;left:50%;top:50%;width:clamp(220px, 24vw, 340px);
+  border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.18);
+  background:#0D0F14;box-shadow:0 30px 90px rgba(0,0,0,.75);cursor:pointer;
+  will-change:transform,opacity;
+}
+.t-card img{width:100%;height:auto;display:block}
+.t-card__bar{
+  padding:10px 12px;display:flex;justify-content:space-between;align-items:center;
+  background:rgba(8,10,14,.92);border-top:1px solid var(--line);
+}
+
+/* Minimap Radar */
+.minimap{
+  position:fixed;left:18px;bottom:18px;z-index:40;width:172px;height:122px;
+  border-radius:12px;background:var(--panel);border:1px solid var(--line-2);
+  backdrop-filter:blur(16px);overflow:hidden;cursor:crosshair;
+}
+.minimap canvas{width:100%;height:100%;display:block}
+.minimap__lbl{
+  position:absolute;left:8px;top:6px;font-family:var(--mono);font-size:9px;
+  color:var(--cyan);opacity:.75;pointer-events:none;
+}
+
+/* Floating Spatial Command Dock */
+.dock{
+  position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:45;
+  display:flex;align-items:center;gap:6px;padding:7px;border-radius:999px;
+  background:var(--panel);border:1px solid var(--line-2);
+  backdrop-filter:blur(22px);box-shadow:0 24px 60px rgba(0,0,0,.6);
+  max-width:calc(100vw - 24px);overflow-x:auto;scrollbar-width:none;
+}
+.dock::-webkit-scrollbar{display:none}
+.dock-btn{
+  height:34px;padding:0 13px;border-radius:999px;white-space:nowrap;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:#C4CBD6;transition:background .2s,color .2s;
+}
+.dock-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.dock-btn.is-on{background:var(--cyan);color:#050608;font-weight:600}
+.dock-sep{width:1px;height:18px;background:var(--line-2);flex:none}
+
+/* Native <dialog> Focus Viewer */
+dialog.v-dlg{
+  width:min(1100px, 94vw);max-height:90dvh;padding:0;border:1px solid var(--line-2);
+  border-radius:18px;background:#0A0C12;color:var(--ink);overflow:hidden;
+  box-shadow:0 40px 120px rgba(0,0,0,.85);
+  opacity:0;transform:scale(.95);
+  transition:opacity .26s var(--ease),transform .3s var(--ease),display .26s allow-discrete,overlay .26s allow-discrete;
+}
+dialog.v-dlg[open]{opacity:1;transform:scale(1);display:grid;grid-template-columns:1.5fr 1fr}
+@starting-style{dialog.v-dlg[open]{opacity:0;transform:scale(.95)}}
+dialog.v-dlg:modal{overscroll-behavior:contain}
+dialog.v-dlg::backdrop{background:rgba(3,4,6,.82);backdrop-filter:blur(10px);overflow:hidden;overscroll-behavior:contain}
+.vd__media{background:#050608;display:grid;place-items:center;padding:24px;min-height:420px}
+.vd__media img{max-height:74dvh;max-width:100%;object-fit:contain;border-radius:8px}
+.vd__info{padding:26px;display:flex;flex-direction:column;gap:18px;overflow:auto;border-left:1px solid var(--line)}
+
+@media (max-width:860px){
+  .minimap{display:none}
+  dialog.v-dlg[open]{grid-template-columns:1fr}
+  .vd__info{border-left:0;border-top:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-glow" id="bgGlow" aria-hidden="true"></div>
+
+<header class="hud-top">
+  <div class="hud-brand">
+    <span style="width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)"></span>
+    <div>
+      <strong>VORTEX CANVAS</strong>
+      <div class="mono" style="color:var(--muted);font-size:9.5px">Felix Yeboah · Spatial Photo Universe</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <span class="hud-pill mono" id="telemetry">ZOOM 82% · DRAG TO EXPLORE</span>
+    <button class="hud-pill mono" id="autopilotBtn" type="button" style="display:none">Pause Autopilot</button>
+    <button class="hud-pill mono" id="surpriseBtn" type="button">✦ Surprise Me</button>
+  </div>
+</header>
+
+<div class="viewport-2d" id="viewport2d" aria-label="Interactive 2D spatial photography canvas">
+  <div class="world" id="world">
+    <div class="compass-ring" id="compassRing"></div>
+  </div>
+</div>
+
+<div class="viewport-3d" id="viewport3d" aria-label="Interactive 3D depth tunnel">
+  <div class="tunnel-stage" id="tunnelStage"></div>
+</div>
+
+<div class="minimap" id="minimap" title="Click radar to jump">
+  <canvas id="miniCanvas" width="344" height="244"></canvas>
+  <span class="minimap__lbl">RADAR · 35</span>
+</div>
+
+<nav class="dock" aria-label="Spatial controls">
+  <button class="dock-btn is-on" data-layout="constellation">Constellation</button>
+  <button class="dock-btn" data-layout="wheel">Color Wheel</button>
+  <button class="dock-btn" data-layout="tunnel">3D Tunnel</button>
+  <span class="dock-sep"></span>
+  <button class="dock-btn is-on" data-set="all">All</button>
+  <button class="dock-btn" data-set="streets">Streets</button>
+  <button class="dock-btn" data-set="land-and-sea">Land &amp; Sea</button>
+  <button class="dock-btn" data-set="quiet">Quiet</button>
+  <span class="dock-sep"></span>
+  <button class="dock-btn" id="zoomOut">−</button>
+  <button class="dock-btn" id="resetCam">Center</button>
+  <button class="dock-btn" id="zoomIn">+</button>
+</nav>
+
+<dialog class="v-dlg" id="vDialog" aria-label="Frame inspection">
+  <div class="vd__media"><img id="vdImg" alt=""></div>
+  <div class="vd__info">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="mono" id="vdFrame" style="color:var(--cyan)">01 / 35</span>
+      <button class="hud-pill mono" id="vdClose" style="height:30px">Esc ✕</button>
+    </div>
+    <h2 id="vdTitle" tabindex="-1" style="margin:0;font-family:var(--display);font-size:28px;line-height:1.05">Title</h2>
+    <div class="mono" id="vdMeta" style="color:var(--muted)"></div>
+    <div id="vdExif" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"></div>
+    <div>
+      <div class="mono" style="color:var(--muted);margin-bottom:8px">Chromatic Signature</div>
+      <div id="vdSwatches" style="display:flex;gap:6px"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:auto">
+      <button class="hud-pill mono" id="vdPrev">← Prev</button>
+      <button class="hud-pill mono" id="vdNext">Next →</button>
+      <button class="hud-pill mono" id="vdFav" style="margin-left:auto">☆ Save</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="catalog.js"></script>
+<script>
+(function () {
+  const FY = window.FY_PHOTOS;
+  FY.mountSwitcher("03", "dark");
+
+  const world = document.getElementById("world");
+  const vp2d = document.getElementById("viewport2d");
+  const vp3d = document.getElementById("viewport3d");
+  const tunnelStage = document.getElementById("tunnelStage");
+  const compassRing = document.getElementById("compassRing");
+  const telemetry = document.getElementById("telemetry");
+  const autopilotBtn = document.getElementById("autopilotBtn");
+  const bgGlow = document.getElementById("bgGlow");
+
+  const state = {
+    layout: "constellation",
+    set: "all",
+    x: 0, y: 0, vx: 0, vy: 0,
+    scale: 0.78, targetScale: 0.78,
+    dragging: false, dragged: false,
+    px: 0, py: 0,
+    tunnelZ: 0, tunnelVel: 0,
+    autopilot: !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    dlgIdx: 0
+  };
+
+  // Precompute 2D positions for Constellation & Color Wheel
+  const coords = { constellation: [], wheel: [], tunnel: [] };
+  const goldenAngle = 2.3999632297;
+  FY.photos.forEach(function (p, i) {
+    // Constellation: airy golden-angle spiral with organic jitter
+    const r = 185 * Math.sqrt(i + 0.8) + 60;
+    const a = i * goldenAngle;
+    coords.constellation.push({
+      x: Math.cos(a) * r * 1.28,
+      y: Math.sin(a) * r * 0.92,
+      rot: ((i % 5) - 2) * 1.6
+    });
+
+    // Color Wheel: real HSL Hue angle & saturation radius!
+    const hueDeg = (p.hsl && p.hsl[0]) || 0;
+    const sat = (p.hsl && p.hsl[1]) || 0;
+    const rad = (hueDeg * Math.PI) / 180;
+    const dist = sat < 0.12 ? 120 + (i % 6) * 52 : 380 + sat * 440 + (i % 3) * 70;
+    coords.wheel.push({
+      x: Math.cos(rad) * dist,
+      y: Math.sin(rad) * dist,
+      rot: 0
+    });
+
+    // 3D Tunnel coordinates
+    const ta = i * 1.15;
+    const tr = 240 + (i % 3) * 145;
+    coords.tunnel.push({
+      x: Math.cos(ta) * tr * 1.35,
+      y: Math.sin(ta) * tr * 0.78,
+      z: -i * 290
+    });
+  });
+
+  // Build 2D nodes
+  const nodes = FY.photos.map(function (p, i) {
+    const el = document.createElement("article");
+    el.className = "node";
+    el.dataset.idx = i;
+    el.dataset.set = p.set;
+    el.innerHTML =
+      '<div class="node__img" style="aspect-ratio:' + p.w + '/' + p.h + ';background-image:url(' + p.lqip + ');background-size:cover">' +
+        '<img src="' + FY.src(p, 480) + '" loading="lazy" alt="' + p.title + '">' +
+      '</div>' +
+      '<div class="node__cap"><span>' + p.frame + ' · ' + p.title + '</span><span class="node__dot" style="background:' + p.color + '"></span></div>';
+    el.addEventListener("pointerenter", function () {
+      bgGlow.style.background = "radial-gradient(ellipse 60% 45% at 50% 50%, " + p.palette[2] + "28, transparent 72%)";
+    });
+    el.addEventListener("click", function (e) {
+      if (state.dragged) return;
+      e.stopPropagation();
+      openDlg(i);
+    });
+    world.appendChild(el);
+    return el;
+  });
+
+  // Build 3D Tunnel cards
+  const tCards = FY.photos.map(function (p, i) {
+    const el = document.createElement("article");
+    el.className = "t-card";
+    el.innerHTML =
+      '<img src="' + FY.src(p, 960) + '" loading="lazy" alt="' + p.title + '">' +
+      '<div class="t-card__bar"><span style="font-size:13px;font-weight:500">' + p.title + '</span><span class="mono" style="color:var(--cyan)">' + p.frame + '</span></div>';
+    el.addEventListener("click", function () { openDlg(i); });
+    tunnelStage.appendChild(el);
+    return el;
+  });
+
+  function applyPositions() {
+    const arr = coords[state.layout === "wheel" ? "wheel" : "constellation"];
+    compassRing.classList.toggle("is-on", state.layout === "wheel");
+    nodes.forEach(function (el, i) {
+      const c = arr[i];
+      el.style.transform = "translate3d(" + (c.x - 115).toFixed(1) + "px," + (c.y - 120).toFixed(1) + "px,0) rotate(" + c.rot + "deg)";
+      el.classList.toggle("is-dim", state.set !== "all" && el.dataset.set !== state.set);
+    });
+  }
+  applyPositions();
+
+  // Pan & Momentum Physics for 2D Canvas
+  vp2d.addEventListener("pointerdown", function (e) {
+    state.dragging = true;
+    state.dragged = false;
+    state.px = e.clientX;
+    state.py = e.clientY;
+    state.vx = 0; state.vy = 0;
+  });
+  window.addEventListener("pointermove", function (e) {
+    if (!state.dragging) return;
+    const dx = e.clientX - state.px;
+    const dy = e.clientY - state.py;
+    if (Math.abs(dx) + Math.abs(dy) > 4) state.dragged = true;
+    state.x += dx / state.scale;
+    state.y += dy / state.scale;
+    state.vx = dx / state.scale;
+    state.vy = dy / state.scale;
+    state.px = e.clientX;
+    state.py = e.clientY;
+  });
+  window.addEventListener("pointerup", function () { state.dragging = false; });
+
+  vp2d.addEventListener("wheel", function (e) {
+    e.preventDefault();
+    if (e.ctrlKey || e.metaKey) {
+      state.targetScale = Math.max(0.36, Math.min(1.65, state.targetScale * (1 - e.deltaY * 0.004)));
+    } else {
+      state.x -= e.deltaX / state.scale;
+      state.y -= e.deltaY / state.scale;
+    }
+  }, { passive: false });
+
+  // 3D Tunnel wheel control
+  vp3d.addEventListener("wheel", function (e) {
+    e.preventDefault();
+    state.tunnelVel += e.deltaY * 1.4;
+  }, { passive: false });
+
+  // Minimap click teleport
+  const miniCanvas = document.getElementById("miniCanvas");
+  const mctx = miniCanvas.getContext("2d");
+  document.getElementById("minimap").addEventListener("click", function (e) {
+    if (state.layout === "tunnel") return;
+    const r = miniCanvas.getBoundingClientRect();
+    const nx = ((e.clientX - r.left) / r.width - 0.5) * 2800;
+    const ny = ((e.clientY - r.top) / r.height - 0.5) * 2000;
+    state.x = -nx;
+    state.y = -ny;
+    state.vx = 0; state.vy = 0;
+  });
+
+  function drawMinimap() {
+    const w = miniCanvas.width, h = miniCanvas.height;
+    mctx.clearRect(0, 0, w, h);
+    const arr = coords[state.layout === "wheel" ? "wheel" : "constellation"];
+    arr.forEach(function (c, i) {
+      const p = FY.photos[i];
+      const mx = w / 2 + (c.x / 2800) * w;
+      const my = h / 2 + (c.y / 2000) * h;
+      mctx.fillStyle = (state.set === "all" || p.set === state.set) ? p.palette[3] : "rgba(255,255,255,.15)";
+      mctx.beginPath();
+      mctx.arc(mx, my, 3.2, 0, Math.PI * 2);
+      mctx.fill();
+    });
+    // Viewport rect
+    const vw = (window.innerWidth / state.scale / 2800) * w;
+    const vh = (window.innerHeight / state.scale / 2000) * h;
+    const vx = w / 2 - (state.x / 2800) * w - vw / 2;
+    const vy = h / 2 - (state.y / 2000) * h - vh / 2;
+    mctx.strokeStyle = "#7CE8FF";
+    mctx.lineWidth = 2;
+    mctx.strokeRect(vx, vy, vw, vh);
+  }
+
+  // Main Animation Loop
+  const tunnelSpan = FY.photos.length * 290;
+  function tick() {
+    if (state.layout !== "tunnel") {
+      if (!state.dragging) {
+        state.x += state.vx;
+        state.y += state.vy;
+        state.vx *= 0.91;
+        state.vy *= 0.91;
+      }
+      state.scale += (state.targetScale - state.scale) * 0.14;
+      world.style.transform = "scale(" + state.scale.toFixed(4) + ") translate3d(" + state.x.toFixed(1) + "px," + state.y.toFixed(1) + "px,0)";
+      telemetry.textContent = "ZOOM " + Math.round(state.scale * 100) + "% · X " + Math.round(-state.x) + " Y " + Math.round(-state.y);
+      drawMinimap();
+    } else {
+      if (state.autopilot) state.tunnelZ += 1.9;
+      state.tunnelZ += state.tunnelVel * 0.12;
+      state.tunnelVel *= 0.88;
+      tCards.forEach(function (el, i) {
+        const c = coords.tunnel[i];
+        let z = ((c.z + state.tunnelZ) % tunnelSpan + tunnelSpan) % tunnelSpan - tunnelSpan + 700;
+        const opacity = z > 420 ? Math.max(0, 1 - (z - 420) / 280) : Math.max(0, 1 + z / 3400);
+        const setOk = state.set === "all" || FY.photos[i].set === state.set;
+        el.style.transform = "translate3d(" + (c.x - 150) + "px," + (c.y - 110) + "px," + z.toFixed(1) + "px)";
+        el.style.opacity = setOk ? opacity.toFixed(3) : (opacity * 0.12).toFixed(3);
+        el.style.pointerEvents = (opacity > 0.25 && z < 450 && setOk) ? "auto" : "none";
+      });
+      telemetry.textContent = "DEPTH Z · " + Math.round(state.tunnelZ) + " · SCROLL TO FLY";
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  // Dock & Header controls
+  document.querySelectorAll("[data-layout]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll("[data-layout]").forEach(function (b) { b.classList.toggle("is-on", b === btn); });
+      state.layout = btn.dataset.layout;
+      const is3d = state.layout === "tunnel";
+      vp2d.style.display = is3d ? "none" : "block";
+      vp3d.classList.toggle("is-on", is3d);
+      document.getElementById("minimap").style.display = is3d ? "none" : "";
+      autopilotBtn.style.display = is3d ? "inline-flex" : "none";
+      if (!is3d) { state.x = 0; state.y = 0; state.targetScale = state.layout === "wheel" ? 0.56 : 0.78; applyPositions(); }
+    });
+  });
+
+  document.querySelectorAll("[data-set]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll("[data-set]").forEach(function (b) { b.classList.toggle("is-on", b === btn); });
+      state.set = btn.dataset.set;
+      applyPositions();
+    });
+  });
+
+  document.getElementById("zoomIn").addEventListener("click", function () { state.targetScale = Math.min(1.65, state.targetScale + 0.18); });
+  document.getElementById("zoomOut").addEventListener("click", function () { state.targetScale = Math.max(0.36, state.targetScale - 0.18); });
+  document.getElementById("resetCam").addEventListener("click", function () {
+    state.x = 0; state.y = 0; state.vx = 0; state.vy = 0; state.targetScale = state.layout === "wheel" ? 0.56 : 0.78;
+    nodes.forEach(function (n) { n.classList.remove("is-focus"); });
+  });
+
+  autopilotBtn.addEventListener("click", function () {
+    state.autopilot = !state.autopilot;
+    autopilotBtn.textContent = state.autopilot ? "Pause Autopilot" : "Play Autopilot";
+  });
+
+  document.getElementById("surpriseBtn").addEventListener("click", function () {
+    const idx = Math.floor(Math.random() * FY.photos.length);
+    if (state.layout === "tunnel") { openDlg(idx); return; }
+    const arr = coords[state.layout === "wheel" ? "wheel" : "constellation"];
+    state.x = -arr[idx].x;
+    state.y = -arr[idx].y;
+    state.targetScale = 1.15;
+    nodes.forEach(function (n, i) { n.classList.toggle("is-focus", i === idx); });
+    FY.toast("Focused · " + FY.photos[idx].title);
+  });
+
+  // Dialog
+  const dlg = document.getElementById("vDialog");
+  function openDlg(i) {
+    state.dlgIdx = (i + FY.photos.length) % FY.photos.length;
+    const p = FY.photos[state.dlgIdx];
+    document.getElementById("vdFrame").textContent = p.frame + " / " + FY.photos.length + " · " + FY.setName(p.set);
+    document.getElementById("vdTitle").textContent = p.title;
+    document.getElementById("vdMeta").textContent = p.location + " · " + FY.formatDate(p.date);
+    document.getElementById("vdImg").src = FY.full(p);
+    document.getElementById("vdExif").innerHTML =
+      '<div><div class="mono" style="color:var(--muted)">Camera</div><div>' + p.exif.camera + '</div></div>' +
+      '<div><div class="mono" style="color:var(--muted)">Lens</div><div>' + p.exif.lens + '</div></div>' +
+      '<div><div class="mono" style="color:var(--muted)">Exposure</div><div>' + p.exif.aperture + ' · ' + p.exif.shutter + 's</div></div>' +
+      '<div><div class="mono" style="color:var(--muted)">ISO / Focal</div><div>ISO ' + p.exif.iso + ' · ' + p.exif.focal + '</div></div>';
+    document.getElementById("vdSwatches").innerHTML = p.palette.map(function (c) {
+      return '<button data-hex="' + c + '" style="flex:1;height:30px;border-radius:6px;background:' + c + ';border:1px solid rgba(255,255,255,.15)" title="Copy ' + c + '"></button>';
+    }).join("");
+    const fav = FY.getShortlist().has(p.id);
+    const fb = document.getElementById("vdFav");
+    fb.classList.toggle("is-on", fav);
+    fb.textContent = fav ? "★ Saved" : "☆ Save";
+    if (!dlg.open) dlg.showModal();
+    document.getElementById("vdTitle").focus();
+  }
+  document.getElementById("vdClose").addEventListener("click", function () { dlg.close(); });
+  document.getElementById("vdPrev").addEventListener("click", function () { openDlg(state.dlgIdx - 1); });
+  document.getElementById("vdNext").addEventListener("click", function () { openDlg(state.dlgIdx + 1); });
+  document.getElementById("vdFav").addEventListener("click", function () {
+    const p = FY.photos[state.dlgIdx];
+    const on = FY.toggleShortlist(p.id);
+    FY.toast(on ? "Saved to shortlist" : "Removed");
+    openDlg(state.dlgIdx);
+  });
+  document.getElementById("vdSwatches").addEventListener("click", function (e) {
+    const b = e.target.closest("[data-hex]");
+    if (b) { navigator.clipboard && navigator.clipboard.writeText(b.dataset.hex); FY.toast("Copied " + b.dataset.hex); }
+  });
+  window.addEventListener("keydown", function (e) {
+    if (!dlg.open) return;
+    if (e.key === "ArrowRight") openDlg(state.dlgIdx + 1);
+    else if (e.key === "ArrowLeft") openDlg(state.dlgIdx - 1);
+  });
+})();
+</script>
+</body>
+</html>

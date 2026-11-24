@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>04 · Cinema Reel — Felix Yeboah 35mm Monograph</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0C0B0A;
+  --bg-2:#141210;
+  --ink:#EFECE6;
+  --muted:#8E877D;
+  --amber:#E8A849;
+  --red:#E05246;
+  --line:rgba(239,236,230,.10);
+  --line-2:rgba(239,236,230,.20);
+  --serif:"Playfair Display", Georgia, serif;
+  --sans:"Space Grotesk", system-ui, sans-serif;
+  --mono:"Space Mono", ui-monospace, monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --pad:clamp(16px, 3.2vw, 44px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--bg);color:var(--ink)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+img{display:block;max-width:100%}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:4px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase}
+
+/* Film Stock Emulation Filters */
+body[data-stock="natural"] .film-img{filter:none}
+body[data-stock="portra"] .film-img{filter:contrast(1.04) saturate(1.16) sepia(.16) brightness(1.04) hue-rotate(-5deg)}
+body[data-stock="hp5"] .film-img{filter:grayscale(1) contrast(1.28) brightness(.96)}
+body[data-stock="cinestill"] .film-img{filter:contrast(1.14) saturate(1.12) hue-rotate(-14deg) brightness(.96)}
+body[data-stock="kodachrome"] .film-img{filter:contrast(1.22) saturate(1.36) sepia(.14) brightness(.98)}
+
+/* Animated subtle 35mm grain */
+.film-grain{
+  position:fixed;inset:0;z-index:70;pointer-events:none;opacity:.06;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Full-Viewport Cinema Stage */
+.cinema{
+  position:relative;height:100svh;min-height:640px;display:grid;
+  grid-template-rows:auto 1fr auto;overflow:hidden;border-bottom:1px solid var(--line);
+}
+.cinema__bg{
+  position:absolute;inset:-40px;z-index:0;opacity:.22;filter:blur(70px) saturate(1.3);
+  background-size:cover;background-position:center;transition:background-image .8s ease;
+}
+
+.c-top{
+  position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:16px var(--pad);
+  background:linear-gradient(to bottom, rgba(12,11,10,.88), rgba(12,11,10,0));
+}
+.c-brand{display:flex;align-items:center;gap:12px}
+.rec-dot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 12px var(--red)}
+.c-brand strong{font-family:var(--serif);font-size:22px;font-weight:500;letter-spacing:.01em}
+
+.c-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.c-pill{
+  height:34px;padding:0 12px;border-radius:999px;display:inline-flex;align-items:center;gap:7px;
+  background:rgba(20,18,16,.76);border:1px solid var(--line-2);backdrop-filter:blur(14px);
+  color:var(--ink);transition:border-color .2s,background .2s,color .2s;
+}
+.c-pill:hover{border-color:var(--amber)}
+.c-pill.is-on{background:var(--amber);color:#0C0B0A;border-color:var(--amber);font-weight:700}
+
+/* Main Stage Viewport */
+.c-stage{
+  position:relative;z-index:10;display:grid;grid-template-columns:1fr minmax(260px, 320px);
+  gap:24px;padding:12px var(--pad) 18px;min-height:0;align-items:center;
+}
+.frame-box{
+  position:relative;width:100%;height:100%;display:grid;place-items:center;
+  overflow:hidden;border-radius:8px;background:#070606;border:1px solid var(--line);
+}
+.stage-img{
+  max-width:100%;max-height:100%;width:auto;height:100%;object-fit:contain;
+  transition:filter .4s var(--ease), transform 7s ease-out;
+}
+.stage-img.is-entering{animation:curtainWipe .7s var(--ease) both}
+@keyframes curtainWipe{
+  from{clip-path:inset(0 100% 0 0);opacity:.4}
+  to{clip-path:inset(0 0 0 0);opacity:1}
+}
+@media (prefers-reduced-motion: reduce){
+  .stage-img.is-entering{animation:none}
+}
+
+/* Leica Rangefinder Viewfinder HUD Overlay */
+.vf-hud{
+  position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .35s var(--ease);
+}
+.vf-hud.is-on{opacity:1}
+.vf-grid{
+  position:absolute;inset:24px;
+  background:
+    linear-gradient(to right, transparent 33.2%, rgba(232,168,73,.28) 33.3%, transparent 33.5%, transparent 66.5%, rgba(232,168,73,.28) 66.6%, transparent 66.8%),
+    linear-gradient(to bottom, transparent 33.2%, rgba(232,168,73,.28) 33.3%, transparent 33.5%, transparent 66.5%, rgba(232,168,73,.28) 66.6%, transparent 66.8%);
+  border:1px solid rgba(232,168,73,.35);
+}
+.vf-reticle{
+  position:absolute;left:50%;top:50%;width:72px;height:48px;transform:translate(-50%,-50%);
+  border:1.5px solid var(--amber);
+}
+.vf-reticle::before{
+  content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;border-radius:50%;
+  background:var(--red);transform:translate(-50%,-50%);
+}
+.vf-readout{
+  position:absolute;left:32px;right:32px;bottom:32px;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 14px;border-radius:6px;background:rgba(12,11,10,.78);
+  border:1px solid rgba(232,168,73,.35);color:var(--amber);
+}
+
+/* Side Director's Panel */
+.c-panel{
+  align-self:stretch;display:flex;flex-direction:column;gap:16px;padding:20px;border-radius:12px;
+  background:rgba(20,18,16,.78);border:1px solid var(--line-2);backdrop-filter:blur(18px);
+  overflow:auto;
+}
+.c-title{margin:0;font-family:var(--serif);font-size:clamp(1.8rem, 2.4vw, 2.4rem);font-weight:400;line-height:1.05}
+.c-title em{font-style:italic;color:var(--amber)}
+.stock-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.stock-btn{
+  padding:8px 10px;border-radius:8px;border:1px solid var(--line-2);text-align:left;
+  background:rgba(255,255,255,.03);transition:border-color .2s,background .2s,color .2s;
+}
+.stock-btn:hover{border-color:var(--amber)}
+.stock-btn.is-on{background:var(--amber);color:#0C0B0A;border-color:var(--amber);font-weight:700}
+.hist-wrap{
+  padding:10px;border-radius:8px;background:#080707;border:1px solid var(--line);
+}
+.hist-wrap canvas{width:100%;height:56px;display:block}
+.spec-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px}
+.spec-list dt{color:var(--muted)}
+.spec-list dd{margin:2px 0 0;font-weight:500}
+
+/* Bottom Wave-Magnifying 35mm Filmstrip Dock */
+.reel-dock{
+  position:relative;z-index:20;padding:10px var(--pad) 16px;
+  background:linear-gradient(to top, rgba(12,11,10,.96) 65%, rgba(12,11,10,0));
+}
+.reel-sprockets{
+  height:7px;margin-bottom:8px;opacity:.22;
+  background:repeating-linear-gradient(to right, var(--ink) 0 12px, transparent 12px 24px);
+}
+.reel-strip{
+  display:flex;align-items:flex-end;gap:6px;overflow-x:auto;padding:14px 4px 4px;
+  scrollbar-width:none;height:86px;
+}
+.reel-strip::-webkit-scrollbar{display:none}
+.reel-item{
+  flex:none;width:62px;height:44px;border-radius:4px;overflow:hidden;position:relative;
+  border:1.5px solid rgba(255,255,255,.14);opacity:.55;transform-origin:bottom center;
+  transition:opacity .2s,border-color .2s,transform .18s var(--ease);
+}
+.reel-item img{width:100%;height:100%;object-fit:cover}
+.reel-item.is-on{opacity:1;border-color:var(--amber);box-shadow:0 0 18px rgba(232,168,73,.35)}
+.reel-item__n{
+  position:absolute;left:3px;bottom:2px;font-family:var(--mono);font-size:8px;
+  color:var(--amber);text-shadow:0 1px 4px #000;
+}
+
+/* Below-the-Fold Full Contact Roll Archive */
+.roll-section{padding:clamp(44px, 6vw, 84px) var(--pad) 120px;max-width:1540px;margin:0 auto}
+.roll-head{
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;
+  padding-bottom:20px;border-bottom:1px solid var(--line-2);margin-bottom:32px;
+}
+.roll-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:24px}
+.roll-card{
+  background:var(--bg-2);border:1px solid var(--line);border-radius:8px;overflow:hidden;cursor:pointer;
+  transition:transform .45s var(--ease),border-color .25s;
+}
+.roll-card:hover{transform:translateY(-5px);border-color:var(--amber)}
+.roll-card__img{aspect-ratio:3/2;overflow:hidden;background:#070606}
+.roll-card__img img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.roll-card:hover .roll-card__img img{transform:scale(1.05)}
+.roll-card__foot{padding:12px 14px;display:flex;justify-content:space-between;align-items:baseline}
+
+@media (max-width:960px){
+  .cinema{height:auto;min-height:100svh}
+  .c-stage{grid-template-columns:1fr;grid-template-rows:minmax(320px, 52vh) auto}
+}
+</style>
+</head>
+<body data-stock="natural">
+<div class="film-grain" aria-hidden="true"></div>
+
+<section class="cinema" id="stageTop">
+  <div class="cinema__bg" id="cinemaBg" aria-hidden="true"></div>
+
+  <header class="c-top">
+    <div class="c-brand">
+      <span class="rec-dot" aria-hidden="true"></span>
+      <strong>Cinema Reel</strong>
+      <span class="mono" style="color:var(--muted)">Felix Yeboah · 35mm Soundstage</span>
+    </div>
+    <div class="c-bar">
+      <button class="c-pill mono is-on" id="vfToggle" type="button">Viewfinder (V)</button>
+      <button class="c-pill mono" id="playToggle" type="button">Play Reel</button>
+      <a class="c-pill mono" href="#rollArchive">Full Roll ↓</a>
+    </div>
+  </header>
+
+  <div class="c-stage">
+    <div class="frame-box" id="frameBox">
+      <img class="stage-img film-img" id="stageImg" alt="">
+      <div class="vf-hud is-on" id="vfHud" aria-hidden="true">
+        <div class="vf-grid"></div>
+        <div class="vf-reticle"></div>
+        <div class="vf-readout mono">
+          <span id="vfLeft">AF-S · [●] · RAW+WEBP</span>
+          <span id="vfCenter">f/2.8 · 1/500 · ISO 200</span>
+          <span id="vfRight">EXP 0.0 EV</span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="c-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="mono" id="cNum" style="color:var(--amber)">ROLL 01 · FRAME 01A</span>
+        <button class="c-pill mono" id="cFav" style="height:28px;padding:0 10px" type="button">☆ Save</button>
+      </div>
+      <h1 class="c-title" id="cTitle">Atlantic Mist</h1>
+      <div class="mono" id="cSub" style="color:var(--muted)">Cape Coast, GH · Land &amp; Sea</div>
+
+      <div>
+        <div class="mono" style="color:var(--muted);margin-bottom:8px">Darkroom Film Stock</div>
+        <div class="stock-grid" id="stockGrid">
+          <button class="stock-btn mono is-on" data-stock="natural">Natural</button>
+          <button class="stock-btn mono" data-stock="portra">Portra 400</button>
+          <button class="stock-btn mono" data-stock="hp5">Ilford HP5</button>
+          <button class="stock-btn mono" data-stock="cinestill">Cinestill 800T</button>
+          <button class="stock-btn mono" data-stock="kodachrome" style="grid-column:span 2">Kodachrome 64</button>
+        </div>
+      </div>
+
+      <div class="hist-wrap">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span class="mono" style="color:var(--muted);font-size:9.5px">Tonal Histogram</span>
+          <span class="mono" id="cTone" style="color:var(--amber);font-size:9.5px">RGB</span>
+        </div>
+        <canvas id="histCanvas" width="280" height="56"></canvas>
+      </div>
+
+      <dl class="spec-list" id="cSpecs"></dl>
+
+      <div style="display:flex;gap:8px;margin-top:auto">
+        <button class="c-pill mono" id="prevBtn" style="flex:1;justify-content:center" type="button">← Prev</button>
+        <button class="c-pill mono" id="nextBtn" style="flex:1;justify-content:center" type="button">Next →</button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="reel-dock">
+    <div class="reel-sprockets" aria-hidden="true"></div>
+    <div class="reel-strip" id="reelStrip" aria-label="35mm filmstrip scrubber"></div>
+  </div>
+</section>
+
+<section class="roll-section" id="rollArchive">
+  <div class="roll-head">
+    <div>
+      <div class="mono" style="color:var(--amber)">Complete 35mm Contact Roll</div>
+      <h2 style="margin:6px 0 0;font-family:var(--serif);font-size:clamp(2rem, 4vw, 3.4rem);font-weight:400">All <em>Frames</em> on Reel</h2>
+    </div>
+    <div class="c-bar" id="rollFilters"></div>
+  </div>
+  <div class="roll-grid" id="rollGrid"></div>
+</section>
+
+<script src="catalog.js"></script>
+<script>
+(function () {
+  const FY = window.FY_PHOTOS;
+  FY.mountSwitcher("04", "dark");
+
+  const state = {
+    idx: 0,
+    set: "all",
+    playing: false,
+    vf: true,
+    timer: null,
+    filtered: FY.photos.slice()
+  };
+
+  const stageImg = document.getElementById("stageImg");
+  const cinemaBg = document.getElementById("cinemaBg");
+  const reelStrip = document.getElementById("reelStrip");
+  const histCanvas = document.getElementById("histCanvas");
+  const hctx = histCanvas.getContext("2d");
+
+  function hexToRgb(hex) {
+    const n = parseInt(hex.replace("#", ""), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+
+  function drawHistogram(palette) {
+    const w = histCanvas.width, h = histCanvas.height;
+    hctx.clearRect(0, 0, w, h);
+    const channels = [
+      { idx: 0, color: "rgba(232,110,90,.65)" },
+      { idx: 1, color: "rgba(130,215,165,.55)" },
+      { idx: 2, color: "rgba(110,180,245,.6)" }
+    ];
+    const rgbs = palette.map(hexToRgb);
+    channels.forEach(function (ch) {
+      hctx.beginPath();
+      hctx.moveTo(0, h);
+      for (let x = 0; x <= w; x += 6) {
+        const t = x / w;
+        let energy = 0;
+        rgbs.forEach(function (rgb, pi) {
+          const center = rgb[ch.idx] / 255;
+          const dist = Math.abs(t - center);
+          energy += Math.exp(-(dist * dist) / 0.018) * (0.65 + (pi % 3) * 0.22);
+        });
+        const y = h - Math.min(h - 4, energy * 16);
+        hctx.lineTo(x, y);
+      }
+      hctx.lineTo(w, h);
+      hctx.closePath();
+      hctx.fillStyle = ch.color;
+      hctx.fill();
+    });
+  }
+
+  function renderStage() {
+    const p = state.filtered[state.idx];
+    if (!p) return;
+    stageImg.classList.remove("is-entering");
+    void stageImg.offsetWidth;
+    stageImg.src = FY.full(p);
+    stageImg.alt = p.title;
+    stageImg.classList.add("is-entering");
+    cinemaBg.style.backgroundImage = "url(" + FY.src(p, 480) + ")";
+
+    document.getElementById("cNum").textContent = "FRAME " + p.frame + "A · " + String(state.idx + 1).padStart(2, "0") + "/" + String(state.filtered.length).padStart(2, "0");
+    document.getElementById("cTitle").innerHTML = p.title;
+    document.getElementById("cSub").textContent = p.location + " · " + FY.setName(p.set) + " · " + FY.formatDate(p.date);
+    document.getElementById("vfCenter").textContent = p.exif.aperture + " · " + p.exif.shutter + "s · ISO " + p.exif.iso;
+    document.getElementById("vfRight").textContent = p.exif.camera.toUpperCase();
+    document.getElementById("cSpecs").innerHTML =
+      '<div><dt class="mono">Body</dt><dd>' + p.exif.camera + '</dd></div>' +
+      '<div><dt class="mono">Optics</dt><dd>' + p.exif.lens + '</dd></div>' +
+      '<div><dt class="mono">Shutter</dt><dd>' + p.exif.shutter + 's · ' + p.exif.aperture + '</dd></div>' +
+      '<div><dt class="mono">ISO / Ratio</dt><dd>ISO ' + p.exif.iso + ' · ' + p.orientation + '</dd></div>';
+
+    const fav = FY.getShortlist().has(p.id);
+    const cFav = document.getElementById("cFav");
+    cFav.classList.toggle("is-on", fav);
+    cFav.textContent = fav ? "★ Saved" : "☆ Save";
+
+    drawHistogram(p.palette);
+    document.querySelectorAll(".reel-item").forEach(function (el, i) {
+      el.classList.toggle("is-on", i === state.idx);
+    });
+    const active = reelStrip.querySelector(".reel-item.is-on");
+    if (active) active.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+  }
+
+  function renderReel() {
+    reelStrip.innerHTML = state.filtered.map(function (p, i) {
+      return '<button class="reel-item ' + (i === state.idx ? "is-on" : "") + '" data-jump="' + i + '" aria-label="Frame ' + p.frame + ': ' + p.title + '">' +
+        '<img class="film-img" src="' + FY.src(p, 480) + '" loading="lazy" alt="">' +
+        '<span class="reel-item__n">' + p.frame + 'A</span>' +
+      '</button>';
+    }).join("");
+  }
+
+  // Wave magnification across 35mm filmstrip dock!
+  reelStrip.addEventListener("pointermove", function (e) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const items = reelStrip.querySelectorAll(".reel-item");
+    items.forEach(function (el) {
+      const r = el.getBoundingClientRect();
+      const dist = Math.abs(e.clientX - (r.left + r.width / 2));
+      const boost = Math.max(0, 1 - dist / 140);
+      const scale = 1 + boost * 0.48;
+      el.style.transform = "scale(" + scale.toFixed(3) + ") translateY(" + (-boost * 8).toFixed(1) + "px)";
+    });
+  });
+  reelStrip.addEventListener("pointerleave", function () {
+    reelStrip.querySelectorAll(".reel-item").forEach(function (el) { el.style.transform = ""; });
+  });
+  reelStrip.addEventListener("click", function (e) {
+    const b = e.target.closest("[data-jump]");
+    if (!b) return;
+    state.idx = parseInt(b.dataset.jump, 10);
+    renderStage();
+  });
+
+  // Film Stock Switcher
+  document.getElementById("stockGrid").addEventListener("click", function (e) {
+    const b = e.target.closest("[data-stock]");
+    if (!b) return;
+    document.querySelectorAll("[data-stock]").forEach(function (x) { x.classList.toggle("is-on", x === b); });
+    document.body.dataset.stock = b.dataset.stock;
+    FY.toast("Film Stock: " + b.textContent);
+  });
+
+  // Viewfinder HUD Toggle
+  const vfToggle = document.getElementById("vfToggle");
+  const vfHud = document.getElementById("vfHud");
+  function toggleVF() {
+    state.vf = !state.vf;
+    vfToggle.classList.toggle("is-on", state.vf);
+    vfHud.classList.toggle("is-on", state.vf);
+  }
+  vfToggle.addEventListener("click", toggleVF);
+
+  // Reel Slideshow (explicit Play / Pause control per WCAG 2.2.2)
+  const playToggle = document.getElementById("playToggle");
+  function setPlaying(on) {
+    state.playing = on;
+    clearInterval(state.timer);
+    playToggle.classList.toggle("is-on", on);
+    playToggle.textContent = on ? "Pause Reel" : "Play Reel";
+    if (on) {
+      state.timer = setInterval(function () {
+        state.idx = (state.idx + 1) % state.filtered.length;
+        renderStage();
+      }, 4200);
+    }
+  }
+  playToggle.addEventListener("click", function () { setPlaying(!state.playing); });
+
+  document.getElementById("prevBtn").addEventListener("click", function () {
+    state.idx = (state.idx - 1 + state.filtered.length) % state.filtered.length;
+    renderStage();
+  });
+  document.getElementById("nextBtn").addEventListener("click", function () {
+    state.idx = (state.idx + 1) % state.filtered.length;
+    renderStage();
+  });
+  document.getElementById("cFav").addEventListener("click", function () {
+    const p = state.filtered[state.idx];
+    const on = FY.toggleShortlist(p.id);
+    FY.toast(on ? "Saved to shortlist" : "Removed");
+    renderStage();
+  });
+
+  window.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") { state.idx = (state.idx + 1) % state.filtered.length; renderStage(); }
+    else if (e.key === "ArrowLeft") { state.idx = (state.idx - 1 + state.filtered.length) % state.filtered.length; renderStage(); }
+    else if (e.key.toLowerCase() === "v") toggleVF();
+    else if (e.key === " ") { e.preventDefault(); setPlaying(!state.playing); }
+  });
+
+  // Below-the-Fold Contact Roll
+  const rollFilters = document.getElementById("rollFilters");
+  const rollGrid = document.getElementById("rollGrid");
+  function renderRoll() {
+    const sets = [{ id: "all", title: "All Rolls", count: FY.photos.length }].concat(FY.sets);
+    rollFilters.innerHTML = sets.map(function (s) {
+      return '<button class="c-pill mono ' + (state.set === s.id ? "is-on" : "") + '" data-rset="' + s.id + '">' + s.title + ' (' + s.count + ')</button>';
+    }).join("");
+    rollGrid.innerHTML = state.filtered.map(function (p, i) {
+      return '<article class="roll-card" data-load="' + i + '" tabindex="0">' +
+        '<div class="roll-card__img"><img class="film-img" src="' + FY.src(p, 960) + '" loading="lazy" alt="' + p.title + '"></div>' +
+        '<div class="roll-card__foot"><span style="font-family:var(--serif);font-size:19px">' + p.title + '</span><span class="mono" style="color:var(--amber)">' + p.frame + 'A</span></div>' +
+      '</article>';
+    }).join("");
+  }
+  rollFilters.addEventListener("click", function (e) {
+    const b = e.target.closest("[data-rset]");
+    if (!b) return;
+    state.set = b.dataset.rset;
+    state.filtered = state.set === "all" ? FY.photos.slice() : FY.photos.filter(function (p) { return p.set === state.set; });
+    state.idx = 0;
+    renderReel(); renderStage(); renderRoll();
+  });
+  rollGrid.addEventListener("click", function (e) {
+    const c = e.target.closest("[data-load]");
+    if (!c) return;
+    state.idx = parseInt(c.dataset.load, 10);
+    renderStage();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  renderReel();
+  renderStage();
+  renderRoll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Work — Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/column.css">
+<style>
+  .work-index { margin-top: var(--s-6); }
+  .work-chips { margin-bottom: var(--s-5); }
+  .work-chips[hidden] { display: none; }
+  /* 36px pill, 44px hit area (the 8px gap absorbs the overhang) */
+  .work-line { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); }
+  .work-line .num { flex: none; color: var(--muted); }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="column">
+  <header class="site-header">
+    <a class="identity" href="index.html" aria-label="Felix Yeboah, home">
+      <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="">
+      <span>Felix Yeboah</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="work.html" aria-current="page">Work</a></li>
+        <li><a href="writing.html">Writing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="photos.html">Photos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+    <main id="main">
+    <section class="page-head">
+      <h1>Work</h1>
+    </section>
+
+    <section class="work-index" aria-label="Projects">
+      <div class="chips work-chips" role="group" aria-label="Filter projects" hidden>
+        <button type="button" class="chip" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="chip" data-filter="products" aria-pressed="false">Products</button>
+        <button type="button" class="chip" data-filter="commerce" aria-pressed="false">Commerce</button>
+        <button type="button" class="chip" data-filter="drones" aria-pressed="false">Drones &amp; aerial</button>
+        <button type="button" class="chip" data-filter="brands" aria-pressed="false">Brands &amp; events</button>
+      </div>
+      <ul class="ruled work-list">
+        <li data-group="products">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/reevit.jpg" width="1600" height="1000" alt="" loading="eager"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">Reevit</span></span><span class="cat">Payments</span></span><span class="num mono">01</span></span>
+              <span class="feature-desc">Payments that don't miss. When one provider goes down, the next one picks up and your customers never notice.</span>
+              <span class="domain mono">reevit.io</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="commerce">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/miss-cookie.jpg" width="1600" height="1000" alt="" loading="eager"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">Miss Cookie Spices</span></span><span class="cat">E-commerce</span></span><span class="num mono">02</span></span>
+              <span class="feature-desc">Premium Ghanaian spices and cooking ingredients, with a storefront built for mobile money.</span>
+              <span class="domain mono">misscookieghana.com</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="products">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/waytu.jpg" width="1600" height="1000" alt="" loading="eager"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">Waytu</span></span><span class="cat">Ride-sharing</span></span><span class="num mono">03</span></span>
+              <span class="feature-desc">Community-driven ride-sharing that pairs nearby commuters for a cheaper, greener trip.</span>
+              <span class="domain mono">waytu.io</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="drones">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/drobotix.jpg" width="1600" height="1000" alt="" loading="lazy"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">Drobotix</span></span><span class="cat">Ag-Tech Drones</span></span><span class="num mono">04</span></span>
+              <span class="feature-desc">Drone technology, training and support that help farmers spray and survey at scale.</span>
+              <span class="domain mono">drobotixas.com</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="commerce">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/studio-theon.jpg" width="1600" height="1000" alt="" loading="lazy"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">Studio Theon</span></span><span class="cat">Agency</span></span><span class="num mono">05</span></span>
+              <span class="feature-desc">A creative digital agency site with a storefront for seasonal souvenirs and gifts.</span>
+              <span class="domain mono">studiotheon.com</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="brands">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/dasheen-atelier.jpg" width="1600" height="1000" alt="" loading="lazy"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">Dasheen Atelier</span></span><span class="cat">Fashion</span></span><span class="num mono">06</span></span>
+              <span class="feature-desc">Made-to-measure bridal and traditional wear, finished by hand in Accra.</span>
+              <span class="domain mono">dasheenatelier.com</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="drones">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/dronehub.jpg" width="1600" height="1000" alt="" loading="lazy"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">Dronehub</span></span><span class="cat">Drone sales &amp; services</span></span><span class="num mono">07</span></span>
+              <span class="feature-desc">Selling and servicing drones for consumer, enterprise and agriculture in Ghana.</span>
+              <span class="domain mono">dronehubafrica.com</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="drones">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/uavops.jpg" width="1600" height="1000" alt="" loading="lazy"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">UAVOps</span></span><span class="cat">Aerial data intelligence</span></span><span class="num mono">08</span></span>
+              <span class="feature-desc">High-precision aerial intelligence that helps organisations make faster, safer and better-informed decisions.</span>
+              <span class="domain mono">uavops.vercel.app</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="products">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/blavior.jpg" width="1600" height="1000" alt="" loading="lazy"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">Blavior</span></span><span class="cat">Real estate</span></span><span class="num mono">09</span></span>
+              <span class="feature-desc">A real estate connection platform, opening with a waitlist for agents, developers and property owners.</span>
+              <span class="domain mono">blavior.io</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="commerce">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/the-rumson.jpg" width="1600" height="1000" alt="" loading="lazy"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">The Rumson</span></span><span class="cat">Restaurant</span></span><span class="num mono">10</span></span>
+              <span class="feature-desc">Elevated Ghanaian comfort food in the heart of Labone, with online ordering for dine-in, takeaway and delivery.</span>
+              <span class="domain mono">therumson.com</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="brands">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/7even-sports.jpg" width="1600" height="1000" alt="" loading="lazy"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">7even Sports Group</span></span><span class="cat">Sports club</span></span><span class="num mono">11</span></span>
+              <span class="feature-desc">Empowering Ghana's grassroots athletes through leagues, development programmes and global exposure.</span>
+              <span class="domain mono">7evensportsgroup.com</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="brands">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/css.jpg" width="1600" height="1000" alt="" loading="lazy"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">CSS</span></span><span class="cat">Connectivity solutions</span></span><span class="num mono">12</span></span>
+              <span class="feature-desc">Communication and connectivity solutions for businesses.</span>
+              <span class="domain mono">techbycss.com</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="brands">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/the-arck.jpg" width="1600" height="1000" alt="" loading="lazy"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">The Arck Interior LTD</span></span><span class="cat">Interior design</span></span><span class="num mono">13</span></span>
+              <span class="feature-desc">Thoughtfully designed kitchens and living spaces that reflect your personality and style.</span>
+              <span class="domain mono">thearckinteriorltd.com</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="brands">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/dna.jpg" width="1600" height="1000" alt="" loading="lazy"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">Desmond Weds Akyeamaa</span></span><span class="cat">Wedding</span></span><span class="num mono">14</span></span>
+              <span class="feature-desc">A wedding site for Desmond and Akyeamaa to share their love story with invited guests.</span>
+              <span class="domain mono">dna-8a83.fly.dev</span>
+            </span>
+          </a>
+        </li>
+        <li data-group="products">
+          <a class="feature" href="work-reevit.html">
+            <span class="thumb"><img src="../../public/assets/covers/undisciplined.jpg" width="1600" height="1000" alt="" loading="lazy"></span>
+            <span class="feature-body">
+              <span class="work-line"><span class="feature-title"><span class="name"><span class="u">Undisciplined</span></span><span class="cat">Education</span></span><span class="num mono">15</span></span>
+              <span class="feature-desc">Education that's about understanding and applying knowledge to solve real-world problems.</span>
+              <span class="domain mono">undisciplined.vercel.app</span>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="contact">
+    <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+    <div class="footer-links">
+      <a href="https://github.com/felixyeboah">GitHub</a>
+      <a href="https://x.com/sudocode_">X</a>
+      <a href="resume.html">Résumé</a>
+      <a href="photos.html">Photos</a>
+      <span class="copy">© 2026</span>
+    </div>
+  </footer>
+</div>
+<script>
+(() => {
+  const bar = document.querySelector('.work-chips');
+  const chips = [...bar.querySelectorAll('.chip')];
+  const items = document.querySelectorAll('.work-list > li');
+  const apply = (group) => {
+    chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filter === group)));
+    items.forEach((li) => { li.hidden = group !== 'all' && li.dataset.group !== group; });
+  };
+  bar.addEventListener('click', (e) => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    apply(chip.dataset.filter);
+    const url = new URL(location.href);
+    if (chip.dataset.filter === 'all') url.searchParams.delete('cat');
+    else url.searchParams.set('cat', chip.dataset.filter);
+    history.replaceState(null, '', url);
+  });
+  const cat = new URLSearchParams(location.search).get('cat');
+  apply(chips.some((c) => c.dataset.filter === cat) ? cat : 'all');
+  bar.hidden = false;
+})();
+</script>
+</body>
+</html>

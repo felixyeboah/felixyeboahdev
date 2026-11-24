@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Photos · A · Darkroom</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../../app/site.css">
+<link rel="stylesheet" href="shared.css">
+<script src="data.js"></script>
+<script src="shared.js"></script>
+<style>
+/* Option A, "Darkroom": the site's Dark Studio language. Cursor-trail hero, then one archive in three views. */
+
+.pcap{
+  position:absolute;left:12px;right:12px;bottom:10px;z-index:2;display:flex;justify-content:space-between;gap:12px;
+  color:#fff;font-size:11px;opacity:0;transform:translateY(6px);pointer-events:none;
+  transition:opacity .35s var(--ease),transform .6s var(--ease-out);
+}
+.pcap b{font-weight:500}
+.pcap span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ---------- hero ---------- */
+.phero{position:relative;display:flex;min-height:min(92svh,1000px);overflow:hidden;isolation:isolate}
+.phero__trail{position:absolute;inset:0;z-index:1}
+.phero__trail img{
+  position:absolute;max-width:none;opacity:0;object-fit:cover;border-radius:4px;pointer-events:none;
+  will-change:transform,opacity;box-shadow:0 30px 60px -24px rgba(0,0,0,.85);
+}
+/* the whole text block inverts whatever passes underneath it */
+.phero__in{
+  position:relative;z-index:2;display:flex;flex-direction:column;width:100%;
+  padding-top:calc(120px + 2vw);padding-bottom:clamp(20px,2.6vw,36px);
+  mix-blend-mode:difference;pointer-events:none;
+}
+.phero__in a{pointer-events:auto}
+.phero__in .pagehead__crumb{margin-bottom:0}
+.phero__title{
+  margin-top:auto;margin-left:-.045em;padding-block:.06em .12em;overflow:clip;
+  font-size:clamp(3.1rem,15.4vw,15.2rem);line-height:.86;letter-spacing:-.066em;font-weight:500;white-space:nowrap;
+}
+.phero__title span{display:inline-block}
+html.motion .phero__title span{transform:translateY(112%);animation:ph-rise 1.25s var(--ease-out) forwards;animation-delay:calc(var(--i) * 42ms + 120ms)}
+@keyframes ph-rise{to{transform:none}}
+.phero__meta{display:flex;gap:clamp(24px,5vw,72px);margin:clamp(14px,1.8vw,24px) 0 0;padding-top:16px;border-top:1px solid var(--line-2);color:var(--muted)}
+.phero__meta div{display:flex;gap:12px}
+.phero__meta dd{margin:0;color:var(--ink);font-variant-numeric:tabular-nums}
+html.motion .phero__meta,html.motion .phero .pagehead__crumb{animation:ph-fade 1s var(--ease-out) .5s both}
+@keyframes ph-fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (max-width:900px){ .phero__in{padding-top:112px} .phero{min-height:min(84svh,760px)} }
+
+/* ---------- filter bar ---------- */
+.pg{position:relative;padding-top:clamp(20px,2.4vw,36px)}
+.pbar{position:sticky;top:78px;z-index:30;padding-block:8px;margin-bottom:clamp(14px,1.8vw,26px);pointer-events:none}
+.pbar__in{display:flex;justify-content:space-between;align-items:center;gap:12px 24px;flex-wrap:wrap}
+.pbar__in > *{pointer-events:auto}
+.pbar__segs{display:flex;gap:8px;margin-left:auto}
+.pbar .fchip:not([aria-pressed="true"]),.pbar .seg{
+  background:rgba(17,17,19,.72);-webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%);
+}
+@media (max-width:760px){
+  .pbar{position:static;padding-block:0}
+  .pbar__segs{margin-left:0;width:100%;justify-content:space-between}
+}
+
+.pv{min-height:60svh}
+html.motion .pv.is-swap{animation:pv-in .7s var(--ease-out) both}
+@keyframes pv-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* ---------- wall ---------- */
+.wall{
+  --gap:clamp(8px,1.15vw,18px);
+  display:grid;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr));gap:var(--gap);align-items:start;
+  padding-bottom:clamp(120px,17vw,280px);
+}
+.wall__col{display:grid;gap:var(--gap);will-change:transform}
+.pt{position:relative;display:block;overflow:hidden;border-radius:3px;transition:opacity .5s var(--ease)}
+.pt::after{
+  content:"";position:absolute;inset:auto 0 0 0;height:38%;z-index:1;opacity:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.55));transition:opacity .4s var(--ease);
+}
+.pt:focus-visible{outline-offset:3px;border-radius:3px}
+.pt:focus-visible::after,.pt:focus-visible .pcap{opacity:1;transform:none}
+/* the mask sits on the inner frame: the tile itself is what the observer watches */
+html.motion .pt .fr{clip-path:inset(0);transition:clip-path 1.25s var(--ease-out) var(--d,0ms)}
+html.motion .pt:not(.is-in) .fr{clip-path:inset(100% 0 0 0)}
+html.motion .pt:not(.is-in) .fr img{transform:scale(1.2)}
+@media (hover:hover){
+  .wall:has(.pt:hover) .pt:not(:hover){opacity:.36}
+  .pt:hover .fr img{scale:1.04}
+  .pt:hover::after,.pt:hover .pcap{opacity:1;transform:none}
+}
+
+/* ---------- reel ---------- */
+.reel{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;cursor:grab;user-select:none;-webkit-user-select:none;outline-offset:-4px}
+.reel::-webkit-scrollbar{display:none}
+.reel.is-drag{cursor:grabbing}
+.reel__track{display:flex;gap:clamp(10px,1.4vw,22px);width:max-content;height:min(68svh,720px,112vw);padding-inline:var(--pad)}
+.rf{position:relative;flex:none;height:100%;max-width:88vw;aspect-ratio:var(--r);overflow:hidden;border-radius:3px}
+.rf:focus-visible{outline-offset:-4px}
+.rf .pcap{opacity:1;transform:none;text-shadow:0 1px 12px rgba(0,0,0,.6)}
+html.motion .rf .fr img{width:116%;max-width:none;margin-left:-8%;transform:translate3d(var(--px,0%),0,0);transition:opacity .7s var(--ease)}
+.reel__hud{display:flex;align-items:center;gap:20px;padding-top:20px;padding-bottom:clamp(96px,12vw,180px);color:var(--muted);font-variant-numeric:tabular-nums}
+.reel__hud b{color:var(--ink);font-weight:400}
+.reel__bar{flex:1;height:1px;background:var(--line-2)}
+.reel__bar i{display:block;height:1px;background:var(--accent);transform-origin:left center;transform:scaleX(.02)}
+
+/* ---------- canvas ---------- */
+.cv{
+  position:relative;isolation:isolate;height:min(84svh,920px);overflow:hidden;margin-bottom:clamp(96px,12vw,180px);
+  border-block:1px solid var(--line);cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;outline-offset:-4px;
+}
+.cv.is-drag{cursor:grabbing}
+.cv::after{ /* soft edges so tiles arrive and leave rather than pop */
+  content:"";position:absolute;inset:0;z-index:40;pointer-events:none;
+  background:
+    linear-gradient(90deg,var(--bg),transparent 9%,transparent 91%,var(--bg)),
+    linear-gradient(180deg,var(--bg),transparent 12%,transparent 88%,var(--bg));
+}
+.ct{position:absolute;left:0;top:0;display:block;overflow:hidden;border-radius:2px;will-change:transform;transition:opacity .4s var(--ease)}
+.ct[data-depth="0"]{opacity:.5}
+.ct[data-depth="2"]{box-shadow:0 36px 80px -24px rgba(0,0,0,.9)}
+.ct:focus-visible{outline-offset:2px;opacity:1}
+@media (hover:hover){
+  .cv:not(.is-drag) .ct:hover{opacity:1}
+  .cv:not(.is-drag) .ct:hover .fr img{scale:1.05}
+}
+</style>
+</head>
+<body id="top" data-option="a">
+<a class="skip" href="#main">Skip to content</a>
+<div class="grain" aria-hidden="true"></div>
+<header class="nav" id="nav"></header>
+
+<main id="main">
+  <header class="phero">
+    <div class="phero__trail" aria-hidden="true"></div>
+    <div class="wrap phero__in">
+      <p class="pagehead__crumb mono"><a href="https://felixyeboah.dev">Index</a><span class="sep" aria-hidden="true"></span><span aria-current="page">Photos</span></p>
+      <h1 class="phero__title" aria-label="Photographs"></h1>
+      <dl class="phero__meta mono"></dl>
+    </div>
+  </header>
+
+  <section class="pg" aria-label="Archive">
+    <div class="pbar">
+      <div class="wrap pbar__in">
+        <div class="fchips" role="group" aria-label="Set" id="sets"></div>
+        <div class="pbar__segs">
+          <div class="seg" role="group" aria-label="Sort" id="sort">
+            <button type="button" data-v="recent">Recent</button>
+            <button type="button" data-v="colour">Colour</button>
+          </div>
+          <div class="seg" role="group" aria-label="View" id="views">
+            <button type="button" data-v="wall">Wall</button>
+            <button type="button" data-v="reel">Reel</button>
+            <button type="button" data-v="canvas">Canvas</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pv" id="view"></div>
+  </section>
+</main>
+
+<footer class="footer"></footer>
+
+<script>
+PX.ready(function () {
+    'use strict';
+    var $ = function (s, r) { return (r || document).querySelector(s); };
+    var div = function (cls) { var d = document.createElement('div'); d.className = cls; return d; };
+    var mod = function (n, m) { return ((n % m) + m) % m; };
+    var fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+    /* ------------------------------------------------------------------ hero */
+    var TITLE = 'Photographs';
+    $('.phero__title').innerHTML = TITLE.split('').map(function (ch, i) {
+        return '<span aria-hidden="true" style="--i:' + i + '">' + ch + '</span>';
+    }).join('');
+    var years = PX.photos.map(PX.year).filter(Boolean).sort();
+    var span = years.length ? (years[0] === years[years.length - 1] ? years[0] : years[0] + '–' + years[years.length - 1]) : '';
+    $('.phero__meta').innerHTML =
+        '<div><dt>Frames</dt><dd>' + PX.pad(PX.photos.length) + '</dd></div>' +
+        '<div><dt>Sets</dt><dd>' + PX.pad(PX.sets.length) + '</dd></div>' +
+        (span ? '<div><dt>Years</dt><dd>' + span + '</dd></div>' : '');
+
+    /* The pointer leaves a trail of photographs behind the title; left alone it draws itself. Decoration only. */
+    (function trail() {
+        var layer = $('.phero__trail'), hero = layer.parentElement;
+        if (!PX.motion || !PX.photos.length) return;
+        var POOL = 9, GAP = 96, LIFE = 1500;
+        var stride = Math.max(1, Math.floor(PX.photos.length / 12));
+        var photos = PX.photos.filter(function (_, i) { return i % stride === 0; }).slice(0, 12);
+        var imgs = [];
+        for (var i = 0; i < POOL; i++) {
+            var im = new Image();
+            im.alt = '';
+            im.decoding = 'async';
+            im.draggable = false;
+            layer.appendChild(im);
+            imgs.push(im);
+        }
+        var ready = {};
+        photos.forEach(function (p) {
+            var pre = new Image();
+            pre.onload = function () { ready[p.id] = 1; };
+            pre.src = PX.src(p, 0);
+        });
+        var slot = 0, shot = 0, z = 1, lastX = -1e4, lastY = -1e4, lastMove = performance.now() - 1500, visible = true, raf = 0;
+
+        function spawn(x, y) {
+            var p = photos[shot % photos.length];
+            for (var k = 0; k < photos.length && !ready[p.id]; k++) p = photos[++shot % photos.length];
+            if (!ready[p.id]) return;
+            shot++;
+            var el = imgs[slot++ % imgs.length];
+            var base = layer.clientWidth < 700 ? 150 : 250, r = p.w / p.h, w = r > 1 ? base * 1.25 : base;
+            el.src = PX.src(p, 0);
+            el.style.width = w + 'px';
+            el.style.height = w / r + 'px';
+            el.style.left = x - w / 2 + 'px';
+            el.style.top = y - w / r / 2 + 'px';
+            el.style.zIndex = String(z++);
+            var tilt = ((shot * 37) % 9) - 4;
+            el.getAnimations().forEach(function (a) { a.cancel(); });
+            el.animate([
+                { opacity: 0, transform: 'scale(.55) rotate(' + tilt * 1.6 + 'deg)', easing: 'cubic-bezier(.16,1,.3,1)' },
+                { opacity: 1, transform: 'scale(1) rotate(' + tilt + 'deg)', offset: 0.16 },
+                { opacity: 1, transform: 'scale(1) rotate(' + tilt + 'deg)', offset: 0.62, easing: 'cubic-bezier(.4,0,.2,1)' },
+                { opacity: 0, transform: 'translateY(36px) scale(.94) rotate(' + tilt + 'deg)' },
+            ], { duration: LIFE, easing: 'linear', fill: 'both' });
+        }
+        function at(x, y) {
+            if (Math.hypot(x - lastX, y - lastY) < GAP) return;
+            lastX = x;
+            lastY = y;
+            spawn(x, y);
+        }
+        function auto(t) {
+            raf = 0;
+            if (!visible || document.hidden) return;
+            if (t - lastMove > 2200) {
+                var w = layer.clientWidth, h = layer.clientHeight, k = t / 2600;
+                at(w / 2 + Math.sin(k) * w * 0.34, h * 0.48 + Math.sin(k * 2) * h * 0.2);
+            }
+            raf = requestAnimationFrame(auto);
+        }
+        function kick() { if (!raf) raf = requestAnimationFrame(auto); }
+        new IntersectionObserver(function (en) {
+            visible = en[0].isIntersecting;
+            if (visible) kick();
+        }).observe(hero);
+        hero.addEventListener('pointermove', function (e) {
+            var r = layer.getBoundingClientRect();
+            lastMove = performance.now();
+            at(e.clientX - r.left, e.clientY - r.top);
+        });
+        document.addEventListener('visibilitychange', kick);
+        kick();
+    })();
+
+    /* ------------------------------------------------------------------ state */
+    var VIEWS = { wall: wall, reel: reel, canvas: canvas };
+    var state = { set: PX.get('set') || 'all', sort: PX.get('sort') || 'recent', view: PX.get('view') || 'wall' };
+    if (state.set !== 'all' && !PX.sets.some(function (s) { return s.id === state.set; })) state.set = 'all';
+    if (state.sort !== 'colour') state.sort = 'recent';
+    if (!VIEWS[state.view]) state.view = 'wall';
+
+    var host = $('#view'), teardown = null, suppressClick = false;
+
+    function list() {
+        var l = PX.photos.filter(function (p) { return state.set === 'all' || p.set === state.set; });
+        return state.sort === 'colour' ? l.sort(PX.byColour) : l;
+    }
+    PX.lightbox.bind(list);
+    PX.cursor();
+
+    $('#sets').innerHTML = [{ id: 'all', title: 'All', count: PX.photos.length }].concat(PX.sets).map(function (s) {
+        return '<button class="fchip" type="button" data-v="' + s.id + '">' + s.title + ' <span>' + s.count + '</span></button>';
+    }).join('');
+
+    function press(group, v) {
+        Array.prototype.forEach.call(group.children, function (b) {
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-v') === v));
+        });
+    }
+    function bind(id, key, def) {
+        var g = $(id);
+        g.addEventListener('click', function (e) {
+            var b = e.target.closest('button');
+            if (!b || state[key] === b.getAttribute('data-v')) return;
+            state[key] = b.getAttribute('data-v');
+            PX.set(key, state[key] === def ? null : state[key]);
+            render(true);
+        });
+    }
+    bind('#sets', 'set', 'all');
+    bind('#sort', 'sort', 'recent');
+    bind('#views', 'view', 'wall');
+
+    host.addEventListener('click', function (e) {
+        var a = e.target.closest('[data-pid]');
+        if (!a) return;
+        e.preventDefault();
+        if (suppressClick) { suppressClick = false; return; }
+        PX.lightbox.open(a.getAttribute('data-pid'), a);
+    });
+
+    function render(swap) {
+        if (teardown) teardown();
+        host.innerHTML = '';
+        press($('#sets'), state.set);
+        press($('#sort'), state.sort);
+        press($('#views'), state.view);
+        teardown = VIEWS[state.view](host, list()) || null;
+        if (swap) {
+            host.classList.remove('is-swap');
+            void host.offsetWidth;
+            host.classList.add('is-swap');
+            /* a shorter list can leave the viewport past the end of the page */
+            var top = host.getBoundingClientRect().top;
+            if (top < 0) window.scrollTo({ top: window.scrollY + top - 150, behavior: 'instant' });
+        }
+    }
+
+    function tile(p, cls, o) {
+        var a = document.createElement('a');
+        a.className = cls;
+        a.href = '#p=' + p.id;
+        a.setAttribute('data-pid', p.id);
+        a.setAttribute('data-cur', 'View');
+        a.setAttribute('aria-label', PX.alt(p));
+        a.draggable = false;
+        a.appendChild(PX.frame(p, { alt: '', sizes: o.sizes, min: o.min, eager: o.eager }));
+        var c = document.createElement('span');
+        c.className = 'pcap mono';
+        c.innerHTML = '<b>' + PX.no(p) + '</b><span>' + PX.setTitle(p.set) + '</span>';
+        a.appendChild(c);
+        return a;
+    }
+
+    /* ------------------------------------------------------------------ wall */
+    function wall(host, l) {
+        var el = div('wall wrap'), cols = [], n = 0, speeds = [], io = null, raf = 0;
+        host.appendChild(el);
+
+        function build() {
+            var want = innerWidth < 620 ? 2 : innerWidth < 1100 ? 3 : 4;
+            if (want === n) return;
+            n = want;
+            speeds = n === 2 ? [0, -0.07] : n === 3 ? [0, -0.1, -0.04] : [0, -0.11, -0.035, -0.08];
+            if (io) io.disconnect();
+            el.innerHTML = '';
+            el.style.setProperty('--cols', n);
+            cols = [];
+            var hs = [];
+            for (var i = 0; i < n; i++) {
+                var c = div('wall__col');
+                el.appendChild(c);
+                cols.push(c);
+                hs.push(0);
+            }
+            l.forEach(function (p, i) {
+                var k = hs.indexOf(Math.min.apply(null, hs));
+                var t = tile(p, 'pt', { sizes: '(max-width:620px) 50vw, (max-width:1100px) 33vw, 25vw', min: 480, eager: i < n * 2 });
+                t.style.aspectRatio = p.w + ' / ' + p.h;
+                t.style.setProperty('--d', k * 70 + 'ms');
+                cols[k].appendChild(t);
+                hs[k] += p.h / p.w;
+            });
+            io = PX.reveal(el.querySelectorAll('.pt'));
+            drift();
+        }
+        function drift() {
+            raf = 0;
+            if (!PX.motion) return;
+            var prog = Math.max(0, innerHeight - el.getBoundingClientRect().top);
+            cols.forEach(function (c, i) {
+                c.style.transform = 'translate3d(0,' + (prog * speeds[i]).toFixed(1) + 'px,0)';
+            });
+        }
+        function onScroll() { if (!raf) raf = requestAnimationFrame(drift); }
+        build();
+        addEventListener('scroll', onScroll, { passive: true });
+        addEventListener('resize', build);
+        return function () {
+            removeEventListener('scroll', onScroll);
+            removeEventListener('resize', build);
+            cancelAnimationFrame(raf);
+            if (io) io.disconnect();
+        };
+    }
+
+    /* ------------------------------------------------------------------ reel */
+    function reel(host, l) {
+        var sc = div('reel'), tr = div('reel__track'), hud = div('wrap reel__hud mono');
+        sc.tabIndex = 0;
+        sc.setAttribute('role', 'group');
+        sc.setAttribute('aria-label', 'Reel');
+        sc.setAttribute('data-cur', 'Drag');
+        var tiles = l.map(function (p, i) {
+            var t = tile(p, 'rf', { sizes: '(max-width:700px) 88vw, 60vw', min: 960, eager: i < 3 });
+            t.style.setProperty('--r', (p.w / p.h).toFixed(4));
+            t.setAttribute('data-cur', 'View');
+            tr.appendChild(t);
+            return t;
+        });
+        sc.appendChild(tr);
+        hud.innerHTML = '<span><b>001</b> / ' + PX.pad(l.length) + '</span><div class="reel__bar"><i></i></div><span class="reel__set"></span>';
+        host.appendChild(sc);
+        host.appendChild(hud);
+        var count = $('b', hud), bar = $('i', hud), setEl = $('.reel__set', hud), raf = 0, cur = -1;
+
+        function update() {
+            raf = 0;
+            var max = sc.scrollWidth - sc.clientWidth, mid = sc.scrollLeft + sc.clientWidth / 2, best = 0, bd = 1e9;
+            tiles.forEach(function (t, i) {
+                var c = t.offsetLeft + t.offsetWidth / 2, d = c - mid;
+                if (Math.abs(d) < bd) { bd = Math.abs(d); best = i; }
+                if (PX.motion && Math.abs(d) < sc.clientWidth * 1.4) t.style.setProperty('--px', ((d / sc.clientWidth) * -6).toFixed(2) + '%');
+            });
+            bar.style.transform = 'scaleX(' + Math.max(0.02, max > 0 ? sc.scrollLeft / max : 1).toFixed(4) + ')';
+            if (best !== cur && l[best]) {
+                cur = best;
+                count.textContent = PX.pad(best + 1);
+                setEl.textContent = PX.setTitle(l[best].set);
+            }
+        }
+        function kick() { if (!raf) raf = requestAnimationFrame(update); }
+        sc.addEventListener('scroll', kick, { passive: true });
+
+        /* vertical wheel travels the strip until it runs out, then the page scrolls on */
+        sc.addEventListener('wheel', function (e) {
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+            var max = sc.scrollWidth - sc.clientWidth;
+            if ((e.deltaY < 0 && sc.scrollLeft <= 0) || (e.deltaY > 0 && sc.scrollLeft >= max - 1)) return;
+            e.preventDefault();
+            sc.scrollLeft += e.deltaY;
+        }, { passive: false });
+
+        /* mouse drag with a little throw; touch uses native scrolling */
+        var down = false, sx = 0, sl = 0, vx = 0, lx = 0, lt = 0, glide = 0;
+        sc.addEventListener('pointerdown', function (e) {
+            if (e.pointerType !== 'mouse' || e.button !== 0) return;
+            down = true;
+            suppressClick = false;
+            cancelAnimationFrame(glide);
+            sx = lx = e.clientX;
+            sl = sc.scrollLeft;
+            lt = performance.now();
+            vx = 0;
+        });
+        function move(e) {
+            if (!down) return;
+            var dx = e.clientX - sx;
+            if (Math.abs(dx) > 5) { suppressClick = true; sc.classList.add('is-drag'); }
+            sc.scrollLeft = sl - dx;
+            var now = performance.now();
+            if (now > lt) vx = (e.clientX - lx) / (now - lt);
+            lx = e.clientX;
+            lt = now;
+        }
+        function up() {
+            if (!down) return;
+            down = false;
+            sc.classList.remove('is-drag');
+            setTimeout(function () { suppressClick = false; }, 0);
+            var v = vx * 16;
+            (function throwIt() {
+                if (Math.abs(v) < 0.4) return;
+                sc.scrollLeft -= v;
+                v *= 0.94;
+                glide = requestAnimationFrame(throwIt);
+            })();
+        }
+        addEventListener('pointermove', move);
+        addEventListener('pointerup', up);
+        sc.addEventListener('keydown', function (e) {
+            if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+            e.preventDefault();
+            sc.scrollBy({ left: (e.key === 'ArrowRight' ? 1 : -1) * sc.clientWidth * 0.6, behavior: PX.motion ? 'smooth' : 'instant' });
+        });
+        addEventListener('resize', kick);
+        update();
+        return function () {
+            removeEventListener('pointermove', move);
+            removeEventListener('pointerup', up);
+            removeEventListener('resize', kick);
+            cancelAnimationFrame(raf);
+            cancelAnimationFrame(glide);
+        };
+    }
+
+    /* ------------------------------------------------------------------ canvas */
+    function canvas(host, l) {
+        var cv = div('cv');
+        cv.tabIndex = 0;
+        cv.setAttribute('role', 'group');
+        cv.setAttribute('aria-label', 'Canvas');
+        cv.setAttribute('data-cur', 'Drag');
+        host.appendChild(cv);
+        var DEPTH = [0.72, 1, 1.24], items = [], W = 0, H = 0, PAD = 0;
+        var ox = 0, oy = 0, vx = 0, vy = 0, raf = 0, visible = true, down = false, px = 0, py = 0, sx = 0, sy = 0, idle = performance.now();
+
+        function build() {
+            cv.innerHTML = '';
+            items = [];
+            if (!l.length) return;
+            var vw = cv.clientWidth, vh = cv.clientHeight;
+            var base = Math.max(120, Math.min(250, vw * 0.17));
+            var cw = base * 1.28, ch = base * 1.2;
+            PAD = base * 1.6;
+            /* repeat the set until the plane is larger than the window, so wrapping is never seen */
+            var need = Math.ceil(((vw + PAD * 2) * (vh + PAD * 2)) / (cw * ch)), src = l.slice();
+            while (src.length < need) src = src.concat(l);
+            var cols = Math.max(Math.ceil((vw + PAD * 2) / cw), Math.ceil(Math.sqrt(src.length * (vw / vh))));
+            var rows = Math.ceil(src.length / cols);
+            while (rows * ch < vh + PAD * 2) rows++;
+            W = cols * cw;
+            H = rows * ch;
+            src.forEach(function (p, i) {
+                var seed = (i * 9301 + 49297) % 233280, r1 = seed / 233280, r2 = ((seed * 7 + 13) % 233280) / 233280;
+                var d = (i * 5 + Math.floor(i / cols)) % 3, depth = DEPTH[d], r = p.w / p.h;
+                var w = base * depth * (r > 1 ? 1.16 : 0.84), h = w / r;
+                var t = tile(p, 'ct', { sizes: Math.round(w) + 'px', min: 480, eager: true });
+                t.setAttribute('data-depth', String(d));
+                t.style.width = w.toFixed(0) + 'px';
+                t.style.height = h.toFixed(0) + 'px';
+                t.style.zIndex = String(d * 10 + 1);
+                cv.appendChild(t);
+                items.push({
+                    el: t, depth: depth, w: w, h: h,
+                    x: (i % cols) * cw + (cw - w) * (0.2 + r1 * 0.6),
+                    y: Math.floor(i / cols) * ch + (ch - h) * (0.15 + r2 * 0.7),
+                });
+            });
+            place();
+        }
+        function place() {
+            for (var i = 0; i < items.length; i++) {
+                var t = items[i];
+                var x = mod(t.x + ox * t.depth + PAD, W) - PAD, y = mod(t.y + oy * t.depth + PAD, H) - PAD;
+                t.el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
+            }
+        }
+        function frame(now) {
+            raf = 0;
+            if (!visible || document.hidden || PX.lightbox.isOpen()) return;
+            if (!down) {
+                if (Math.abs(vx) + Math.abs(vy) > 0.05) {
+                    ox += vx;
+                    oy += vy;
+                    vx *= 0.94;
+                    vy *= 0.94;
+                } else if (PX.motion && now - idle > 1200) {
+                    ox -= 0.22;
+                    oy -= 0.1;
+                }
+            }
+            place();
+            if (PX.motion || down || Math.abs(vx) + Math.abs(vy) > 0.05) raf = requestAnimationFrame(frame);
+        }
+        function kick() { if (!raf) raf = requestAnimationFrame(frame); }
+
+        cv.addEventListener('pointerdown', function (e) {
+            if (e.pointerType === 'mouse' && e.button !== 0) return;
+            down = true;
+            suppressClick = false;
+            px = sx = e.clientX;
+            py = sy = e.clientY;
+            vx = vy = 0;
+            kick();
+        });
+        function move(e) {
+            if (!down) return;
+            var dx = e.clientX - px, dy = e.clientY - py;
+            if (Math.hypot(e.clientX - sx, e.clientY - sy) > 6) { suppressClick = true; cv.classList.add('is-drag'); }
+            /* on touch, vertical movement belongs to the page */
+            if (e.pointerType !== 'mouse') dy = 0;
+            ox += dx;
+            oy += dy;
+            vx = dx;
+            vy = dy;
+            px = e.clientX;
+            py = e.clientY;
+        }
+        function up() {
+            if (!down) return;
+            down = false;
+            idle = performance.now();
+            cv.classList.remove('is-drag');
+            setTimeout(function () { suppressClick = false; }, 0);
+            kick();
+        }
+        addEventListener('pointermove', move);
+        addEventListener('pointerup', up);
+        addEventListener('pointercancel', up);
+        cv.addEventListener('keydown', function (e) {
+            var k = { ArrowLeft: [1, 0], ArrowRight: [-1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
+            if (!k) return;
+            e.preventDefault();
+            vx = k[0] * 14;
+            vy = k[1] * 14;
+            idle = performance.now();
+            kick();
+        });
+        /* tabbing to a photograph brings it to the middle */
+        cv.addEventListener('focusin', function (e) {
+            var a = e.target.closest('.ct');
+            if (!a || down) return;
+            var r = a.getBoundingClientRect(), c = cv.getBoundingClientRect(), it = items.filter(function (t) { return t.el === a; })[0];
+            if (!it) return;
+            ox += (c.left + c.width / 2 - (r.left + r.width / 2)) / it.depth;
+            oy += (c.top + c.height / 2 - (r.top + r.height / 2)) / it.depth;
+            idle = performance.now() + 4000;
+            place();
+            cv.scrollLeft = cv.scrollTop = 0;
+        });
+        var io = new IntersectionObserver(function (en) {
+            visible = en[0].isIntersecting;
+            if (visible) kick();
+        });
+        io.observe(cv);
+        var prevClose = PX.lightbox.onClose;
+        PX.lightbox.onClose = kick;
+        document.addEventListener('visibilitychange', kick);
+        var rt = 0;
+        function onResize() { clearTimeout(rt); rt = setTimeout(build, 180); }
+        addEventListener('resize', onResize);
+        build();
+        kick();
+        return function () {
+            removeEventListener('pointermove', move);
+            removeEventListener('pointerup', up);
+            removeEventListener('pointercancel', up);
+            removeEventListener('resize', onResize);
+            document.removeEventListener('visibilitychange', kick);
+            PX.lightbox.onClose = prevClose;
+            io.disconnect();
+            cancelAnimationFrame(raf);
+            clearTimeout(rt);
+        };
+    }
+
+    render(false);
+});
+</script>
+</body>
+</html>

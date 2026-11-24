@@ -1,0 +1,95 @@
+import { readFileSync, writeFileSync, unlinkSync, existsSync } from 'node:fs';
+const ROOT = '/Users/nanayaw/Developer/Devs/nextjs/felixyeboah.dev';
+const OUT = ROOT + '/design-options/column-site';
+const { getPosts, fmtDate, isoDate } = await import(ROOT + '/lib/site/posts.ts');
+const { renderPost } = await import(ROOT + '/lib/site/post-render.ts');
+
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const norm = (s: string) => s.toLowerCase().replace(/&[a-z#0-9]+;/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+
+const tpl = readFileSync(OUT + '/tools/post.template.html', 'utf8');
+const head = tpl.slice(0, tpl.indexOf('<article'));
+const tail = tpl.slice(tpl.indexOf('  </main>'));
+
+const all = (getPosts() as any[]).slice().sort((a, b) => +b.date - +a.date);
+const file = (p: any) => `post-${p.slug}.html`;
+
+// titles as shown on the writing index (newest first, same order)
+let writing = readFileSync(OUT + '/writing.html', 'utf8');
+const rowRe = /<a class="writing-row" href="[^"]*">(<span class="writing-main"><span class="writing-title"><span class="u">)([^<]*)/g;
+const rows = [...writing.matchAll(rowRe)];
+if (rows.length !== all.length) throw new Error(`rows ${rows.length} != posts ${all.length}`);
+const shown = new Map<string, string>();
+let k = 0;
+writing = writing.replace(rowRe, (_m, pre, title) => {
+    const p = all[k++];
+    shown.set(p.slug, title);
+    if (norm(title).slice(0, 12) !== norm(p.title).slice(0, 12)) console.log('title differs:', p.slug, '|', title, '|', p.title);
+    return `<a class="writing-row" href="${file(p)}">${pre}${title}`;
+});
+writeFileSync(OUT + '/writing.html', writing);
+
+const COPY = `<script>
+document.querySelectorAll('.code').forEach(function (fig) {
+  var b = fig.querySelector('.code__copy'), pre = fig.querySelector('pre');
+  if (!b || !pre || !navigator.clipboard) { if (b) b.hidden = true; return; }
+  b.addEventListener('click', function () {
+    var text = [].map.call(pre.querySelectorAll('.l'), function (l) { return l.textContent; }).join('\\n') || pre.textContent;
+    navigator.clipboard.writeText(text).then(function () {
+      b.classList.add('is-done'); b.querySelector('span').textContent = 'Copied';
+      setTimeout(function () { b.classList.remove('is-done'); b.querySelector('span').textContent = 'Copy'; }, 1600);
+    });
+  });
+});
+</script>
+`;
+
+const slugs = new Set(all.map((p) => p.slug));
+const stats: Record<string, number> = {};
+all.forEach((p, i) => {
+    const r = renderPost(p, all);
+    let body: string = r.html;
+    body = body.replace(/(src|href)="\/assets\//g, '$1="../../public/assets/');
+    body = body.replace(/srcset="([^"]*)"/g, (_m, v: string) => `srcset="${v.replace(/(^|,\s*)\/assets\//g, '$1../../public/assets/')}"`);
+    body = body.replace(/href="\/writing\/([^"#/]+)\/?(#[^"]*)?"/g, (_m, s, h) => `href="${slugs.has(s) ? 'post-' + s + '.html' : 'writing.html'}${h || ''}"`);
+    body = body.replace(/href="\/work\/[^"]*"/g, 'href="work-reevit.html"').replace(/href="\/work"/g, 'href="work.html"');
+    body = body.replace(/href="\/(writing|about|photos|resume)\/?"/g, 'href="$1.html"').replace(/href="\/"/g, 'href="index.html"');
+    stats[p.slug] = (body.match(/class="code/g) || []).length;
+    const title = shown.get(p.slug)!;
+    const newer = all[i - 1], older = all[i + 1];
+    const pagerLink = (q: any, rel: string, dir: string) =>
+        q ? `      <a href="${file(q)}" rel="${rel}">\n        <span class="dir">${dir}</span>\n        <span class="name"><span class="u">${shown.get(q.slug)}</span></span>\n      </a>\n` : '      <span></span>\n';
+    const html =
+        head.replace(/<title>[^<]*<\/title>/, `<title>${title} — Felix Yeboah</title>`) +
+        `<article aria-labelledby="post-title">
+      <header class="page-head post-head">
+        <a class="crumb" href="writing.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M8.5 3.5L5 7l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Writing</a>
+        <h1 id="post-title">${title}</h1>
+        <ul class="meta-line">
+          <li><time class="mono" datetime="${isoDate(p.date)}">${fmtDate(p.date)}</time></li>
+          <li>${p.minutes} min read</li>
+        </ul>
+      </header>
+
+      <div class="prose post-body">
+${body}
+      </div>
+
+      <footer class="post-author">
+        <img class="avatar" src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq" width="40" height="40" alt="" loading="lazy">
+        <span class="name">Felix Yeboah</span>
+        <a class="link" href="https://x.com/sudocode_">@sudocode_ on X</a>
+      </footer>
+    </article>
+
+    <nav class="pager post-pager" aria-label="More writing">
+${pagerLink(older, 'prev', 'Previous')}${pagerLink(newer, 'next', 'Next')}    </nav>
+
+    <p class="post-all"><a class="link" href="writing.html">All writing</a></p>
+` + tail.replace('</body>', COPY + '</body>');
+    writeFileSync(`${OUT}/${file(p)}`, html);
+    if (r.warnings.length) console.log('warn', p.slug, r.warnings.slice(0, 3));
+});
+console.log(JSON.stringify(stats));
+// machine-readable title -> file map for relinking other pages
+writeFileSync('/tmp/colgen/posts.json', JSON.stringify(all.map((p) => ({ slug: p.slug, file: file(p), title: shown.get(p.slug), raw: p.title }))));

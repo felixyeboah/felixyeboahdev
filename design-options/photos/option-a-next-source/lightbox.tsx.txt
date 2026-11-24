@@ -1,0 +1,386 @@
+'use client';
+
+import { type CSSProperties, type PointerEvent as ReactPointerEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+
+import { copy, toast } from '@/lib/site/fy';
+import { type Photo, pad3, photoDate, photoSrc, photoSrcSet, pickWidth } from '@/lib/site/photos';
+
+/* Full-screen viewer, portalled to <body> so the page behind can be made inert. Only ever rendered
+   after an interaction or a client-side URL read, never on the server.
+   Keys: ← → step, Home/End jump, Esc close, I details, Space play/pause, F fullscreen, Z zoom.
+   Touch: swipe sideways to step, down to close. */
+
+const STRIP = 7; /* thumbnails either side of the current one */
+const PLAY_MS = 4500;
+
+const I = {
+    info: (
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="5.6" stroke="currentColor" strokeWidth="1.3" />
+            <path d="M8 7.3v3.6M8 5.1v.2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        </svg>
+    ),
+    play: (
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M5.2 3.6v8.8L12 8 5.2 3.6Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
+        </svg>
+    ),
+    pause: (
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M5.5 3.8v8.4M10.5 3.8v8.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+    ),
+    full: (
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2.8 6V2.8H6M10 2.8h3.2V6M13.2 10v3.2H10M6 13.2H2.8V10" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    ),
+    link: (
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path
+                d="M6.8 9.2a2.6 2.6 0 0 0 3.7 0l2.1-2.1a2.6 2.6 0 0 0-3.7-3.7l-.7.7M9.2 6.8a2.6 2.6 0 0 0-3.7 0L3.4 8.9a2.6 2.6 0 0 0 3.7 3.7l.7-.7"
+                stroke="currentColor"
+                strokeWidth="1.3"
+                strokeLinecap="round"
+            />
+        </svg>
+    ),
+    close: (
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="m3.5 3.5 9 9m0-9-9 9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        </svg>
+    ),
+    prev: (
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M13.5 8h-11m0 0L7 3.5M2.5 8 7 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    ),
+    next: (
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2.5 8h11m0 0L9 3.5M13.5 8 9 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    ),
+};
+
+type Props = {
+    list: Photo[];
+    id: string;
+    no: Map<string, number>;
+    setTitle: Record<string, string>;
+    onStep: (id: string) => void;
+    onClose: () => void;
+};
+
+export function Lightbox({ list, id, no, setTitle, onStep, onClose }: Props) {
+    const box = useRef<HTMLDivElement>(null);
+    const [info, setInfo] = useState(false);
+    const [playing, setPlaying] = useState(false);
+    const [zoom, setZoom] = useState(false);
+    const [dir, setDir] = useState<1 | -1>(1);
+    /* the first picture arrives by morphing from its thumbnail; only later ones slide in */
+    const [stepped, setStepped] = useState(false);
+    const [loaded, setLoaded] = useState<string | null>(null);
+
+    const idx = Math.max(
+        0,
+        list.findIndex((p) => p.id === id),
+    );
+    const p = list[idx];
+    const n = no.get(p.id)!;
+    const when = photoDate(p);
+    const exif = p.exif;
+    const settings = exif ? [exif.focal, exif.aperture, exif.shutter, exif.iso ? 'ISO ' + exif.iso : null].filter(Boolean) : [];
+
+    const go = useCallback(
+        (to: number, d?: 1 | -1) => {
+            const next = (to + list.length) % list.length;
+            if (next === idx) return;
+            setDir(d ?? (to > idx ? 1 : -1));
+            setStepped(true);
+            setZoom(false);
+            onStep(list[next].id);
+        },
+        [idx, list, onStep],
+    );
+
+    /* modal behaviour: inert page, locked scroll, focus in and back out */
+    useEffect(() => {
+        const prev = document.activeElement as HTMLElement | null;
+        const behind = Array.from(document.body.children).filter((el) => el !== box.current && !el.classList.contains('toast')) as HTMLElement[];
+        behind.forEach((el) => el.setAttribute('inert', ''));
+        const root = document.documentElement;
+        const overflow = root.style.overflow;
+        root.style.overflow = 'hidden';
+        box.current?.focus({ preventScroll: true });
+        return () => {
+            behind.forEach((el) => el.removeAttribute('inert'));
+            root.style.overflow = overflow;
+            if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+            prev?.focus?.({ preventScroll: true });
+        };
+    }, []);
+
+    const share = useCallback(() => {
+        copy(location.href).then((ok) => toast(ok ? 'Link copied' : 'Couldn’t copy the link', ok ? {} : { tone: 'error' }));
+    }, []);
+
+    const fullscreen = useCallback(() => {
+        if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+        /* the whole document, not just the viewer, so toasts on <body> stay visible */
+        else document.documentElement.requestFullscreen?.().catch(() => {});
+    }, []);
+
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.metaKey || e.ctrlKey || e.altKey) return;
+            const k = e.key;
+            if (k === 'Escape') {
+                e.preventDefault();
+                if (e.repeat) return;
+                if (zoom) setZoom(false);
+                else onClose();
+            } else if (k === 'ArrowRight') go(idx + 1, 1);
+            else if (k === 'ArrowLeft') go(idx - 1, -1);
+            else if (k === 'Home') go(0, -1);
+            else if (k === 'End') go(list.length - 1, 1);
+            else if (k === 'i' || k === 'I') setInfo((v) => !v);
+            else if (k === 'f' || k === 'F') fullscreen();
+            else if (k === 'z' || k === 'Z') setZoom((v) => !v);
+            else if (k === ' ' && !(e.target as Element).closest('button, a')) {
+                e.preventDefault();
+                setPlaying((v) => !v);
+            } else if (k === 'Tab') {
+                /* keep focus inside */
+                const f = box.current?.querySelectorAll<HTMLElement>('button:not([disabled]), a[href]');
+                if (!f?.length) return;
+                const first = f[0];
+                const last = f[f.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, [idx, list.length, go, onClose, zoom, fullscreen]);
+
+    /* slideshow: wait for the picture, then hold it */
+    useEffect(() => {
+        if (!playing || loaded !== p.id) return;
+        const t = setTimeout(() => go(idx + 1, 1), PLAY_MS);
+        return () => clearTimeout(t);
+    }, [playing, loaded, p.id, idx, go]);
+
+    /* touch: swipe to step, pull down to close */
+    const swipe = useRef<{ x: number; y: number } | null>(null);
+    const onPointerDown = (e: ReactPointerEvent) => {
+        swipe.current = e.pointerType === 'mouse' || zoom ? null : { x: e.clientX, y: e.clientY };
+    };
+    const onPointerUp = (e: ReactPointerEvent) => {
+        const s = swipe.current;
+        swipe.current = null;
+        if (!s) return;
+        const dx = e.clientX - s.x;
+        const dy = e.clientY - s.y;
+        if (Math.abs(dx) > 56 && Math.abs(dx) > Math.abs(dy) * 1.2) go(idx + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+        else if (dy > 96 && dy > Math.abs(dx) * 1.4) onClose();
+    };
+
+    /* zoom follows the pointer */
+    const onFrameMove = (e: ReactPointerEvent<HTMLButtonElement>) => {
+        if (!zoom) return;
+        const r = e.currentTarget.parentElement!.getBoundingClientRect();
+        e.currentTarget.style.setProperty('--ox', (((e.clientX - r.left) / r.width) * 100).toFixed(1) + '%');
+        e.currentTarget.style.setProperty('--oy', (((e.clientY - r.top) / r.height) * 100).toFixed(1) + '%');
+    };
+
+    const from = Math.max(0, Math.min(idx - STRIP, list.length - (STRIP * 2 + 1)));
+    const strip = list.slice(from, from + STRIP * 2 + 1);
+    const neighbours = list.length > 1 ? [list[(idx + 1) % list.length], list[(idx - 1 + list.length) % list.length]] : [];
+    const sizes = zoom ? '240vw' : info ? '(max-width: 900px) 100vw, 72vw' : '100vw';
+    const title = p.title ?? `Frame ${pad3(n)}`;
+
+    return createPortal(
+        <div
+            className={['lb', info && 'is-info', zoom && 'is-zoom', playing && 'is-playing'].filter(Boolean).join(' ')}
+            ref={box}
+            role="dialog"
+            tabIndex={-1}
+            aria-modal="true"
+            aria-label={`${title}, ${idx + 1} of ${list.length}`}
+            style={{ '--lbc': p.color } as CSSProperties}
+        >
+            <div className="lb__glow" aria-hidden="true" />
+            {playing && loaded === p.id && <i className="lb__progress" key={p.id} style={{ animationDuration: PLAY_MS + 'ms' }} aria-hidden="true" />}
+
+            <header className="lb__top mono">
+                <p className="lb__count" aria-live="polite">
+                    <b>{pad3(idx + 1)}</b> / {pad3(list.length)}
+                    <span>{setTitle[p.set] ?? p.set}</span>
+                </p>
+                <div className="lb__tools">
+                    <button type="button" className="lb__btn" aria-label="Details" aria-keyshortcuts="I" aria-pressed={info} onClick={() => setInfo((v) => !v)}>
+                        {I.info}
+                    </button>
+                    <button type="button" className="lb__btn" aria-label={playing ? 'Pause slideshow' : 'Play slideshow'} aria-keyshortcuts="Space" aria-pressed={playing} onClick={() => setPlaying((v) => !v)}>
+                        {playing ? I.pause : I.play}
+                    </button>
+                    <button type="button" className="lb__btn lb__btn--full" aria-label="Fullscreen" aria-keyshortcuts="F" onClick={fullscreen}>
+                        {I.full}
+                    </button>
+                    <button type="button" className="lb__btn" aria-label="Copy link to this photograph" onClick={share}>
+                        {I.link}
+                    </button>
+                    <button type="button" className="lb__btn lb__btn--close" aria-label="Close" aria-keyshortcuts="Escape" onClick={onClose}>
+                        {I.close}
+                    </button>
+                </div>
+            </header>
+
+            <div className="lb__stage" onPointerDown={onPointerDown} onPointerUp={onPointerUp}>
+                <div className="lb__frame" style={{ '--r': (p.w / p.h).toFixed(4), backgroundColor: p.color, backgroundImage: `url(${photoSrc(p, p.widths[0])}), url(${p.lqip})` } as CSSProperties}>
+                    <button
+                        type="button"
+                        className="lb__zoom"
+                        key={p.id}
+                        data-dir={stepped ? dir : undefined}
+                        aria-label={zoom ? 'Zoom out' : 'Zoom in'}
+                        aria-keyshortcuts="Z"
+                        onClick={() => setZoom((v) => !v)}
+                        onPointerMove={onFrameMove}
+                    >
+                        <img
+                            className={loaded === p.id ? 'is-loaded' : undefined}
+                            src={photoSrc(p, pickWidth(p, 1600))}
+                            srcSet={photoSrcSet(p)}
+                            sizes={sizes}
+                            width={p.w}
+                            height={p.h}
+                            alt={p.title ?? `Photograph ${pad3(n)}, ${setTitle[p.set] ?? p.set}${p.location ? ', ' + p.location : ''}`}
+                            decoding="async"
+                            draggable={false}
+                            ref={(el) => {
+                                if (el?.complete && el.naturalWidth) setLoaded(p.id);
+                            }}
+                            onLoad={() => setLoaded(p.id)}
+                        />
+                    </button>
+                </div>
+                {list.length > 1 && (
+                    <>
+                        <button type="button" className="lb__nav lb__nav--prev" aria-label="Previous photograph" onClick={() => go(idx - 1, -1)}>
+                            {I.prev}
+                        </button>
+                        <button type="button" className="lb__nav lb__nav--next" aria-label="Next photograph" onClick={() => go(idx + 1, 1)}>
+                            {I.next}
+                        </button>
+                    </>
+                )}
+            </div>
+
+            <aside className="lb__info" aria-label="Details" hidden={!info}>
+                {p.title && <p className="lb__no mono">{pad3(n)}</p>}
+                <h3>{title}</h3>
+                <dl className="lb__meta mono">
+                    <div>
+                        <dt>Set</dt>
+                        <dd>{setTitle[p.set] ?? p.set}</dd>
+                    </div>
+                    {p.location && (
+                        <div>
+                            <dt>Place</dt>
+                            <dd>{p.location}</dd>
+                        </div>
+                    )}
+                    {when && (
+                        <div>
+                            <dt>Taken</dt>
+                            <dd>{when}</dd>
+                        </div>
+                    )}
+                    {exif?.camera && (
+                        <div>
+                            <dt>Camera</dt>
+                            <dd>{exif.camera}</dd>
+                        </div>
+                    )}
+                    {exif?.lens && (
+                        <div>
+                            <dt>Lens</dt>
+                            <dd>{exif.lens}</dd>
+                        </div>
+                    )}
+                    {settings.length > 0 && (
+                        <div>
+                            <dt>Exposure</dt>
+                            <dd>{settings.join(' · ')}</dd>
+                        </div>
+                    )}
+                    <div>
+                        <dt>Size</dt>
+                        <dd>
+                            {p.w} × {p.h}
+                        </dd>
+                    </div>
+                    {p.credit && (
+                        <div>
+                            <dt>{p.sample ? 'Sample by' : 'Credit'}</dt>
+                            <dd>
+                                {p.source ? (
+                                    <a href={p.source} target="_blank" rel="noopener">
+                                        {p.credit}
+                                    </a>
+                                ) : (
+                                    p.credit
+                                )}
+                            </dd>
+                        </div>
+                    )}
+                </dl>
+                <ul className="lb__palette" aria-label="Palette">
+                    {p.palette.map((c, i) => (
+                        <li key={c + i}>
+                            <button
+                                type="button"
+                                className="mono"
+                                style={{ '--sw': c } as CSSProperties}
+                                aria-label={`Copy colour ${c}`}
+                                onClick={() => copy(c).then((ok) => ok && toast(`${c.toUpperCase()} copied`))}
+                            >
+                                <i aria-hidden="true" />
+                                {c}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </aside>
+
+            <footer className="lb__bottom">
+                <ol className="lb__strip" aria-label="Nearby photographs">
+                    {strip.map((s, i) => (
+                        <li key={s.id}>
+                            <button
+                                type="button"
+                                aria-label={`Photograph ${from + i + 1}`}
+                                aria-current={s.id === p.id ? 'true' : undefined}
+                                style={{ backgroundColor: s.color, backgroundImage: `url(${photoSrc(s, s.widths[0])}), url(${s.lqip})` }}
+                                onClick={() => go(from + i)}
+                            />
+                        </li>
+                    ))}
+                </ol>
+            </footer>
+
+            {/* warm the cache for the pictures either side */}
+            {neighbours.map((nb) => (
+                <img key={nb.id} className="lb__pre" src={photoSrc(nb, pickWidth(nb, 1600))} srcSet={photoSrcSet(nb)} sizes={sizes} alt="" aria-hidden="true" decoding="async" />
+            ))}
+        </div>,
+        document.body,
+    );
+}

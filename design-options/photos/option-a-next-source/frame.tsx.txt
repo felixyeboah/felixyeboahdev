@@ -1,0 +1,37 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+
+import { type Photo, photoSrc, photoSrcSet, pickWidth } from '@/lib/site/photos';
+
+/** One photograph: blurred placeholder underneath, the real image fading in over it once decoded. */
+export function Frame({ p, sizes, alt, eager, className }: { p: Photo; sizes: string; alt: string; eager?: boolean; className?: string }) {
+    const img = useRef<HTMLImageElement>(null);
+    const [loaded, setLoaded] = useState(false);
+
+    /* an image served from cache can finish before hydration, so onLoad never fires */
+    useEffect(() => {
+        if (img.current?.complete && img.current.naturalWidth) setLoaded(true);
+    }, []);
+
+    return (
+        <span
+            className={['fr', loaded && 'is-loaded', className].filter(Boolean).join(' ')}
+            style={{ backgroundColor: p.color, backgroundImage: `url(${p.lqip})` }}
+        >
+            <img
+                ref={img}
+                src={photoSrc(p, pickWidth(p, 960))}
+                srcSet={photoSrcSet(p)}
+                sizes={sizes}
+                width={p.w}
+                height={p.h}
+                alt={alt}
+                loading={eager ? 'eager' : 'lazy'}
+                decoding="async"
+                draggable={false}
+                onLoad={() => setLoaded(true)}
+            />
+        </span>
+    );
+}

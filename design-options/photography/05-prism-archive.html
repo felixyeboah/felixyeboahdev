@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>05 · Prism Archive — Felix Yeboah Photography</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ECEAE4;
+  --card:#F6F5F0;
+  --surface:#E2DFD7;
+  --ink:#121214;
+  --ink-2:#4B4A46;
+  --muted:#78756E;
+  --line:rgba(18,18,20,.10);
+  --line-2:rgba(18,18,20,.18);
+  --accent:#2454FF;
+  --on-accent:#FFFFFF;
+  --serif:"Fraunces", Georgia, serif;
+  --sans:"Space Grotesk", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --pad:clamp(16px, 3vw, 44px);
+}
+html[data-theme="dark"]{
+  --bg:#09090B;
+  --card:#121216;
+  --surface:#1A1A20;
+  --ink:#F3F2EE;
+  --ink-2:#B8B5AE;
+  --muted:#7F7D77;
+  --line:rgba(243,242,238,.09);
+  --line-2:rgba(243,242,238,.18);
+  --accent:#D4FF3A;
+  --on-accent:#09090B;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;-webkit-font-smoothing:antialiased;transition:background-color .35s var(--ease),color .35s var(--ease)}
+body{overflow-x:clip}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+input{font:inherit;color:inherit}
+img{display:block;max-width:100%}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+
+/* Top Navigation Bar */
+.nav{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:14px var(--pad);border-bottom:1px solid var(--line);
+  background:color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.nav__brand{display:flex;align-items:center;gap:10px}
+.nav__mark{
+  width:28px;height:28px;border-radius:8px;display:grid;place-items:center;
+  background:var(--ink);color:var(--bg);font-weight:700;font-size:12px;
+}
+.nav__right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{
+  height:36px;padding:0 13px;border-radius:10px;border:1px solid var(--line-2);
+  background:var(--card);color:var(--ink);display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:500;transition:border-color .2s,background .2s,color .2s,transform .2s;
+}
+.btn:hover{border-color:var(--ink)}
+.btn.is-on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.kbd{
+  padding:2px 6px;border-radius:5px;background:var(--surface);border:1px solid var(--line-2);
+  font-family:var(--mono);font-size:10px;color:var(--muted);
+}
+
+/* Bento Hero Section */
+.bento{
+  max-width:1540px;margin:24px auto 0;padding:0 var(--pad);
+  display:grid;grid-template-columns:1.45fr 1fr .85fr;gap:14px;
+}
+.b-tile{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:clamp(20px, 2.4vw, 30px);position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.b-title{
+  margin:10px 0 0;font-family:var(--serif);font-weight:400;
+  font-size:clamp(2.5rem, 4.4vw, 4.4rem);line-height:.94;letter-spacing:-.03em;
+}
+.b-title em{font-style:italic;color:var(--accent)}
+.b-cover{
+  padding:0;min-height:290px;cursor:pointer;
+}
+.b-cover img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+.b-cover:hover img{transform:scale(1.04)}
+.b-cover__cap{
+  position:absolute;left:14px;right:14px;bottom:14px;padding:10px 14px;border-radius:12px;
+  background:rgba(12,12,16,.76);color:#F5F4F0;backdrop-filter:blur(12px);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.gear-list{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.gear-row{
+  display:flex;justify-content:space-between;align-items:center;padding:10px 12px;
+  border-radius:10px;border:1px solid var(--line);background:var(--bg);
+  transition:border-color .2s,background .2s,color .2s;
+}
+.gear-row:hover{border-color:var(--accent)}
+.gear-row.is-on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+
+/* Sticky Multi-Facet Filter & Density Bar */
+.toolbar{
+  max-width:1540px;margin:20px auto 0;padding:14px var(--pad);
+  position:sticky;top:65px;z-index:40;
+}
+.toolbar__in{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 14px;border-radius:16px;background:color-mix(in srgb, var(--card) 88%, transparent);
+  border:1px solid var(--line-2);backdrop-filter:blur(18px);
+  box-shadow:0 16px 40px -16px rgba(0,0,0,.18);
+}
+.facet-group{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.pill{
+  height:32px;padding:0 12px;border-radius:999px;font-size:12.5px;font-weight:500;
+  color:var(--ink-2);border:1px solid transparent;transition:background .2s,color .2s,border-color .2s;
+}
+.pill:hover{background:var(--surface);color:var(--ink)}
+.pill.is-on{background:var(--ink);color:var(--bg)}
+.density-wrap{display:flex;align-items:center;gap:10px}
+.density-wrap input[type="range"]{
+  width:96px;accent-color:var(--accent);cursor:pointer;
+}
+
+/* Adaptive Masonry Grid */
+.grid-wrap{
+  max-width:1540px;margin:0 auto;padding:16px var(--pad) 120px;
+}
+.masonry{
+  column-count:var(--cols, 4);column-gap:16px;
+}
+.p-card{
+  break-inside:avoid;margin-bottom:16px;border-radius:14px;overflow:hidden;
+  background:var(--card);border:1px solid var(--line);cursor:pointer;
+  position:relative;transform-style:preserve-3d;
+  transition:transform .25s var(--ease),border-color .25s,box-shadow .35s;
+}
+.p-card:hover{border-color:var(--accent);box-shadow:0 24px 48px -18px rgba(0,0,0,.28)}
+.p-card__media{position:relative;overflow:hidden;background:var(--surface)}
+.p-card__media img{width:100%;height:auto;display:block;transition:transform .7s var(--ease)}
+.p-card:hover .p-card__media img{transform:scale(1.04)}
+.p-card__glare{
+  position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .25s;
+  background:radial-gradient(circle at var(--gx,50%) var(--gy,50%), rgba(255,255,255,.22), transparent 58%);
+}
+.p-card:hover .p-card__glare{opacity:1}
+.p-card__actions{
+  position:absolute;top:10px;right:10px;display:flex;gap:6px;opacity:0;transition:opacity .25s;
+}
+.p-card:hover .p-card__actions,.p-card:focus-within .p-card__actions{opacity:1}
+.icon-pill{
+  width:32px;height:32px;border-radius:999px;display:grid;place-items:center;
+  background:rgba(12,12,16,.76);color:#fff;border:1px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(8px);font-size:13px;
+}
+.icon-pill.is-fav{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.p-card__bar{display:flex;height:4px}
+.p-card__bar span{flex:1}
+.p-card__meta{
+  padding:11px 13px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+}
+.p-card__title{font-weight:500;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Command Palette <dialog> (⌘K) */
+dialog.cmd-dlg{
+  width:min(600px, 92vw);max-height:72dvh;padding:0;border:1px solid var(--line-2);
+  border-radius:18px;background:var(--card);color:var(--ink);overflow:hidden;
+  box-shadow:0 36px 90px rgba(0,0,0,.45);
+  opacity:0;transform:translateY(-10px) scale(.98);
+  transition:opacity .2s var(--ease),transform .25s var(--ease),display .2s allow-discrete,overlay .2s allow-discrete;
+}
+dialog.cmd-dlg[open]{opacity:1;transform:translateY(0) scale(1);display:flex;flex-direction:column}
+@starting-style{dialog.cmd-dlg[open]{opacity:0;transform:translateY(-10px) scale(.98)}}
+dialog.cmd-dlg:modal{overscroll-behavior:contain}
+dialog.cmd-dlg::backdrop{background:rgba(9,9,11,.55);backdrop-filter:blur(8px);overflow:hidden;overscroll-behavior:contain}
+.cmd-input{
+  width:100%;padding:18px 20px;border:0;border-bottom:1px solid var(--line);
+  background:transparent;font-size:16px;outline:none;
+}
+.cmd-list{overflow:auto;padding:8px;display:flex;flex-direction:column;gap:4px}
+.cmd-item{
+  display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;text-align:left;
+  transition:background .15s;
+}
+.cmd-item:hover,.cmd-item:focus-visible{background:var(--surface)}
+.cmd-item img{width:42px;height:32px;object-fit:cover;border-radius:6px;flex:none}
+
+/* Lightbox <dialog> */
+dialog.lb-dlg{
+  width:min(1160px, 94vw);max-height:90dvh;padding:0;border:1px solid var(--line-2);
+  border-radius:18px;background:var(--card);color:var(--ink);overflow:hidden;
+  box-shadow:0 40px 110px rgba(0,0,0,.5);
+  opacity:0;transform:scale(.96);
+  transition:opacity .25s var(--ease),transform .3s var(--ease),display .25s allow-discrete,overlay .25s allow-discrete;
+}
+dialog.lb-dlg[open]{opacity:1;transform:scale(1);display:grid;grid-template-columns:1.55fr 1fr}
+@starting-style{dialog.lb-dlg[open]{opacity:0;transform:scale(.96)}}
+dialog.lb-dlg:modal{overscroll-behavior:contain}
+dialog.lb-dlg::backdrop{background:rgba(9,9,11,.74);backdrop-filter:blur(10px);overflow:hidden;overscroll-behavior:contain}
+.lbd__imgwrap{background:#0B0B0D;display:grid;place-items:center;padding:22px;min-height:420px}
+.lbd__imgwrap img{max-height:76dvh;max-width:100%;object-fit:contain;border-radius:8px}
+.lbd__side{padding:26px;display:flex;flex-direction:column;gap:18px;overflow:auto}
+
+@media (max-width:1080px){
+  .bento{grid-template-columns:1fr 1fr}
+  .b-tile:first-child{grid-column:span 2}
+}
+@media (max-width:740px){
+  .bento{grid-template-columns:1fr}
+  .b-tile:first-child{grid-column:span 1}
+  .masonry{column-count:2!important}
+  dialog.lb-dlg[open]{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion: reduce){
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav__brand">
+    <span class="nav__mark">FY</span>
+    <div>
+      <strong>Prism Archive</strong>
+      <div class="mono" style="color:var(--muted);font-size:9.5px">Felix Yeboah · Visual Index</div>
+    </div>
+  </div>
+  <div class="nav__right">
+    <button class="btn" id="cmdBtn" type="button">
+      <span>Search Archive</span>
+      <span class="kbd">⌘K</span>
+    </button>
+    <button class="btn" id="shortlistOnlyBtn" type="button">
+      ★ Shortlist <span class="mono" id="slCount" style="opacity:.7">0</span>
+    </button>
+    <button class="btn" id="themeBtn" type="button" title="Toggle Swiss Light / Matte Dark">
+      <span id="themeIcon">◐</span>
+      <span id="themeLabel">Dark</span>
+    </button>
+  </div>
+</header>
+
+<section class="bento">
+  <div class="b-tile">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="mono" style="color:var(--accent)">OPT 05 · SWISS BENTO ARCHIVE</span>
+      <span class="mono" style="color:var(--muted)" id="heroCount">35 / 35 FRAMES</span>
+    </div>
+    <h1 class="b-title">Every frame, <em>indexed</em> with precision.</h1>
+    <p style="margin:14px 0 0;color:var(--ink-2);max-width:52ch;line-height:1.55">
+      Multi-facet filtering by collection, camera body, and orientation — plus live column density control, instant ⌘K search, and one-click Light/Dark paper switch.
+    </p>
+  </div>
+
+  <div class="b-tile b-cover" id="featuredTile" tabindex="0" title="Click to inspect featured plate">
+    <img id="featImg" alt="Featured photograph">
+    <div class="b-cover__cap">
+      <div>
+        <div class="mono" style="font-size:9.5px;opacity:.75">Featured Plate</div>
+        <strong id="featTitle" style="font-family:var(--serif);font-size:19px;font-weight:400"></strong>
+      </div>
+      <button class="btn mono" id="shuffleFeat" type="button" style="height:30px;padding:0 10px;background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.25)">Shuffle ↻</button>
+    </div>
+  </div>
+
+  <div class="b-tile">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="mono" style="color:var(--muted)">Filter by Camera</span>
+      <button class="mono" id="clearGear" style="color:var(--accent)">Reset</button>
+    </div>
+    <div class="gear-list" id="gearList"></div>
+  </div>
+</section>
+
+<div class="toolbar">
+  <div class="toolbar__in">
+    <div class="facet-group" id="setPills"></div>
+    <div class="facet-group" id="orientPills">
+      <button class="pill is-on" data-orient="all">Any Ratio</button>
+      <button class="pill" data-orient="portrait">Portrait</button>
+      <button class="pill" data-orient="landscape">Landscape</button>
+    </div>
+    <div class="density-wrap">
+      <label class="mono" for="densityRange" style="color:var(--muted)">Cols <b id="colsLabel" style="color:var(--ink)">4</b></label>
+      <input id="densityRange" type="range" min="2" max="6" value="4">
+    </div>
+  </div>
+</div>
+
+<main class="grid-wrap">
+  <div class="masonry" id="masonry" style="--cols:4"></div>
+</main>
+
+<!-- Command Palette Dialog -->
+<dialog class="cmd-dlg" id="cmdDialog" aria-label="Search archive commands and frames">
+  <input class="cmd-input" id="cmdInput" type="search" placeholder="Search titles, locations, cameras (Leica, Fuji, Sony), or actions…">
+  <div class="cmd-list" id="cmdList"></div>
+</dialog>
+
+<!-- Lightbox Dialog -->
+<dialog class="lb-dlg" id="lbDialog" aria-label="Photograph detail">
+  <div class="lbd__imgwrap"><img id="lbdImg" alt=""></div>
+  <div class="lbd__side">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="mono" id="lbdMeta" style="color:var(--accent)">01 / 35</span>
+      <button class="btn mono" id="lbdClose" style="height:30px">Esc ✕</button>
+    </div>
+    <h2 id="lbdTitle" tabindex="-1" style="margin:0;font-family:var(--serif);font-size:30px;font-weight:400;line-height:1.05"></h2>
+    <div class="mono" id="lbdLoc" style="color:var(--muted)"></div>
+    <div id="lbdExif" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"></div>
+    <div>
+      <div class="mono" style="color:var(--muted);margin-bottom:8px">Palette · Click to copy</div>
+      <div id="lbdSwatches" style="display:flex;gap:6px"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:auto">
+      <button class="btn mono" id="lbdPrev">← Prev</button>
+      <button class="btn mono" id="lbdNext">Next →</button>
+      <button class="btn mono" id="lbdFav" style="margin-left:auto">☆ Save</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="catalog.js"></script>
+<script>
+(function () {
+  const FY = window.FY_PHOTOS;
+  FY.mountSwitcher("05", "light");
+
+  const state = {
+    set: "all",
+    camera: "all",
+    orient: "all",
+    onlyShortlist: false,
+    cols: 4,
+    featIdx: 0,
+    filtered: FY.photos.slice(),
+    lbIdx: 0
+  };
+
+  // Theme Toggle with smooth View Transition
+  const themeBtn = document.getElementById("themeBtn");
+  const themeLabel = document.getElementById("themeLabel");
+  function toggleTheme() {
+    const apply = function () {
+      const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = next;
+      themeLabel.textContent = next === "dark" ? "Light" : "Dark";
+    };
+    FY.withViewTransition(apply);
+  }
+  themeBtn.addEventListener("click", toggleTheme);
+
+  // Featured Bento Cover
+  function renderFeatured() {
+    const p = FY.photos[state.featIdx % FY.photos.length];
+    document.getElementById("featImg").src = FY.src(p, 960);
+    document.getElementById("featTitle").textContent = p.title + " · " + p.location;
+  }
+  document.getElementById("shuffleFeat").addEventListener("click", function (e) {
+    e.stopPropagation();
+    state.featIdx = (state.featIdx + 1 + Math.floor(Math.random() * (FY.photos.length - 1))) % FY.photos.length;
+    renderFeatured();
+  });
+  document.getElementById("featuredTile").addEventListener("click", function () {
+    const p = FY.photos[state.featIdx % FY.photos.length];
+    const idx = state.filtered.findIndex(function (x) { return x.id === p.id; });
+    if (idx >= 0) openLb(idx);
+    else { state.set = "all"; state.camera = "all"; state.orient = "all"; state.onlyShortlist = false; applyFilters(); openLb(p.index); }
+  });
+  renderFeatured();
+
+  // Camera Gear Bento Filter
+  const cameras = Array.from(new Set(FY.photos.map(function (p) { return p.exif.camera; })));
+  const gearList = document.getElementById("gearList");
+  function renderGear() {
+    gearList.innerHTML = cameras.map(function (cam) {
+      const count = FY.photos.filter(function (p) { return p.exif.camera === cam; }).length;
+      return '<button class="gear-row ' + (state.camera === cam ? "is-on" : "") + '" data-cam="' + cam + '">' +
+        '<span style="font-weight:500;font-size:13.5px">' + cam + '</span>' +
+        '<span class="mono" style="opacity:.75">' + count + '</span>' +
+      '</button>';
+    }).join("");
+  }
+  gearList.addEventListener("click", function (e) {
+    const b = e.target.closest("[data-cam]");
+    if (!b) return;
+    state.camera = state.camera === b.dataset.cam ? "all" : b.dataset.cam;
+    FY.withViewTransition(function () { renderGear(); applyFilters(); });
+  });
+  document.getElementById("clearGear").addEventListener("click", function () {
+    state.camera = "all"; state.set = "all"; state.orient = "all"; state.onlyShortlist = false;
+    document.getElementById("shortlistOnlyBtn").classList.remove("is-on");
+    document.querySelectorAll("[data-orient]").forEach(function (b) { b.classList.toggle("is-on", b.dataset.orient === "all"); });
+    FY.withViewTransition(function () { renderGear(); renderSets(); applyFilters(); });
+  });
+
+  // Collection pills
+  const setPills = document.getElementById("setPills");
+  function renderSets() {
+    const items = [{ id: "all", title: "All", count: FY.photos.length }].concat(FY.sets);
+    setPills.innerHTML = items.map(function (s) {
+      return '<button class="pill ' + (state.set === s.id ? "is-on" : "") + '" data-set="' + s.id + '">' + s.title + ' <span class="mono" style="opacity:.6">' + s.count + '</span></button>';
+    }).join("");
+  }
+  setPills.addEventListener("click", function (e) {
+    const b = e.target.closest("[data-set]");
+    if (!b) return;
+    state.set = b.dataset.set;
+    FY.withViewTransition(function () { renderSets(); applyFilters(); });
+  });
+
+  // Orientation pills
+  document.getElementById("orientPills").addEventListener("click", function (e) {
+    const b = e.target.closest("[data-orient]");
+    if (!b) return;
+    document.querySelectorAll("[data-orient]").forEach(function (x) { x.classList.toggle("is-on", x === b); });
+    state.orient = b.dataset.orient;
+    FY.withViewTransition(applyFilters);
+  });
+
+  // Shortlist only toggle
+  const slBtn = document.getElementById("shortlistOnlyBtn");
+  slBtn.addEventListener("click", function () {
+    state.onlyShortlist = !state.onlyShortlist;
+    slBtn.classList.toggle("is-on", state.onlyShortlist);
+    FY.withViewTransition(applyFilters);
+  });
+
+  // Density Slider
+  const masonry = document.getElementById("masonry");
+  document.getElementById("densityRange").addEventListener("input", function (e) {
+    state.cols = parseInt(e.target.value, 10);
+    document.getElementById("colsLabel").textContent = String(state.cols);
+    masonry.style.setProperty("--cols", state.cols);
+  });
+
+  function applyFilters() {
+    const favs = FY.getShortlist();
+    document.getElementById("slCount").textContent = String(favs.size);
+    state.filtered = FY.photos.filter(function (p) {
+      if (state.set !== "all" && p.set !== state.set) return false;
+      if (state.camera !== "all" && p.exif.camera !== state.camera) return false;
+      if (state.orient !== "all" && p.orientation !== state.orient) return false;
+      if (state.onlyShortlist && !favs.has(p.id)) return false;
+      return true;
+    });
+    document.getElementById("heroCount").textContent = String(state.filtered.length).padStart(2, "0") + " / " + FY.photos.length + " FRAMES";
+    renderGrid();
+  }
+
+  function renderGrid() {
+    const favs = FY.getShortlist();
+    if (!state.filtered.length) {
+      masonry.innerHTML = '<div style="column-span:all;padding:70px 0;text-align:center;color:var(--muted)" class="mono">No photographs match your active facets.</div>';
+      return;
+    }
+    masonry.innerHTML = state.filtered.map(function (p, i) {
+      const fav = favs.has(p.id);
+      return '<article class="p-card" data-open="' + i + '" tabindex="0">' +
+        '<div class="p-card__media" style="aspect-ratio:' + p.w + '/' + p.h + ';background-image:url(' + p.lqip + ');background-size:cover">' +
+          '<img src="' + FY.src(p, 960) + '" srcset="' + FY.srcset(p) + '" sizes="(max-width:740px) 50vw, 25vw" loading="lazy" alt="' + p.title + '">' +
+          '<div class="p-card__glare"></div>' +
+          '<div class="p-card__actions">' +
+            '<button class="icon-pill ' + (fav ? "is-fav" : "") + '" data-fav="' + p.id + '" title="Toggle shortlist">' + (fav ? "★" : "☆") + '</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="p-card__bar">' + p.palette.map(function (c) { return '<span style="background:' + c + '"></span>'; }).join("") + '</div>' +
+        '<div class="p-card__meta">' +
+          '<span class="p-card__title">' + p.title + '</span>' +
+          '<span class="mono" style="color:var(--muted);flex:none">' + p.frame + '</span>' +
+        '</div>' +
+      '</article>';
+    }).join("");
+  }
+
+  // Subtle 3D specular card tilt on pointermove
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  masonry.addEventListener("pointermove", function (e) {
+    if (reduced) return;
+    const card = e.target.closest(".p-card");
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    const rx = (0.5 - py) * 6;
+    const ry = (px - 0.5) * 6;
+    card.style.transform = "perspective(700px) rotateX(" + rx.toFixed(2) + "deg) rotateY(" + ry.toFixed(2) + "deg) translateY(-3px)";
+    card.style.setProperty("--gx", (px * 100).toFixed(1) + "%");
+    card.style.setProperty("--gy", (py * 100).toFixed(1) + "%");
+  });
+  masonry.addEventListener("pointerout", function (e) {
+    const card = e.target.closest(".p-card");
+    if (card && !card.contains(e.relatedTarget)) card.style.transform = "";
+  });
+
+  masonry.addEventListener("click", function (e) {
+    const fb = e.target.closest("[data-fav]");
+    if (fb) {
+      e.stopPropagation();
+      const on = FY.toggleShortlist(fb.dataset.fav);
+      FY.toast(on ? "Added to shortlist" : "Removed from shortlist");
+      applyFilters();
+      return;
+    }
+    const card = e.target.closest("[data-open]");
+    if (card) openLb(parseInt(card.dataset.open, 10));
+  });
+
+  // Command Palette (⌘K / /)
+  const cmdDlg = document.getElementById("cmdDialog");
+  const cmdInput = document.getElementById("cmdInput");
+  const cmdList = document.getElementById("cmdList");
+
+  function openCmd() {
+    cmdInput.value = "";
+    renderCmd("");
+    if (!cmdDlg.open) cmdDlg.showModal();
+    cmdInput.focus();
+  }
+  function renderCmd(q) {
+    const term = q.trim().toLowerCase();
+    const actions = [
+      { type: "act", id: "theme", label: "Toggle Light / Dark Theme", sub: "Action" },
+      { type: "act", id: "random", label: "Jump to Random Photograph", sub: "Action" },
+      { type: "act", id: "reset", label: "Reset All Active Filters", sub: "Action" }
+    ].filter(function (a) { return !term || a.label.toLowerCase().includes(term); });
+
+    const matches = FY.photos.filter(function (p) {
+      if (!term) return true;
+      return (p.title + " " + p.location + " " + p.exif.camera + " " + p.exif.lens + " " + p.set).toLowerCase().includes(term);
+    }).slice(0, 12);
+
+    cmdList.innerHTML =
+      actions.map(function (a) {
+        return '<button class="cmd-item" data-act="' + a.id + '"><span class="kbd">ACT</span><span>' + a.label + '</span><span class="mono" style="margin-left:auto;color:var(--muted)">' + a.sub + '</span></button>';
+      }).join("") +
+      matches.map(function (p) {
+        return '<button class="cmd-item" data-pid="' + p.id + '"><img src="' + FY.src(p, 480) + '" alt=""><div><div style="font-weight:500">' + p.title + '</div><div class="mono" style="color:var(--muted)">' + p.location + ' · ' + p.exif.camera + '</div></div><span class="mono" style="margin-left:auto;color:var(--accent)">' + p.frame + '</span></button>';
+      }).join("");
+  }
+  cmdInput.addEventListener("input", function () { renderCmd(cmdInput.value); });
+  cmdList.addEventListener("click", function (e) {
+    const act = e.target.closest("[data-act]");
+    if (act) {
+      cmdDlg.close();
+      if (act.dataset.act === "theme") toggleTheme();
+      else if (act.dataset.act === "reset") document.getElementById("clearGear").click();
+      else if (act.dataset.act === "random") openLb(Math.floor(Math.random() * state.filtered.length));
+      return;
+    }
+    const pi = e.target.closest("[data-pid]");
+    if (pi) {
+      cmdDlg.close();
+      let idx = state.filtered.findIndex(function (x) { return x.id === pi.dataset.pid; });
+      if (idx < 0) {
+        state.set = "all"; state.camera = "all"; state.orient = "all"; state.onlyShortlist = false;
+        renderSets(); renderGear(); applyFilters();
+        idx = state.filtered.findIndex(function (x) { return x.id === pi.dataset.pid; });
+      }
+      if (idx >= 0) openLb(idx);
+    }
+  });
+  document.getElementById("cmdBtn").addEventListener("click", openCmd);
+  cmdDlg.addEventListener("click", function (e) { if (e.target === cmdDlg) cmdDlg.close(); });
+
+  // Lightbox
+  const lbDlg = document.getElementById("lbDialog");
+  function openLb(idx) {
+    state.lbIdx = (idx + state.filtered.length) % state.filtered.length;
+    const p = state.filtered[state.lbIdx];
+    if (!p) return;
+    document.getElementById("lbdMeta").textContent = p.frame + " · " + FY.setName(p.set);
+    document.getElementById("lbdTitle").textContent = p.title;
+    document.getElementById("lbdLoc").textContent = p.location + " · " + FY.formatDate(p.date);
+    document.getElementById("lbdImg").src = FY.full(p);
+    document.getElementById("lbdExif").innerHTML =
+      '<div><div class="mono" style="color:var(--muted)">Camera</div><div>' + p.exif.camera + '</div></div>' +
+      '<div><div class="mono" style="color:var(--muted)">Lens</div><div>' + p.exif.lens + '</div></div>' +
+      '<div><div class="mono" style="color:var(--muted)">Exposure</div><div>' + p.exif.aperture + ' · ' + p.exif.shutter + 's</div></div>' +
+      '<div><div class="mono" style="color:var(--muted)">ISO / Res</div><div>ISO ' + p.exif.iso + ' · ' + p.w + '×' + p.h + '</div></div>';
+    document.getElementById("lbdSwatches").innerHTML = p.palette.map(function (c) {
+      return '<button data-hex="' + c + '" style="flex:1;height:30px;border-radius:6px;background:' + c + ';border:1px solid rgba(128,128,128,.25)" title="Copy ' + c + '"></button>';
+    }).join("");
+    const fav = FY.getShortlist().has(p.id);
+    const fb = document.getElementById("lbdFav");
+    fb.classList.toggle("is-on", fav);
+    fb.textContent = fav ? "★ Saved" : "☆ Save";
+    if (!lbDlg.open) lbDlg.showModal();
+    document.getElementById("lbdTitle").focus();
+  }
+  document.getElementById("lbdClose").addEventListener("click", function () { lbDlg.close(); });
+  document.getElementById("lbdPrev").addEventListener("click", function () { openLb(state.lbIdx - 1); });
+  document.getElementById("lbdNext").addEventListener("click", function () { openLb(state.lbIdx + 1); });
+  document.getElementById("lbdFav").addEventListener("click", function () {
+    const p = state.filtered[state.lbIdx];
+    const on = FY.toggleShortlist(p.id);
+    FY.toast(on ? "Saved to shortlist" : "Removed");
+    applyFilters();
+    openLb(state.lbIdx);
+  });
+  document.getElementById("lbdSwatches").addEventListener("click", function (e) {
+    const b = e.target.closest("[data-hex]");
+    if (b) { navigator.clipboard && navigator.clipboard.writeText(b.dataset.hex); FY.toast("Copied " + b.dataset.hex); }
+  });
+
+  window.addEventListener("keydown", function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); openCmd(); return; }
+    if (e.key === "/" && !cmdDlg.open && !lbDlg.open && document.activeElement.tagName !== "INPUT") { e.preventDefault(); openCmd(); return; }
+    if (lbDlg.open) {
+      if (e.key === "ArrowRight") openLb(state.lbIdx + 1);
+      else if (e.key === "ArrowLeft") openLb(state.lbIdx - 1);
+    }
+  });
+  window.addEventListener("fy:shortlist", applyFilters);
+
+  renderGear();
+  renderSets();
+  applyFilters();
+})();
+</script>
+</body>
+</html>

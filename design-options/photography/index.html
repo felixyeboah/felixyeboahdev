@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Photography Page Prototypes — 5 Directions · Felix Yeboah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090B;
+  --card:#111115;
+  --ink:#F3F0EA;
+  --ink-2:#B8B4AC;
+  --muted:#807D76;
+  --line:rgba(243,240,234,.10);
+  --line-2:rgba(243,240,234,.18);
+  --accent:#D4FF3A;
+  --on-accent:#09090B;
+  --serif:"Instrument Serif", Georgia, serif;
+  --sans:"Geist", system-ui, sans-serif;
+  --mono:"Geist Mono", ui-monospace, monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --pad:clamp(18px, 3.6vw, 52px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase}
+.grain{
+  position:fixed;inset:0;z-index:50;pointer-events:none;opacity:.04;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap{max-width:1540px;margin:0 auto;padding:clamp(28px, 4vw, 56px) var(--pad) 96px}
+.head{
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px;
+  padding-bottom:28px;border-bottom:1px solid var(--line-2);
+}
+.head h1{
+  margin:10px 0 0;font-family:var(--serif);font-weight:400;
+  font-size:clamp(2.8rem, 6vw, 5.4rem);line-height:.92;letter-spacing:-.02em;
+}
+.head h1 em{font-style:italic;color:var(--accent)}
+.head__sub{max-width:46ch;color:var(--ink-2);line-height:1.6;margin:0}
+
+.grid{
+  margin-top:clamp(28px, 4vw, 48px);
+  display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:28px;
+}
+.card{
+  display:flex;flex-direction:column;gap:16px;padding:16px;border-radius:20px;
+  background:var(--card);border:1px solid var(--line);
+  transition:border-color .35s var(--ease),transform .55s var(--ease),box-shadow .55s var(--ease);
+}
+.card:hover{
+  border-color:var(--accent);transform:translateY(-6px);
+  box-shadow:0 32px 70px -24px rgba(0,0,0,.65);
+}
+.card--wide{grid-column:span 2}
+.preview{
+  --s:.3;position:relative;aspect-ratio:16/10;border-radius:12px;overflow:hidden;
+  border:1px solid var(--line-2);background:#050507;
+}
+.preview iframe{
+  position:absolute;top:0;left:0;width:1440px;height:900px;border:0;
+  transform-origin:0 0;transform:scale(var(--s));pointer-events:none;
+}
+.card__row{display:flex;align-items:center;gap:12px}
+.num{
+  width:32px;height:32px;border-radius:50%;display:grid;place-items:center;flex:none;
+  background:var(--accent);color:var(--on-accent);font-weight:600;
+}
+.card__title{margin:0;font-family:var(--serif);font-size:30px;font-weight:400;line-height:1}
+.card__go{
+  margin-left:auto;padding:7px 13px;border-radius:999px;border:1px solid var(--line-2);
+  color:var(--ink);transition:background .2s,color .2s,border-color .2s;
+}
+.card:hover .card__go{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.card__desc{margin:0;color:var(--ink-2);font-size:14px;line-height:1.55}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.tags li{
+  padding:5px 10px;border-radius:999px;border:1px solid var(--line-2);
+  color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;
+}
+
+@media (max-width:1100px){
+  .grid{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  .card--wide{grid-column:span 2}
+}
+@media (max-width:740px){
+  .grid{grid-template-columns:1fr}
+  .card--wide{grid-column:span 1}
+}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<main class="wrap">
+  <header class="head">
+    <div>
+      <div class="mono" style="color:var(--accent)">Felix Yeboah · Awwwards × Mobbin Prototypes</div>
+      <h1>Five ways to show <em>the work.</em></h1>
+    </div>
+    <p class="head__sub">
+      Five fully interactive HTML prototypes powered by your 35-photo local archive. Every option includes real EXIF metadata, extracted color palettes, keyboard shortcuts, and a persistent cross-prototype shortlist. Click any direction to launch full-screen.
+    </p>
+  </header>
+
+  <section class="grid" aria-label="Five photography page prototypes">
+    <a class="card card--wide" href="01-atelier-noir.html">
+      <div class="preview"><iframe src="01-atelier-noir.html" title="Option 01 Atelier Noir preview" loading="lazy" tabindex="-1"></iframe></div>
+      <div class="card__row">
+        <span class="num mono">01</span>
+        <div>
+          <h2 class="card__title">Atelier Noir</h2>
+          <div class="mono" style="color:var(--muted)">Dark Studio DNA · Closest to felixyeboah.dev</div>
+        </div>
+        <span class="card__go mono">Launch ↗</span>
+      </div>
+      <p class="card__desc">
+        Magnetic cursor-trail hero with live coordinate telemetry, scroll-velocity skew physics across asymmetric editorial columns, 35mm contact sheet &amp; hover-preview index modes, chromatic tone filter, and a 2.5× Leica optical loupe inside the lightbox.
+      </p>
+      <ul class="tags">
+        <li>Cursor Trail Hero</li><li>Scroll Skew Physics</li><li>2.5× Optical Loupe</li><li>35mm Contact Sheet</li><li>Hover Index</li><li>Print Shortlist</li>
+      </ul>
+    </a>
+
+    <a class="card" href="02-galerie-blanche.html">
+      <div class="preview"><iframe src="02-galerie-blanche.html" title="Option 02 Galerie Blanche preview" loading="lazy" tabindex="-1"></iframe></div>
+      <div class="card__row">
+        <span class="num mono">02</span>
+        <div>
+          <h2 class="card__title">Galerie Blanche</h2>
+          <div class="mono" style="color:var(--muted)">Swiss White-Cube Museum</div>
+        </div>
+        <span class="card__go mono">Launch ↗</span>
+      </div>
+      <p class="card__desc">
+        Warm alabaster museum exhibition wall with horizontal wheel-to-walk gallery scrolling, ambient room lighting that shifts to each print's palette, live Archival Mat / Bleed / Wall Scale framing modes, and an interactive drag-split Diptych Comparator.
+      </p>
+      <ul class="tags">
+        <li>Horizontal Wall Walk</li><li>Ambient Wall Tint</li><li>Mat / Scale Framing</li><li>Split Diptych Lab</li>
+      </ul>
+    </a>
+
+    <a class="card" href="03-vortex-canvas.html">
+      <div class="preview"><iframe src="03-vortex-canvas.html" title="Option 03 Vortex Canvas preview" loading="lazy" tabindex="-1"></iframe></div>
+      <div class="card__row">
+        <span class="num mono">03</span>
+        <div>
+          <h2 class="card__title">Vortex Canvas</h2>
+          <div class="mono" style="color:var(--muted)">Spatial 2D Canvas &amp; 3D Tunnel</div>
+        </div>
+        <span class="card__go mono">Launch ↗</span>
+      </div>
+      <p class="card__desc">
+        Infinite pannable &amp; zoomable spatial universe with momentum glide, live interactive Minimap radar, radial HSL Color Wheel formation, and a 3D perspective Z-Tunnel fly-through with Pause/Play autopilot and "Surprise Me" camera focus.
+      </p>
+      <ul class="tags">
+        <li>Infinite 2D Pan/Zoom</li><li>Live Radar Minimap</li><li>HSL Color Wheel</li><li>3D Z-Tunnel Flythrough</li>
+      </ul>
+    </a>
+
+    <a class="card" href="04-cinema-reel.html">
+      <div class="preview"><iframe src="04-cinema-reel.html" title="Option 04 Cinema Reel preview" loading="lazy" tabindex="-1"></iframe></div>
+      <div class="card__row">
+        <span class="num mono">04</span>
+        <div>
+          <h2 class="card__title">Cinema Reel</h2>
+          <div class="mono" style="color:var(--muted)">A24 35mm Analog Soundstage</div>
+        </div>
+        <span class="card__go mono">Launch ↗</span>
+      </div>
+      <p class="card__desc">
+        Full-viewport cinema stage with curtain-wipe transitions, macOS-dock wave-magnifying 35mm filmstrip scrubber, live analog Film Stock Lab (Portra 400, Ilford HP5, Cinestill 800T, Kodachrome 64), rangefinder Viewfinder HUD, and a live RGB histogram canvas.
+      </p>
+      <ul class="tags">
+        <li>Wave Filmstrip Dock</li><li>Live Film Stocks</li><li>Rangefinder HUD</li><li>Canvas RGB Histogram</li>
+      </ul>
+    </a>
+
+    <a class="card" href="05-prism-archive.html">
+      <div class="preview"><iframe src="05-prism-archive.html" title="Option 05 Prism Archive preview" loading="lazy" tabindex="-1"></iframe></div>
+      <div class="card__row">
+        <span class="num mono">05</span>
+        <div>
+          <h2 class="card__title">Prism Archive</h2>
+          <div class="mono" style="color:var(--muted)">Mobbin Swiss Bento + ⌘K</div>
+        </div>
+        <span class="card__go mono">Launch ↗</span>
+      </div>
+      <p class="card__desc">
+        Architectural Swiss bento header with instant Light ↔ Dark View Transition switch, multi-facet filtering (Collection × Camera × Orientation × Shortlist), live 2–6 column density slider, 3D specular glare tilt cards, and a full ⌘K Spotlight command palette.
+      </p>
+      <ul class="tags">
+        <li>Light / Dark Switch</li><li>Column Density 2–6</li><li>Camera Gear Facets</li><li>⌘K Command Palette</li><li>3D Specular Tilt</li>
+      </ul>
+    </a>
+  </section>
+</main>
+<script>
+(function () {
+  const frames = document.querySelectorAll(".preview");
+  function fit() {
+    frames.forEach(function (box) {
+      const s = box.clientWidth / 1440;
+      box.style.setProperty("--s", s.toFixed(4));
+      box.firstElementChild.style.height = Math.ceil(box.clientHeight / s) + "px";
+    });
+  }
+  fit();
+  window.addEventListener("resize", fit);
+})();
+</script>
+</body>
+</html>

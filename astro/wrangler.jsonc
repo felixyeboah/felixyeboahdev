@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Preview name on purpose: the live site is the Worker "felixyeboah-dev". Rename at switch-over.
+  "name": "felixyeboah-dev-astro",
+  "compatibility_date": "2026-11-24",
+  "assets": {
+    "directory": "./dist",
+    // /about is served from about.html; /about/ redirects to /about
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

@@ -1,0 +1,88 @@
+---
+import Site from '../../layouts/Site.astro';
+import { GROUPS, PROJECTS, pad2 } from '@/lib/site/projects';
+---
+
+<Site title="Work" description="Products, stores and sites designed and built by Felix Yeboah." section="work">
+    <section class="page-head">
+        <h1>Work</h1>
+    </section>
+
+    <section class="work-index" aria-label="Projects">
+        {/* hidden until the script runs: without JavaScript every project simply shows */}
+        <div class="chips work-chips" role="group" aria-label="Filter projects" hidden>
+            <button type="button" class="chip" data-filter="all" aria-pressed="true">All</button>
+            {GROUPS.map(([id, label]) => (
+                <button type="button" class="chip" data-filter={id} aria-pressed="false">{label}</button>
+            ))}
+        </div>
+        <ul class="ruled work-list">
+            {PROJECTS.map((p, i) => (
+                <li data-group={p.group}>
+                    <a class="feature" href={`/work/${p.slug}`}>
+                        <span class="thumb">
+                            <img src={p.cover} width="1600" height="1000" alt="" loading={i < 3 ? 'eager' : 'lazy'} />
+                        </span>
+                        <span class="feature-body">
+                            <span class="work-line">
+                                <span class="feature-title">
+                                    <span class="name"><span class="u">{p.name}</span></span>
+                                    <span class="cat">{p.category}</span>
+                                </span>
+                                <span class="num mono">{pad2(p.order)}</span>
+                            </span>
+                            <span class="feature-desc">{p.desc}</span>
+                            <span class="domain mono">{p.domain}</span>
+                        </span>
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </section>
+</Site>
+
+<style>
+    .work-index {
+        margin-top: var(--s-6);
+    }
+    .work-chips {
+        margin-bottom: var(--s-5);
+    }
+    .work-line {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--s-3);
+    }
+    .work-line .num {
+        flex: none;
+        color: var(--muted);
+    }
+</style>
+
+<script is:inline>
+    /* Filter by group; the choice lives in ?cat= so a filtered list can be linked (same parameter as the old site). */
+    (() => {
+        const bar = document.querySelector('.work-chips');
+        const chips = [...bar.querySelectorAll('.chip')];
+        const items = document.querySelectorAll('.work-list > li');
+        const apply = (group) => {
+            chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.filter === group)));
+            items.forEach((li) => {
+                li.hidden = group !== 'all' && li.dataset.group !== group;
+            });
+        };
+        bar.addEventListener('click', (e) => {
+            const chip = e.target.closest('.chip');
+            if (!chip) return;
+            apply(chip.dataset.filter);
+            const url = new URL(location.href);
+            if (chip.dataset.filter === 'all') url.searchParams.delete('cat');
+            else url.searchParams.set('cat', chip.dataset.filter);
+            history.replaceState(null, '', url);
+        });
+        const cat = new URLSearchParams(location.search).get('cat');
+        apply(chips.some((c) => c.dataset.filter === cat) ? cat : 'all');
+        bar.hidden = false;
+    })();
+</script>

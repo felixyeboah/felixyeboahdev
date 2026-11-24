@@ -1,0 +1,122 @@
+---
+import Site from '../layouts/Site.astro';
+import { getPosts } from '@/lib/site/posts';
+import { PROJECTS, pad2 } from '@/lib/site/projects';
+
+/* The first six projects get a thumbnail row; the rest are one-line rows. */
+const featured = PROJECTS.slice(0, 6);
+const more = PROJECTS.slice(6);
+
+/* The landing's hand-picked writing list; a few titles are shortened for the landing (same list as the Next app). */
+const PICKS: Array<[slug: string, title?: string]> = [
+    ['why-i-built-reevit', "Why I Built Reevit: A Developer's Reaction to a Real Problem"],
+    ['my-2024-in-review', 'A Year of Resilience and Growth — 2024 in review'],
+    ['from-zero-to-go-how-real-projects-shaped-my-golang-skills'],
+    ['mock-testing-with-go-mockery'],
+    ['transitioning-to-backend-engineering'],
+    ['how-i-got-sold-on-remix', 'How I got sold on Remix'],
+];
+const all = getPosts();
+const writing = PICKS.map(([slug, title]) => {
+    const post = all.find((p) => p.slug === slug);
+    if (!post) throw new Error(`Landing post not found: ${slug}`);
+    return { slug, title: title ?? post.title };
+});
+
+const EXPERIENCE = [
+    ['2019 – Present', 'Senior Frontend Engineer', 'Complete Farmer'],
+    ['2022', 'Frontend Engineer', 'Primer API Limited'],
+    ['2018 – 2021', 'Web Developer', 'Bee and Bloom'],
+];
+---
+
+<Site>
+    <section class="intro" aria-labelledby="intro-title">
+        <h1 id="intro-title">Felix Yeboah <span class="role">Software engineer &amp; UI/UX designer</span></h1>
+        <p class="lede">
+            Self-taught, based in Accra. Ten years taking products from first sketch to production — React and Remix on the front, Go and
+            Postgres underneath.
+        </p>
+        <ul class="meta-line">
+            <li class="status"><span class="dot" aria-hidden="true"></span>Taking on select projects</li>
+            <li><a class="link" href="mailto:me@felixyeboah.dev">me@felixyeboah.dev</a></li>
+            <li><a class="link" href="https://github.com/felixyeboah">GitHub</a></li>
+            <li><a class="link" href="https://x.com/sudocode_">X</a></li>
+        </ul>
+    </section>
+
+    <section id="work" aria-labelledby="work-title">
+        <h2 id="work-title">Work</h2>
+        <ul class="ruled">
+            {featured.map((p, i) => (
+                <li>
+                    <a class="feature" href={`/work/${p.slug}`}>
+                        <span class="thumb">
+                            <img src={p.cover} width="1600" height="1000" alt="" loading={i < 2 ? 'eager' : 'lazy'} />
+                        </span>
+                        <span class="feature-body">
+                            <span class="feature-title">
+                                <span class="name"><span class="u">{p.name}</span></span>
+                                <span class="cat">{p.category}</span>
+                            </span>
+                            <span class="feature-desc">{p.desc}</span>
+                            <span class="domain mono">{p.domain}</span>
+                        </span>
+                    </a>
+                </li>
+            ))}
+        </ul>
+
+        <h3>More</h3>
+        <ul class="ruled">
+            {more.map((p) => (
+                <li>
+                    <a class="row" href={`/work/${p.slug}`}>
+                        <span class="num mono">{pad2(p.order)}</span>
+                        <span class="label">
+                            <span class="name"><span class="u">{p.name}</span></span>
+                            <span class="cat">{p.category}</span>
+                        </span>
+                        <span class="domain mono">{p.domain}</span>
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </section>
+
+    <section id="experience" aria-labelledby="experience-title">
+        <h2 id="experience-title">Experience</h2>
+        <ul class="ruled">
+            {EXPERIENCE.map(([years, role, org]) => (
+                <li class="xp">
+                    <span class="years mono">{years}</span>
+                    <span><span class="role">{role}</span> <span class="org">· {org}</span></span>
+                </li>
+            ))}
+        </ul>
+    </section>
+
+    <section id="writing" aria-labelledby="writing-title">
+        <h2 id="writing-title">Writing</h2>
+        <ul class="ruled">
+            {writing.map((w) => (
+                <li>
+                    <a class="post" href={`/writing/${w.slug}`}>
+                        <span class="title"><span class="u">{w.title}</span></span>
+                        <svg viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                            <path d="M4 10L10 4M5 4h5v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </section>
+
+    <section class="about" id="about" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <p>
+            A software developer, and a life-long learner. Over the years I've been building functional, beautiful interfaces and experiences
+            that leave a positive impact on people and businesses.
+        </p>
+    </section>
+</Site>

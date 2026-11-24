@@ -1,0 +1,103 @@
+---
+import Site from '../../layouts/Site.astro';
+import { dekText } from '@/lib/site/post-render';
+import { CAT, CAT_ORDER, getPosts, isoDate } from '@/lib/site/posts';
+
+const posts = getPosts(); /* newest first */
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const dayMonth = (d: Date) => `${d.getUTCDate()} ${MON[d.getUTCMonth()]}`;
+
+/* the newest three carry their standfirst; the rest are one line */
+const LEDE_COUNT = 3;
+const rows = posts.map((p, i) => ({ p, lede: i < LEDE_COUNT ? dekText(p) : '' }));
+const years = [...new Set(posts.map((p) => p.date.getUTCFullYear()))];
+const cats = CAT_ORDER.filter((c) => posts.some((p) => p.categories.includes(c)));
+---
+
+<Site title="Writing" description="Notes from the work: engineering, Remix, Go, and the occasional year in review." section="writing">
+    <section class="page-head" aria-labelledby="writing-title">
+        <h1 id="writing-title">Writing</h1>
+        {/* hidden until the script runs: without JavaScript every post simply shows */}
+        <div class="writing-filter" hidden>
+            <div class="chips" role="group" aria-label="Filter by topic">
+                <button class="chip" type="button" data-cat="all" aria-pressed="true">All</button>
+                {cats.map((c) => (
+                    <button class="chip" type="button" data-cat={c} aria-pressed="false">{CAT[c]}</button>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    {years.map((y) => (
+        <section class="writing-year" aria-labelledby={`y${y}`}>
+            <h2 id={`y${y}`}>{y}</h2>
+            <ul class="ruled">
+                {rows.filter((r) => r.p.date.getUTCFullYear() === y).map(({ p, lede }) => (
+                    <li data-cats={p.categories.join(' ')}>
+                        <a class="writing-row" href={`/writing/${p.slug}`}>
+                            <span class="writing-main">
+                                <span class="writing-title"><span class="u">{p.title}</span></span>
+                                {lede && <span class="feature-desc">{lede}</span>}
+                            </span>
+                            <time class="mono" datetime={isoDate(p.date)}>{dayMonth(p.date)}</time>
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </section>
+    ))}
+
+    <p class="writing-rss"><a class="link" href="/writing/feed.xml">RSS</a></p>
+</Site>
+
+<style>
+    .writing-filter { margin-top: var(--s-6); }
+    .writing-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: baseline;
+        column-gap: var(--s-5);
+        padding: var(--s-3) 0;
+        min-height: 52px;
+        text-decoration: none;
+    }
+    .writing-row:has(.feature-desc) { padding: var(--s-4) 0; }
+    .writing-main { min-width: 0; }
+    .writing-title { font-weight: 500; text-wrap: pretty; }
+    .writing-row .feature-desc { max-width: 36em; }
+    .writing-row time { color: var(--muted); white-space: nowrap; text-align: right; }
+
+    .writing-year + .writing-year { margin-top: var(--s-8); }
+    .writing-rss { margin-top: var(--s-7); }
+    .writing-rss .link { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--t-sm); }
+
+    @media (max-width: 640px) {
+        .writing-row { grid-template-columns: minmax(0, 1fr); row-gap: 2px; }
+        .writing-row time { text-align: left; }
+    }
+</style>
+
+<script is:inline>
+    /* Filter by topic; a year with no matching post is hidden with its heading. */
+    (function () {
+        var filter = document.querySelector('.writing-filter');
+        var chips = filter.querySelectorAll('.chip');
+        var years = document.querySelectorAll('.writing-year');
+        filter.hidden = false;
+        filter.addEventListener('click', function (e) {
+            var chip = e.target.closest('.chip');
+            if (!chip) return;
+            var cat = chip.dataset.cat;
+            chips.forEach(function (c) { c.setAttribute('aria-pressed', String(c === chip)); });
+            years.forEach(function (year) {
+                var shown = 0;
+                year.querySelectorAll('li[data-cats]').forEach(function (li) {
+                    var match = cat === 'all' || li.dataset.cats.split(' ').indexOf(cat) !== -1;
+                    li.hidden = !match;
+                    if (match) shown++;
+                });
+                year.hidden = shown === 0;
+            });
+        });
+    })();
+</script>

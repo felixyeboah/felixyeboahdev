@@ -1,0 +1,108 @@
+---
+/* Photos is the one page with its own document: the photobook ("Monograph") from the previous site, with its
+   viewer, re-themed to the light palette. Its styles and scripts live in src/photobook and load as plain files,
+   in order: the manifest, the shared kit (PX), then the page script. The header and footer repeat the markup
+   of src/layouts/Site.astro because the photobook's stylesheet uses its own class names (.nav among them). */
+import siteCss from '../photobook/site.css?url';
+import sharedCss from '../photobook/shared.css?url';
+import pageCss from '../photobook/page.css?url';
+import sharedJs from '../photobook/shared.js?url';
+import pageJs from '../photobook/page.js?url';
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Photos — Felix Yeboah</title>
+        <meta name="description" content="Photographs by Felix Yeboah." />
+        <link rel="canonical" href="https://felixyeboah.dev/photos" />
+        <link rel="alternate" type="application/rss+xml" href="https://felixyeboah.dev/writing/feed.xml" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico" sizes="256x256" type="image/x-icon" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" />
+        <link rel="stylesheet" href={siteCss} />
+        <link rel="stylesheet" href={sharedCss} />
+        <link rel="stylesheet" href={pageCss} />
+        <script is:inline src="/photos/data.js"></script>
+        <script is:inline src={sharedJs}></script>
+    </head>
+    <body id="top">
+        <a class="skip" href="#main">Skip to content</a>
+        <div class="column">
+          <header class="site-header">
+            <a class="identity" href="/" aria-label="Felix Yeboah, home">
+              <svg class="logo" viewBox="0 0 128 128" width="40" height="40" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="10" y="26" width="108" height="76" rx="13" />
+                <path class="logo-eye" d="M 31 51 L 46 64 L 31 77" />
+                <path class="logo-grin" d="M 62 67 C 68 75 80 75 86 67" />
+              </svg>
+            </a>
+            <nav class="cnav" aria-label="Primary">
+              <ul>
+                <li><a href="/work">Work</a></li>
+                <li><a href="/writing">Writing</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/photos" aria-current="page">Photos</a></li>
+              </ul>
+            </nav>
+          </header>
+        </div>
+
+        <main id="main">
+          <header class="cv wrap">
+            <button class="cv__plate" type="button" id="cvPlate" data-cur="View"></button>
+            <h1 class="cv__title" aria-label="Photographs" id="cvTitle"></h1>
+            <p class="cv__by">Felix Yeboah</p>
+            <dl class="cv__ed mono" id="cvEd"></dl>
+          </header>
+
+          <div class="mg" id="book">
+            <div class="mbar">
+              <div class="wrap mbar__in">
+                <div class="seg" role="group" aria-label="View" id="views">
+                  <button type="button" data-v="plates">Plates</button>
+                  <button type="button" data-v="contents">Contents</button>
+                  <button type="button" data-v="columns">Columns</button>
+                </div>
+              </div>
+            </div>
+
+            <section class="mview pl" id="plates" tabindex="-1" aria-roledescription="carousel" aria-label="Plates">
+              <div class="pl__sheet" id="sheet"></div>
+              <div class="pl__hud">
+                <div class="scrub" id="scrub" role="slider" tabindex="0" aria-label="Plate" aria-valuemin="1">
+                  <div class="scrub__track" id="track"><b class="scrub__fill" id="fill"></b><span class="scrub__knob" id="knob"></span></div>
+                  <div class="scrub__tip" id="tip" hidden><img alt=""><span class="mono"></span></div>
+                </div>
+                <p class="pl__count mono" id="count"></p>
+                <button class="hb" type="button" id="prev" aria-label="Previous plate"></button>
+                <button class="hb" type="button" id="next" aria-label="Next plate"></button>
+                <button class="hb" type="button" id="auto" aria-pressed="false" aria-label="Autoplay"></button>
+              </div>
+              <p class="sr-only" aria-live="polite" id="live"></p>
+            </section>
+
+            <section class="mview toc wrap" id="contents" aria-label="Contents" hidden></section>
+            <section class="mview" id="columns" aria-label="Columns" hidden></section>
+          </div>
+        </main>
+
+        <div class="column">
+          <footer class="site-footer">
+            <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
+            <div class="footer-links">
+              <a href="https://github.com/felixyeboah">GitHub</a>
+              <a href="https://x.com/sudocode_">X</a>
+              <a href="/resume">Résumé</a>
+              <a href="/photos">Photos</a>
+              <span class="copy">© {new Date().getFullYear()}</span>
+            </div>
+          </footer>
+        </div>
+        <script is:inline src={pageJs}></script>
+    </body>
+</html>

@@ -324,7 +324,15 @@
                 if (swiped) return;
                 origin(e);
                 el.classList.toggle('is-zoom');
-                if (el.classList.contains('is-zoom')) setPlay(false);
+                if (el.classList.contains('is-zoom')) {
+                    setPlay(false);
+                    /* Zoom no further than the file can carry: about one image pixel per CSS pixel, between 1.4x
+                       and 2.4x. Small originals (phone screenshots, crops) used to be blown up to 2.4x and looked soft.
+                       While zoomed, ask for the largest file. */
+                    var zp = L.list[L.i], zf = el.querySelector('.lb__frame'), zi = zf && zf.querySelector('img:not(.lb__ghost)');
+                    if (zp && zf) el.style.setProperty('--zoom', Math.max(1.4, Math.min(2.4, zp.w / zf.getBoundingClientRect().width)).toFixed(2));
+                    if (zi) zi.sizes = '250vw';
+                }
             }
         });
 

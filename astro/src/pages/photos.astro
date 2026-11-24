@@ -1,13 +1,17 @@
 ---
 /* Photos is the one page with its own document: the photobook ("Monograph") from the previous site, with its
    viewer, re-themed to the light palette. Its styles and scripts live in src/photobook and load as plain files,
-   in order: the manifest, the shared kit (PX), then the page script. The header and footer repeat the markup
-   of src/layouts/Site.astro because the photobook's stylesheet uses its own class names (.nav among them). */
+   in order: the manifest, the shared kit (PX), then the page script. The header and footer are the shared
+   components; their styles (src/styles/chrome.css) carry their own tokens, so they look the same here. */
 import siteCss from '../photobook/site.css?url';
 import sharedCss from '../photobook/shared.css?url';
 import pageCss from '../photobook/page.css?url';
 import sharedJs from '../photobook/shared.js?url';
 import pageJs from '../photobook/page.js?url';
+import chromeCss from '../styles/chrome.css?url';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Meta from '../components/Meta.astro';
 ---
 
 <!doctype html>
@@ -18,6 +22,7 @@ import pageJs from '../photobook/page.js?url';
         <title>Photos — Felix Yeboah</title>
         <meta name="description" content="Photographs by Felix Yeboah." />
         <link rel="canonical" href="https://felixyeboah.dev/photos" />
+        <Meta title="Photos — Felix Yeboah" description="Photographs by Felix Yeboah." url="https://felixyeboah.dev/photos" />
         <link rel="alternate" type="application/rss+xml" href="https://felixyeboah.dev/writing/feed.xml" />
         <!-- ?v= forces browsers to drop a cached icon; raise it whenever the logo changes -->
         <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
@@ -28,29 +33,14 @@ import pageJs from '../photobook/page.js?url';
         <link rel="stylesheet" href={siteCss} />
         <link rel="stylesheet" href={sharedCss} />
         <link rel="stylesheet" href={pageCss} />
+        <link rel="stylesheet" href={chromeCss} />
         <script is:inline src="/photos/data.js"></script>
         <script is:inline src={sharedJs}></script>
     </head>
     <body id="top">
         <a class="skip" href="#main">Skip to content</a>
         <div class="column">
-          <header class="site-header">
-            <a class="identity" href="/" aria-label="Felix Yeboah, home">
-              <svg class="logo" viewBox="0 0 128 128" width="40" height="40" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="10" y="26" width="108" height="76" rx="13" />
-                <path class="logo-eye" d="M 31 51 L 46 64 L 31 77" />
-                <path class="logo-grin" d="M 62 67 C 68 75 80 75 86 67" />
-              </svg>
-            </a>
-            <nav class="cnav" aria-label="Primary">
-              <ul>
-                <li><a href="/work">Work</a></li>
-                <li><a href="/writing">Writing</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/photos" aria-current="page">Photos</a></li>
-              </ul>
-            </nav>
-          </header>
+            <Header section="photos" />
         </div>
 
         <main id="main">
@@ -93,16 +83,7 @@ import pageJs from '../photobook/page.js?url';
         </main>
 
         <div class="column">
-          <footer class="site-footer">
-            <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
-            <div class="footer-links">
-              <a href="https://github.com/felixyeboah">GitHub</a>
-              <a href="https://x.com/sudocode_">X</a>
-              <a href="/resume">Résumé</a>
-              <a href="/photos">Photos</a>
-              <span class="copy">© {new Date().getFullYear()}</span>
-            </div>
-          </footer>
+            <Footer />
         </div>
         <script is:inline src={pageJs}></script>
     </body>

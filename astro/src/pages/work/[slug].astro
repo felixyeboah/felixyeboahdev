@@ -5,8 +5,8 @@ import { type GalleryItem, type Rich, type Title, getDetail } from '@/lib/site/p
 import { PROJECTS, type Project, pad2 } from '@/lib/site/projects';
 
 /* One template for every project. Each block is optional and renders only when the project has it
-   (lib/site/project-details.ts documents the blocks). The route diagram, a bespoke React component on
-   the old site, is not carried over. */
+   (lib/site/project-details.ts documents the blocks). The route diagram, an animated board on the old
+   site, is drawn here as a static sequence: the same five stops and the same event log. */
 
 export function getStaticPaths() {
     return PROJECTS.map((project) => ({ params: { slug: project.slug }, props: { project } }));
@@ -46,12 +46,21 @@ const galleryImg = (it: GalleryItem) =>
         : { src: it.src as string, srcset: it.srcSet };
 const full = (it: GalleryItem) => it.wide || (it.span ?? 6) >= 12;
 
+/* Reevit's routing diagram (kind 'reevit-route'): one mobile-money charge, illustrative. */
+const ROUTE: Array<{ k: string; t: string; s?: string; tag?: string; state?: 'warn' | 'ok'; event: string }> = [
+    { k: 'Checkout', t: 'Customer taps Pay', s: 'MoMo · GHS', event: 'charge.created' },
+    { k: 'Reevit', t: 'Router', s: 'Chain: Paystack → Hubtel', event: 'route → paystack' },
+    { k: 'Provider 1', t: 'Paystack', tag: 'No response', state: 'warn', event: 'failover → hubtel' },
+    { k: 'Provider 2', t: 'Hubtel', tag: 'Approved', state: 'ok', event: 'hubtel · approved' },
+    { k: 'Webhook', t: 'payment.succeeded', tag: 'To your server', state: 'ok', event: 'webhook · payment.succeeded' },
+];
+
 const i = PROJECTS.findIndex((x) => x.slug === p.slug);
 const prev = PROJECTS[(i - 1 + PROJECTS.length) % PROJECTS.length];
 const next = PROJECTS[(i + 1) % PROJECTS.length];
 ---
 
-<Site title={`${p.name}: ${d.rich ? 'Case study' : p.category}`} description={d.description ?? p.desc} section="work">
+<Site title={`${p.name}: ${d.rich ? 'Case study' : p.category}`} description={d.description ?? p.desc} section="work" image={p.cover} imageAlt={stage.alt}>
     <section class="page-head">
         <a class="crumb" href="/work">
             <svg viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -146,6 +155,30 @@ const next = PROJECTS[(i + 1) % PROJECTS.length];
                     {d.compose.cap[0]}
                 </figcaption>
             </figure>
+        </section>
+    )}
+
+    {d.diagram && (
+        <section aria-labelledby="route-title">
+            <h2 id="route-title">{d.diagram.label}</h2>
+            <p class="case-statement">{plain(d.diagram.title)}</p>
+            <ol class="ruled case-route">
+                {ROUTE.map((r, k) => (
+                    <li class="case-step" data-state={r.state}>
+                        <span class="num mono">{pad2(k + 1)}</span>
+                        <span class="case-step-main">
+                            <span class="case-step-k">{r.k}</span>
+                            <span class="t">{r.t}</span>
+                            {r.s && <span class="b">{r.s}</span>}
+                        </span>
+                        <span class="case-step-end">
+                            {r.tag && <span class="tag">{r.tag}</span>}
+                            <span class="mono muted">{r.event}</span>
+                        </span>
+                    </li>
+                ))}
+            </ol>
+            <p class="case-route-note">Illustrative: one charge, mobile money. {plain(d.diagram.aside)}.</p>
         </section>
     )}
 
@@ -277,8 +310,26 @@ const next = PROJECTS[(i + 1) % PROJECTS.length];
 
     /* the phone capture sits beside its caption; stacked on small screens */
     .case-phone { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: var(--s-6); align-items: end; }
+    /* phone captures are 390x844 screens; shown 9:16 from the top, which trims the sliver of the next
+       section that peeks in at the bottom of a capture (Dronehub's looked like a stray black bar) */
+    .case-phone .frame { aspect-ratio: 9 / 16; }
+    .case-phone .frame img { height: 100%; object-fit: cover; object-position: top center; }
     .case-phone figcaption { margin: 0 0 var(--s-2); max-width: 22em; }
     .case-phone-title { display: block; margin-bottom: var(--s-1); font-size: var(--t-md); font-weight: 600; color: var(--ink); }
+
+    /* route diagram as a sequence: stop on the left, what happened on the right; a rail joins the numbers */
+    .case-route { margin-top: var(--s-5); }
+    .case-step { position: relative; display: grid; grid-template-columns: 2.25rem minmax(0, 1fr) auto; column-gap: var(--s-3); align-items: start; padding: var(--s-4) 0; }
+    .case-step .num { color: var(--muted); line-height: 1.55rem; }
+    .case-step:not(:last-child) .num::after { content: ""; position: absolute; left: 0.5rem; top: calc(var(--s-4) + 1.75rem); bottom: calc(-1 * var(--s-4) + 0.25rem); width: 1px; background: #D9D8D2; }
+    .case-step[data-state="warn"]:not(:last-child) .num::after { background: repeating-linear-gradient(var(--accent) 0 4px, transparent 4px 8px); }
+    .case-step-k { display: block; font-size: var(--t-sm); color: var(--muted); }
+    .case-step .t { display: block; font-weight: 600; }
+    .case-step .b { display: block; color: var(--muted); }
+    .case-step-end { display: grid; justify-items: end; gap: var(--s-1); text-align: right; }
+    .case-step[data-state="warn"] .tag { color: var(--accent); border-color: currentColor; }
+    .case-step[data-state="ok"] .tag { color: #3F6212; border-color: currentColor; }
+    .case-route-note { margin-top: var(--s-4); font-size: var(--t-sm); color: var(--muted); }
 
     .case-note { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); column-gap: var(--s-3); align-items: baseline; padding: var(--s-4) 0; }
     .case-note .num { color: var(--muted); }
@@ -302,5 +353,7 @@ const next = PROJECTS[(i + 1) % PROJECTS.length];
     @media (max-width: 640px) {
         .case-gallery { grid-template-columns: 1fr; }
         .case-phone { grid-template-columns: minmax(0, 200px); }
+        .case-step { grid-template-columns: 2.25rem minmax(0, 1fr); row-gap: var(--s-2); }
+        .case-step-end { grid-column: 2; justify-items: start; text-align: left; }
     }
 </style>

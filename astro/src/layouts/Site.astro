@@ -1,5 +1,9 @@
 ---
+import '../styles/chrome.css';
 import '../styles/column.css';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Meta from '../components/Meta.astro';
 
 interface Props {
     title?: string;
@@ -8,19 +12,18 @@ interface Props {
     section?: 'work' | 'writing' | 'about' | 'photos';
     /** pages that keep search engines out (404) */
     noindex?: boolean;
+    /** link-preview image, as a path on this site; defaults to the site card */
+    image?: string;
+    imageAlt?: string;
+    /** posts are articles to link previews */
+    type?: 'website' | 'article';
 }
 
 const NAME = 'Felix Yeboah';
-const { title, description = 'Software engineer & UI/UX designer in Accra.', section, noindex } = Astro.props;
+const { title, description = 'Software engineer & UI/UX designer in Accra.', section, noindex, image, imageAlt, type } = Astro.props;
 const fullTitle = title ? `${title} — ${NAME}` : `${NAME} — Software engineer & UI/UX designer`;
 /* build.format 'file' names the home page /index; the public URL is / */
 const canonical = new URL(Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '').replace(/\/$/, '') || '/', Astro.site);
-const NAV = [
-    ['work', 'Work', '/work'],
-    ['writing', 'Writing', '/writing'],
-    ['about', 'About', '/about'],
-    ['photos', 'Photos', '/photos'],
-] as const;
 ---
 
 <!doctype html>
@@ -31,6 +34,7 @@ const NAV = [
         <title>{fullTitle}</title>
         <meta name="description" content={description} />
         {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+        {!noindex && <Meta title={fullTitle} description={description} url={canonical.href} image={image} imageAlt={imageAlt} type={type} />}
         <link rel="alternate" type="application/rss+xml" href="https://felixyeboah.dev/writing/feed.xml" />
         <!-- ?v= forces browsers to drop a cached icon; raise it whenever the logo changes -->
         <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
@@ -46,39 +50,13 @@ const NAV = [
     <body>
         <a class="skip" href="#main">Skip to content</a>
         <div class="column">
-            <header class="site-header">
-                <a class="identity" href="/" aria-label="Felix Yeboah, home">
-                    <svg class="logo" viewBox="0 0 128 128" width="40" height="40" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <rect x="10" y="26" width="108" height="76" rx="13" />
-                        <path class="logo-eye" d="M 31 51 L 46 64 L 31 77" />
-                        <path class="logo-grin" d="M 62 67 C 68 75 80 75 86 67" />
-                    </svg>
-                </a>
-                <nav class="nav" aria-label="Primary">
-                    <ul>
-                        {NAV.map(([key, label, href]) => (
-                            <li>
-                                <a href={href} aria-current={section === key ? 'page' : undefined}>{label}</a>
-                            </li>
-                        ))}
-                    </ul>
-                </nav>
-            </header>
+            <Header section={section} />
 
             <main id="main">
                 <slot />
             </main>
 
-            <footer class="site-footer">
-                <a class="footer-email" href="mailto:me@felixyeboah.dev"><span class="u">me@felixyeboah.dev</span></a>
-                <div class="footer-links">
-                    <a href="https://github.com/felixyeboah">GitHub</a>
-                    <a href="https://x.com/sudocode_">X</a>
-                    <a href="/resume">Résumé</a>
-                    <a href="/photos">Photos</a>
-                    <span class="copy">© {new Date().getFullYear()}</span>
-                </div>
-            </footer>
+            <Footer />
         </div>
     </body>
 </html>

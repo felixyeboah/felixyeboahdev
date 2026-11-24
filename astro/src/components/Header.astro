@@ -1,0 +1,34 @@
+---
+/* The site header: logo (links home) and the four sections. Styles are in src/styles/chrome.css.
+   Used by src/layouts/Site.astro and by the Photos page, which has its own document. */
+interface Props {
+    /** which nav item is the current page */
+    section?: 'work' | 'writing' | 'about' | 'photos';
+}
+const { section } = Astro.props;
+const NAV = [
+    ['work', 'Work', '/work'],
+    ['writing', 'Writing', '/writing'],
+    ['about', 'About', '/about'],
+    ['photos', 'Photos', '/photos'],
+] as const;
+---
+
+<header class="site-header">
+    <a class="identity" href="/" aria-label="Felix Yeboah, home">
+        <svg class="logo" viewBox="0 0 128 128" width="40" height="40" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="10" y="26" width="108" height="76" rx="13"></rect>
+            <path class="logo-eye" d="M 31 51 L 46 64 L 31 77"></path>
+            <path class="logo-grin" d="M 62 67 C 68 75 80 75 86 67"></path>
+        </svg>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+        <ul>
+            {NAV.map(([key, label, href]) => (
+                <li>
+                    <a href={href} aria-current={section === key ? 'page' : undefined}>{label}</a>
+                </li>
+            ))}
+        </ul>
+    </nav>
+</header>

@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
    - _headers: the RSS content type for the feed
    - _redirects: every redirect the Next app defines in next.config.ts, with the same status codes
    - favicon.svg: the logo (src/assets/logo.svg). The public folder is shared with the Next app, so it is written here.
+   - og.png: the link-preview card (made by scripts/og.mjs)
    - favicon.ico: the same logo for browsers without SVG icons (made by scripts/favicon.mjs) */
 
 /* old case-study slugs -> current /work slugs (same table as next.config.ts) */
@@ -40,6 +41,7 @@ export default function cloudflareStatic() {
                 writeFileSync(out + '_headers', '/writing/feed.xml\n  Content-Type: application/rss+xml; charset=utf-8\n');
                 copyFileSync(fileURLToPath(new URL('../src/assets/favicon.ico', import.meta.url)), out + 'favicon.ico');
                 copyFileSync(fileURLToPath(new URL('../src/assets/logo.svg', import.meta.url)), out + 'favicon.svg');
+                copyFileSync(fileURLToPath(new URL('../src/assets/og.png', import.meta.url)), out + 'og.png');
             },
         },
     };

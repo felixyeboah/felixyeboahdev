@@ -1,0 +1,7 @@
+/* Fonts are served from this site (the files come from the Fontsource packages), not from Google Fonts:
+   one fewer connection and no render-blocking stylesheet on another host. Each face is split by script,
+   so only the Latin file is downloaded unless a page needs more.
+   Family names: "Schibsted Grotesk Variable" and "JetBrains Mono Variable". */
+@import '@fontsource-variable/schibsted-grotesk/wght.css';
+@import '@fontsource-variable/schibsted-grotesk/wght-italic.css';
+@import '@fontsource-variable/jetbrains-mono/wght.css';

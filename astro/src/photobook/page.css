@@ -8,8 +8,8 @@
   --line:rgba(23,23,23,.08);--line-2:rgba(23,23,23,.15);
   --accent:#171717;--on-accent:#FCFCFA;
   --focus:#D9480F;
-  --sans:"Schibsted Grotesk",ui-sans-serif,system-ui,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"Schibsted Grotesk Variable","Schibsted Grotesk",ui-sans-serif,system-ui,sans-serif;
+  --mono:"JetBrains Mono Variable","JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   --serif:var(--sans); /* display titles use the site sans; see the block at the end of this stylesheet */
   --io:cubic-bezier(.76,0,.24,1);
   --lb-bg:#FCFCFA;--lb-veil:rgba(252,252,250,.72);--lb-sheet:rgba(252,252,250,.97);

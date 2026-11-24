@@ -16,7 +16,8 @@ export default defineConfig({
     publicDir: '../public',
     /* about.html, work/reevit.html: with html_handling "drop-trailing-slash" in wrangler.jsonc these are
        served at /about and /work/reevit, the URLs the live site uses today */
-    build: { format: 'file' },
+    /* inlineStylesheets: the page's CSS travels in the HTML, so first paint does not wait on a second request */
+    build: { format: 'file', inlineStylesheets: 'always' },
     trailingSlash: 'never',
     vite: { resolve: { alias: { '@': repo.replace(/\/$/, '') } } },
     integrations: [cloudflareStatic()],

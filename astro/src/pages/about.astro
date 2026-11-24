@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import Site from '../layouts/Site.astro';
+import portrait from '../assets/portrait.jpg';
 
 /* Copy is Felix's own, from the previous About page and the Uses page (content/pages/uses). */
 ---
@@ -12,13 +14,14 @@ import Site from '../layouts/Site.astro';
 
         <figure class="figure about-portrait">
           <span class="frame">
-            <img
-              src="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_1100/felixyeboah.dev/IMG_7337_tmsrzq"
-              srcset="https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_700/felixyeboah.dev/IMG_7337_tmsrzq 700w, https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_1100/felixyeboah.dev/IMG_7337_tmsrzq 1100w, https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_1440/felixyeboah.dev/IMG_7337_tmsrzq 1440w"
+            <Image
+              src={portrait}
+              widths={[540, 720, 1086]}
               sizes="(max-width: 768px) 100vw, 720px"
-              width="720" height="480"
-              alt="Felix Yeboah wearing headphones, working on a laptop"
-              fetchpriority="high">
+              alt="Felix Yeboah in a car, wearing headphones and glasses, looking out of the window"
+              loading="eager"
+              fetchpriority="high"
+            />
           </span>
         </figure>
 
@@ -85,7 +88,8 @@ import Site from '../layouts/Site.astro';
       /* portrait: 3:4 source shown 3:2 so it sits inside the reading column */
       .about-portrait { margin-top: var(--s-7); }
       .about-portrait .frame { aspect-ratio: 3 / 2; }
-      .about-portrait .frame img { height: 100%; object-fit: cover; object-position: center 25%; }
+      /* the photo is upright (3:4); the frame shows the band from the top of the head to the hand */
+      .about-portrait .frame img { height: 100%; object-fit: cover; object-position: center 30%; }
 
       .about-more { margin-top: var(--s-4); font-size: var(--t-sm); }
 

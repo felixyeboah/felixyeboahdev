@@ -1,5 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import Site from '../../layouts/Site.astro';
+/* the face from src/assets/portrait.jpg, cropped square so it reads at 40px */
+import avatar from '../../assets/portrait-avatar.jpg';
 import { dekText, renderPost } from '@/lib/site/post-render';
 import { type PostMeta, fmtDate, getPosts, isoDate } from '@/lib/site/posts';
 
@@ -22,7 +25,6 @@ const { html } = renderPost(p, all);
 const i = all.findIndex((x) => x.slug === p.slug);
 const newer = all[i - 1];
 const older = all[i + 1];
-const AVATAR = 'https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_auto,q_auto,w_120/felixyeboah.dev/IMG_7337_tmsrzq';
 ---
 
 <Site title={p.title} description={dekText(p) || undefined} section="writing" type="article">
@@ -43,7 +45,7 @@ const AVATAR = 'https://res.cloudinary.com/jaeyholic/image/upload/fl_lossy,f_aut
         <div class="prose post-body" set:html={html} />
 
         <footer class="post-author">
-            <img class="avatar" src={AVATAR} width="40" height="40" alt="" loading="lazy" />
+            <Image class="avatar" src={avatar} width={80} height={80} alt="" loading="lazy" />
             <span class="name">Felix Yeboah</span>
             <a class="link" href="https://x.com/sudocode_">@sudocode_ on X</a>
         </footer>

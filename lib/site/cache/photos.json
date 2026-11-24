@@ -232,20 +232,20 @@
         960,
         1086
       ],
-      "color": "#dadfe5",
+      "color": "#dae0ea",
       "palette": [
-        "#3d3536",
-        "#7c6356",
-        "#6a767f",
-        "#a4a5a6",
-        "#dadfe5"
+        "#433635",
+        "#376486",
+        "#836b5d",
+        "#a1a6aa",
+        "#dae0ea"
       ],
       "hsl": [
-        21,
-        0.18,
-        0.41
+        206,
+        0.42,
+        0.37
       ],
-      "lqip": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAAAQBQCdASoUABsAPulep02pJSOpN/VYASAdCWUAxPk2Bh97aXDt6uoBvhPjQDueFjTAAP7vxu2pdS5r0yP+nHH8q1ev3GRZAkgt0WCEDZEEa8ynCJv22/UQQ6xkDKE6L/XG0s4OyZf9lrG48wO7UTl0+HdLToIKFD5oKhYuvXtOH8tmEIcbpcwgTMwJfF+uc6cBXigOWeoFOMCuAAA=",
+      "lqip": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAACQBACdASoUABsAPu1cqE2ppKOmN/VYATAdiWUAuwBFXthHClIfYSrYmYWGQiAA/vHNUcD7zqEjbW8flYG4UVn7savZMTn8467lnd+gdZHfbagwArP5jDnHXvREehO69Q0cpeoLoYosAhEosAIe8VS7x5mlnMtR3BBJGwmRzObHTippikpwDqdOHUAAAA==",
       "date": "2026-11-15",
       "title": null,
       "location": null,

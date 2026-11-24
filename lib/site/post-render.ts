@@ -1317,7 +1317,7 @@ export function feedXML(posts: PostMeta[]) {
       <link>${url}</link>
       <guid isPermaLink="true">${url}</guid>
       <pubDate>${rfc822(p.date)}</pubDate>
-      <dc:creator>Felix Yeboah</dc:creator>
+      <dc:creator>Felix Yeboah - Jefferson</dc:creator>
 ${p.categories.map((c) => `      <category>${xmlEsc(catLabel(c))}</category>`).join('\n')}
       <description>${xmlEsc(dekText(p))}</description>
       <content:encoded>${cdata(cover + note + r.html)}</content:encoded>
@@ -1327,14 +1327,14 @@ ${p.categories.map((c) => `      <category>${xmlEsc(catLabel(c))}</category>`).j
     return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>Felix Yeboah: Writing</title>
+    <title>Felix Yeboah - Jefferson: Writing</title>
     <link>${SITE_URL}/writing</link>
-    <description>Notes from the work: engineering, Remix, Go, and the occasional year in review. By Felix Yeboah, a software engineer and designer in Accra.</description>
+    <description>Notes from the work: engineering, Remix, Go, and the occasional year in review. By Felix Yeboah - Jefferson, a software engineer and designer in Accra.</description>
     <language>en</language>
     <atom:link href="${CANON}feed.xml" rel="self" type="application/rss+xml"/>
     <lastBuildDate>${rfc822(posts[0].date)}</lastBuildDate>
-    <managingEditor>me@felixyeboah.dev (Felix Yeboah)</managingEditor>
-    <image><url>${cld(AUTHOR_IMG, 144, 'c_fill,h_144')}</url><title>Felix Yeboah: Writing</title><link>${SITE_URL}/writing</link></image>
+    <managingEditor>me@felixyeboah.dev (Felix Yeboah - Jefferson)</managingEditor>
+    <image><url>${cld(AUTHOR_IMG, 144, 'c_fill,h_144')}</url><title>Felix Yeboah - Jefferson: Writing</title><link>${SITE_URL}/writing</link></image>
 ${items}
   </channel>
 </rss>

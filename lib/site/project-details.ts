@@ -205,7 +205,7 @@ export const isLong = (name: string) => name.includes(' ') && name.length > 10;
 export const DETAILS: Record<string, ProjectDetail> = {
     'harbour-price': {
         rich: true,
-        description: 'Harbour Price: a complete commerce platform for Accra, connecting groceries, hot meals, in-store sales and delivery. Designed and built by Felix Yeboah.',
+        description: 'Harbour Price: a complete commerce platform for Accra, connecting groceries, hot meals, in-store sales and delivery. Designed and built by Felix Yeboah - Jefferson.',
         status: 'Completed',
         tagline: ['Four counters. One basket.', 'From the harbour to your doorstep.'],
         credits: [
@@ -365,7 +365,7 @@ export const DETAILS: Record<string, ProjectDetail> = {
     },
     'reevit': {
         rich: true,
-        description: 'Reevit: payments that don’t miss. Every charge goes through the merchant’s own Paystack, Hubtel or Flutterwave, and fails over inside the same tap. Designed and engineered by Felix Yeboah.',
+        description: 'Reevit: payments that don’t miss. Every charge goes through the merchant’s own Paystack, Hubtel or Flutterwave, and fails over inside the same tap. Designed and engineered by Felix Yeboah - Jefferson.',
         formerly: 'Primeflow',
         status: 'Live',
         tagline: ['Payments that don’t miss.', 'One provider goes down, the customer never knows.'],
@@ -554,7 +554,7 @@ export const DETAILS: Record<string, ProjectDetail> = {
             label: 'Why it exists',
             text: 'Not glamorous. Just useful.',
             em: 'And sometimes, that’s all innovation really needs to be.',
-            by: 'Felix Yeboah',
+            by: 'Felix Yeboah - Jefferson',
             role: 'Founder, Reevit · from the launch post',
             mark: 'FY',
         },
@@ -575,7 +575,7 @@ export const DETAILS: Record<string, ProjectDetail> = {
     },
     'miss-cookie-spices': {
         rich: true,
-        description: 'Miss Cookie Spices: a custom online store for freshly blended Ghanaian spices, with Hubtel payments and SMS. Built by Felix Yeboah.',
+        description: 'Miss Cookie Spices: a custom online store for freshly blended Ghanaian spices, with Hubtel payments and SMS. Built by Felix Yeboah - Jefferson.',
         status: 'Live',
         tagline: ['Great food starts with great spices.', 'A storefront built for mobile money.'],
         credits: [

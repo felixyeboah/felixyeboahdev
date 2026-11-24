@@ -12,7 +12,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
     <rect x="10" y="26" width="108" height="76" rx="13"/>
     <path d="M 31 51 L 46 64 L 31 77 M 62 67 C 68 75 80 75 86 67"/>
   </g>
-  <text x="96" y="356" ${FONT} font-size="84" font-weight="700" letter-spacing="-2.5" fill="${INK}">Felix Yeboah</text>
+  <text x="96" y="356" ${FONT} font-size="72" font-weight="700" letter-spacing="-2.2" fill="${INK}">Felix Yeboah - Jefferson</text>
   <text x="96" y="440" ${FONT} font-size="52" font-weight="500" letter-spacing="-1.2" fill="${MUTED}">Software engineer &amp; UI/UX designer</text>
   <rect x="96" y="498" width="1008" height="2" fill="${HAIR}"/>
   <text x="96" y="552" font-family="Menlo, Monaco, monospace" font-size="26" fill="${MUTED}">felixyeboah.dev</text>

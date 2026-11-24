@@ -11,11 +11,11 @@ interface Props {
     url: string;
     type?: 'website' | 'article';
 }
-const { title, description, image = '/og.png', imageAlt = 'Felix Yeboah, software engineer and UI/UX designer', url, type = 'website' } = Astro.props;
+const { title, description, image = '/og.png', imageAlt = 'Felix Yeboah - Jefferson, software engineer and UI/UX designer', url, type = 'website' } = Astro.props;
 const img = new URL(image, Astro.site).href;
 ---
 
-<meta property="og:site_name" content="Felix Yeboah" />
+<meta property="og:site_name" content="Felix Yeboah - Jefferson" />
 <meta property="og:type" content={type} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />

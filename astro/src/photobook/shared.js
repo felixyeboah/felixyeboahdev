@@ -752,7 +752,7 @@
         if (nav && !nav.children.length) {
             nav.innerHTML =
                 '<div class="nav__bar">' +
-                '<a class="brand" href="index.html" aria-label="Felix Yeboah, home"><span class="brand__mark" aria-hidden="true">FY</span><span class="brand__name">Felix Yeboah</span></a>' +
+                '<a class="brand" href="index.html" aria-label="Felix Yeboah - Jefferson, home"><span class="brand__mark" aria-hidden="true">FY</span><span class="brand__name">Felix Yeboah - Jefferson</span></a>' +
                 '<nav aria-label="Primary"><ul class="nav__links">' +
                 NAV.map(function (n) {
                     return '<li><a href="' + href(n[0]) + '"' + (n[0] === 'photos' ? ' aria-current="page"' : '') + '>' + n[1] + '</a></li>';
@@ -806,8 +806,8 @@
         var foot = document.querySelector('footer.footer');
         if (foot && !foot.children.length) {
             foot.innerHTML =
-                '<div class="footer__word" aria-hidden="true">Felix Yeboah</div>' +
-                '<div class="wrap footer__row mono"><span>&copy; ' + new Date().getFullYear() + ' Felix Yeboah</span><span>Designed &amp; built in Accra</span>' +
+                '<div class="footer__word" aria-hidden="true">Felix Yeboah - Jefferson</div>' +
+                '<div class="wrap footer__row mono"><span>&copy; ' + new Date().getFullYear() + ' Felix Yeboah - Jefferson</span><span>Designed &amp; built in Accra</span>' +
                 '<nav class="footer__links" aria-label="Elsewhere"><a href="' + MAIL + '">Email</a><a href="https://github.com/felixyeboah" target="_blank" rel="noopener">GitHub</a><a href="https://x.com/sudocode_" target="_blank" rel="noopener">X / Twitter</a></nav>' +
                 '<a href="#top">Back to top &uarr;</a></div>';
         }

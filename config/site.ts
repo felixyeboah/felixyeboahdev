@@ -21,9 +21,9 @@ export type SiteConfig = {
 };
 
 export const siteConfig: SiteConfig = {
-  name: 'Felix Yeboah',
-  title: 'Felix Yeboah',
-  titleAlt: 'Felix Yeboah | Portfolio',
+  name: 'Felix Yeboah - Jefferson',
+  title: 'Felix Yeboah - Jefferson',
+  titleAlt: 'Felix Yeboah - Jefferson | Portfolio',
   description:
     "Hi I'm Felix, A self-taught Software Engineer and UI/UX Designer from Accra, Ghana. I learn, build and share my knowledge with the world. I'm passionate about building quality software that makes the world a better place.",
   url: 'https://felixyeboah.dev',
@@ -33,7 +33,7 @@ export const siteConfig: SiteConfig = {
   ogImage: '/opengraph-image', // Updated to use the file-based OG image
   favicon: '/static/favicon.png', // Path is relative to the public directory
   shortName: 'FelixYeboah',
-  author: 'Felix Yeboah',
+  author: 'Felix Yeboah - Jefferson',
   keywords: [
     'Software Engineer',
     'Go',

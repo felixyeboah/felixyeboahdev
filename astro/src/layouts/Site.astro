@@ -32,8 +32,9 @@ const NAV = [
         <meta name="description" content={description} />
         {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
         <link rel="alternate" type="application/rss+xml" href="https://felixyeboah.dev/writing/feed.xml" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="icon" href="/favicon.ico" sizes="256x256" type="image/x-icon" />
+        <!-- ?v= forces browsers to drop a cached icon; raise it whenever the logo changes -->
+        <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico?v=3" sizes="256x256" type="image/x-icon" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link

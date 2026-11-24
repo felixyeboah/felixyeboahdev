@@ -27,8 +27,8 @@
   --ease: cubic-bezier(0.2, 0, 0, 1);
   --dur: 200ms;
 
-  --sans: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans: "Schibsted Grotesk Variable", "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 *, *::before, *::after { box-sizing: border-box; }

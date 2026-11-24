@@ -9,6 +9,8 @@ import pageCss from '../photobook/page.css?url';
 import sharedJs from '../photobook/shared.js?url';
 import pageJs from '../photobook/page.js?url';
 import chromeCss from '../styles/chrome.css?url';
+import fontsCss from '../styles/fonts.css?url';
+import sansFont from '@fontsource-variable/schibsted-grotesk/files/schibsted-grotesk-latin-wght-normal.woff2?url';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import Meta from '../components/Meta.astro';
@@ -27,9 +29,8 @@ import Meta from '../components/Meta.astro';
         <!-- ?v= forces browsers to drop a cached icon; raise it whenever the logo changes -->
         <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
         <link rel="icon" href="/favicon.ico?v=3" sizes="256x256" type="image/x-icon" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" />
+        <link rel="preload" href={sansFont} as="font" type="font/woff2" crossorigin />
+        <link rel="stylesheet" href={fontsCss} />
         <link rel="stylesheet" href={siteCss} />
         <link rel="stylesheet" href={sharedCss} />
         <link rel="stylesheet" href={pageCss} />

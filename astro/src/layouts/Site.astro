@@ -1,5 +1,7 @@
 ---
+import '../styles/fonts.css';
 import '../styles/chrome.css';
+import sansFont from '@fontsource-variable/schibsted-grotesk/files/schibsted-grotesk-latin-wght-normal.woff2?url';
 import '../styles/column.css';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
@@ -39,12 +41,7 @@ const canonical = new URL(Astro.url.pathname.replace(/\.html$/, '').replace(/\/i
         <!-- ?v= forces browsers to drop a cached icon; raise it whenever the logo changes -->
         <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
         <link rel="icon" href="/favicon.ico?v=3" sizes="256x256" type="image/x-icon" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap"
-            rel="stylesheet"
-        />
+        <link rel="preload" href={sansFont} as="font" type="font/woff2" crossorigin />
         <slot name="head" />
     </head>
     <body>

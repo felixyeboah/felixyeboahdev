@@ -30,7 +30,6 @@ const ALL_PROJECTS: Project[] = [
     {
         order: 1,
         slug: "harbour-price",
-        draft: true,
         name: "Harbour Price",
         category: "Commerce platform",
         group: "commerce",

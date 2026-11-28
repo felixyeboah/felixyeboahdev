@@ -1,7 +1,7 @@
 ---
 title: 'Redesigning My Portfolio: The Dark Studio Design Language'
 date: '2026-09-27T10:00:00.000Z'
-updated: '2026-09-27T10:00:00.000Z'
+updated: '2026-11-28T10:00:00.000Z'
 subtitle: One design system for fifteen projects and twenty-one posts, and the rules I set before drawing anything.
 categories: ['design', 'engineering']
 keywords: ['design', 'portfolio', 'nextjs', 'design system']
@@ -12,6 +12,10 @@ bannerCredit: Screenshot of felixyeboah.dev
 type: 'blogPost'
 featured: false
 ---
+
+<Callout variant="info" label="Update, November 2026">
+    This site no longer looks like the screenshots below. Two months after this post, I redesigned it again: a light page, one reading column, and Astro in place of Next.js. I have left the post as I wrote it, and added what changed and what survived at the end.
+</Callout>
 
 The old version of this site made you wait two seconds before it showed you anything. A preloader ran on every visit. After that, the case studies scrolled sideways with GSAP, which broke on phones, and the "Expertise" section was four long paragraphs of claims with nothing to back them up. There was one testimonial, the blog felt bolted on, and there was no obvious way to hire me.
 
@@ -129,3 +133,49 @@ Write the rules before the design. "No invented proof" cost more time than any l
 Design one system, not fifteen pages. The template, the data and the colour check did more for the project pages than any single layout could.
 
 And keep the accent for the one thing you want people to do. On this site, that's the lime button. If you've read this far, it says "Let's talk".
+
+## Update, November 2026: the site is light now
+
+Two months after I published this, I redesigned the site again. If you are reading this on felixyeboah.dev, you are looking at the new version, and almost nothing in the screenshots above is still on screen.
+
+![The current felixyeboah.dev landing page: a light page with the name, a one-line introduction and a ruled list of projects](/assets/writing/redesign/column-home.jpg "The site today. One 720 pixel column on an off-white page.")
+
+Dark Studio did what I asked of it, but it was a lot of design. I wanted something calmer: nice, professional, clean. So I went through the same process again, several directions as plain HTML with real content, and picked the quietest one. I call it Column.
+
+### What changed
+
+**One column.** Every page is a single column, 720 pixels wide. The landing page is my name, two sentences and a list of work. There is no hero, no portrait beside a headline, and no browser frames.
+
+**Light, with less of everything.** The palette is now five values:
+
+```css title=column.css
+:root {
+  --page: #FCFCFA;
+  --ink: #171717;
+  --muted: #6F6F6B;
+  --hair: #E8E7E2;
+  --accent: #D9480F;
+}
+```
+
+Lime is gone. The accent is a burnt orange, and it is rationed harder than lime was: the underline when you hover a link, the focus ring and the small status dot. Type is Schibsted Grotesk for everything you read and JetBrains Mono for everything you scan, in five sizes and no more. The serif I added for posts is gone too.
+
+**No colour per project.** Project pages used to build a tinted hero from each brand colour. Now every project page is the same light page, and the project’s own screenshots are the only colour on it. The contrast check I wrote for generated colours has nothing left to check.
+
+![The Reevit project page today: the project name, one line of description and a screenshot of reevit.io, on the same light page as the rest of the site](/assets/writing/redesign/column-case.jpg "Reevit today. The screenshot carries the colour; the page stays out of the way.")
+
+**No contact page.** The lime button is gone, and so is the page behind it. Everything goes through my email address, which sits at the bottom of every page.
+
+**Astro instead of Next.js.** This site is static content: posts are MDX files, and projects and photos are data files. Nothing on it needs a server, so it is now built with Astro and ships as plain HTML. The home page loads in five requests, all to this domain, with the fonts hosted here too.
+
+### What survived
+
+The rules did. There is still no preloader, the site is still checked at phone width, and there is still no invented proof. The case studies I rewrote from the live sites carried over word for word.
+
+So did the structure underneath. Project pages are still one template filled from data, with every block optional, which is why sixteen of them moved to a new design and a new framework without being rewritten. Metadata is still set in mono. Old links still redirect.
+
+The photos page is the one place I kept the old layout. I tried redrawing it in the new style and liked the original better, so it kept its photobook and its viewer and only changed colour.
+
+### What I would add to the advice
+
+Everything at the end of the original post still holds, except the last line. I would add one thing: keep the content and the design apart. The rules, the data and the writing outlived the design language this post is named after. The design was the cheap part to replace.
